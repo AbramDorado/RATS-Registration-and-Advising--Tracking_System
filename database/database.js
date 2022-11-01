@@ -2,8 +2,6 @@ const sqlite3 = require('sqlite3').verbose()
 const source = './database/db.sqlite'
 const utils = require('./utils')
 
-console.log('db required') // temp
-
 // Open/Create Database
 try {
   const db = new sqlite3.Database(source, (err) => {
@@ -36,6 +34,9 @@ try {
 const initial = require('./initial')
 
 // Notes
+
+// SQLite3 API
+// https://github.com/TryGhost/node-sqlite3/wiki/API
 
 // Useful tool for testing SQLite Commands
 // https://sqliteonline.com/

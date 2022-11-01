@@ -20,9 +20,10 @@ async function openDB() {
 }
 
 // Functions
+
 async function dbRun(sql, params, ignoreErrs) {
   // if ignoreErrs == true, no errors will be thrown
-  return new Promise( async (resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       await openDB()
       db.run(sql, params, (err) => {
@@ -42,4 +43,26 @@ async function dbRun(sql, params, ignoreErrs) {
   })
 }
 
-module.exports = {dbRun}
+async function dbGet(sql, params, ignoreErrs) {
+  // if ignoreErrs == true, no errors will be thrown
+  return new Promise(async (resolve, reject) => {
+    try {
+      await openDB()
+      db.get(sql, params, (err, row) => {
+        if (err) {
+          if (!ignoreErrs) {
+            throw err
+          }
+          // console.log('err ignored') // temp
+          // throw err
+        } else {
+          resolve(row)
+        }
+      })
+    } catch (error) {
+      reject(err)
+    }
+  })
+}
+
+module.exports = {dbRun, dbGet}
