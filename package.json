@@ -1,0 +1,19 @@
+{
+  "name": "cmsc-122-final-proj",
+  "version": "1.0.0",
+  "description": "CAS Registration and Advising Tool",
+  "main": "index.js",
+  "scripts": {
+    
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zrfvnzr/cmsc-122-final-proj.git"
+  },
+  "author": "zrfvnzr",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zrfvnzr/cmsc-122-final-proj/issues"
+  },
+  "homepage": "https://github.com/zrfvnzr/cmsc-122-final-proj#readme"
+}
