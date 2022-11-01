@@ -18,7 +18,7 @@ try {
     'jmlicup@up.edu.ph',
     'John Paolo',
     'Licup'
-  ])
+  ], true)
 } catch (error) {
   console.error('Error on inserting initial users.') // temp
   console.error(error) // temp
@@ -37,7 +37,7 @@ try {
     'jpmlicup@gmail.com',
     'John Paolo',
     'Licup'
-  ])
+  ], true)
 } catch (error) {
   console.error('Error on inserting initial users.') // temp
   console.error(error) // temp
@@ -56,7 +56,7 @@ try {
     'jpmlicup10@gmail.com',
     'John Paolo',
     'Licup'
-  ])
+  ], true)
 } catch (error) {
   console.error('Error on inserting initial users.') // temp
   console.error(error) // temp

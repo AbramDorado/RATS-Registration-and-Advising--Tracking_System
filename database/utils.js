@@ -20,19 +20,24 @@ async function openDB() {
 }
 
 // Functions
-async function dbRun(sql, params) {
+async function dbRun(sql, params, ignoreErrs) {
+  // if ignoreErrs == true, no errors will be thrown
   return new Promise( async (resolve, reject) => {
     try {
       await openDB()
       db.run(sql, params, (err) => {
         if (err) {
-          throw err
+          if (!ignoreErrs) {
+            throw err
+          }
+          // console.log('err ignored') // temp
+          // throw err
         } else {
           resolve()
         }
       })
     } catch (error) {
-      reject(error)
+      reject(err)
     }
   })
 }
