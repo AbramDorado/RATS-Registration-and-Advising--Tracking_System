@@ -7,17 +7,12 @@ const app = createApp(App)
 import { createRouter, createWebHistory } from 'vue-router'
 
 // import route components
-// import Home from './views/Home.vue'
-// import Login from './views/Login.vue'
-// import Advisees from './views/Advisees.vue'
-// import Admin from './views/Admin.vue'
+import Home from './pages/Home.vue'
 
 // set routes
 const routes = [
-  // {path: '/', component: Home},
+  {path: '/', component: Home},
   // {path: '/login', component: Login},
-  // {path: '/advisees', component: Advisees},
-  // {path: '/admin', component: Admin}
 ]
 
 const router = createRouter({

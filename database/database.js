@@ -1,45 +1,92 @@
 const sqlite3 = require('sqlite3').verbose()
-const source = './database/db.sqlite'
-const utils = require('./utils')
 
 // Open/Create Database
-try {
-  const db = new sqlite3.Database(source, (err) => {
-    if (err) {
-      throw err
-    } else {
-      console.log('Connected to the SQLite database.')
+async function openOrCreateDB(source) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const db = new sqlite3.Database(source, (err) => {
+        if (err) {
+          throw err
+        } else {
+          // console.log('SQLite database', source, 'opened/created.') // temp
+          resolve(db)
+        }
+      })
+    } catch (error) {
+      console.log('Error opening/creating database', source, 'in database.js') // temp
+      console.log(error) // temp
+      reject()
     }
   })
-} catch (error) {
-  console.error('Error opening/creating database in database.js') // temp
-  console.error(error)
 }
 
-// Create user table
-try {
-  utils.dbRun(`CREATE TABLE IF NOT EXISTS user (
-    id text UNIQUE PRIMARY KEY,
-    role text NOT NULL,
-    up_mail text UNIQUE NOT NULL,
-    first_name text NOT NULL,
-    last_name text NOT NULL
-  )`, [])
-} catch (error) {
-  console.error('Error on creating user table.') // temp
-  console.error(error) // temp
+// Create Table
+async function createTable(db, tableName, columns) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // console.log('database.js > createTable called.') // temp
+      db.run(`CREATE TABLE IF NOT EXISTS ${tableName} (${columns})`, (err) => {
+        if (err) {
+          throw err
+        } else {
+          console.log('Created table', tableName, 'successfully.') // temp
+          resolve()
+        }
+      })
+    } catch (error) {
+      console.log('Error on database.js > createTable') // temp
+      console.log(error) // temp
+      reject()
+    }
+  })
 }
 
-// Insert initial rows
-const initial = require('./initial')
+// Run SQL Command
+async function run(db, sql, params, ignoreErrs) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      db.run(sql, params, (err) => {
+        if (err) {
+          if (ignoreErrs) {
+            resolve()
+          } else {
+            throw err
+          }
+        } else {
+          // console.log('database.js > run success.') // temp
+          resolve()
+        }
+      })
+    } catch (error) {
+      console.log('Error on database.js > run') // temp
+      console.log(error) // temp
+      reject()
+    }
+  })
+}
 
-// Notes
+// Get SQL Query
+async function get(db, sql, params, ignoreErrs) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      db.get(sql, params, (err, row) => {
+        if (err) {
+          if (ignoreErrs) {
+            resolve()
+          } else {
+            throw err
+          }
+        } else {
+          // console.log('database.js > get success.') // temp
+          resolve(row)
+        }
+      })
+    } catch (error) {
+      console.log('Error on database.js > get') // temp
+      console.log(error) // temp
+      reject()
+    }
+  })
+}
 
-// SQLite3 API
-// https://github.com/TryGhost/node-sqlite3/wiki/API
-
-// Useful tool for testing SQLite Commands
-// https://sqliteonline.com/
-
-// Different modes in opening db
-// https://stackoverflow.com/questions/62864483/read-sqlite-database-with-node-js
+module.exports = {openOrCreateDB, createTable, run, get}

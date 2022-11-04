@@ -2,8 +2,15 @@ const express = require('express')
 const app = express()
 const port = 3000
 
+// Test Module
+const test = require('./test')
+console.log(test) // temp
+
 // SQLite3 Database
 const db = require('./database/database')
+async function openDB() {
+  await db.initialCalls()
+}
 
 // Cookie Parser
 const cookieParser = require('cookie-parser')
@@ -27,7 +34,14 @@ app.use(passport.session())
 const authRouter = require('./auth/auth')
 app.use('/', authRouter)
 
-// Express Server
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+// Main
+async function main() {
+  // Open Database
+  await openDB()
+  // Express Server
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+  })
+}
+// main()
+

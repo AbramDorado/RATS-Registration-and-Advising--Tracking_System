@@ -1,0 +1,83 @@
+System Outline
+
+Modules
+  APIs
+  Databases
+    Tables
+      Columns
+  Features
+  Frontend
+    Components
+    Pages
+
+Express Server Module
+  Features:
+    Initializing Express Server {NPM Dependencies: (express), Status: (Done, server.js)}
+    Main Function {Status: Done}
+
+Database Module
+  Databases:
+    db Database {Status: (Done)}
+      Tables:
+        announcement Table
+          Columns:
+        enrollment Table
+          Columns:
+        user Table {Status: (Done)}
+          Columns:
+            id Column {NPM Dependencies: (uuidv4) }
+            role Column
+            up_mail Column
+            first_name Column
+            last_name Column
+    sessions Database
+      Tables:
+        session Table
+          Columns:
+  Features:
+    Utility Function: Opening/Creating Databases {Status: (Done, database/database.js > openOrCreateDB), NPM Dependencies: (sqlite3)}
+    Utility Function: Creating Tables {Status: (Done, database/database.js > createTable), NPM Dependencies: (sqlite3)}
+    Utility Function: Running SQL Commands {Status: (Done, database/database.js > run), NPM Dependencies: (sqlite3)}
+    Utility Function: Get SQL Query {Status: (Done, database/database.js > get), NPM Dependencies: (sqlite3)}
+    Creating Initial Databases {Status: (Done, server.js > main), NPM Dependencies: (sqlite3)}
+    Creating Initial Tables {Status: (Done, database > initial.js), NPM Dependencies: (sqlite3)}
+    Creating Initial Rows {Status: (Done, database > initial.js), NPM Dependencies: (sqlite3)}
+
+Authentication Module
+  Features:
+    Passport Setup {Status: (Done), NPM Dependencies: (passport, express-session, connect-sqlite3, passport-google-oidc)}
+      Configure GoogleStrategy {Status: (Done)}
+      Serialize and Deserialize Functions {Status: (Done)}
+    Session {Status: (Done), Dependencies : (db Database > user Table, session Database > session Table)}
+    Auth Router {Status: (to do: register, edit, delete)}
+  APIs:
+    Authorize User API {Status: Done}
+    Login User API {Status: Done}
+    Logout User API {Status: Done}
+    Register User API {To do: Allow easy registration of many users}
+    Edit User API
+    Delete User API
+  Frontend:
+    Components:
+      Header Component
+    Pages:
+      Admin Dashboard Page
+      Login Page
+
+Announcement Module
+  APIs:
+    Get All Announcements API
+    Add Announcement API
+    Edit Announcement API
+    Delete Announcement API
+  Frontend:
+    Components:
+      Announcement Component
+    Pages:
+      Admin Dashboard Page
+      Home Page
+
+Enrollment Module
+
+
+Miscellaneous Module
