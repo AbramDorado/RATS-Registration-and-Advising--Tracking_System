@@ -23,7 +23,7 @@ export default {
         thiss.user = response.data
       }
     } catch(err) {
-      location.href = '/login'
+      location.href = '/api/login/federated/google'
     }
   }
 }
@@ -38,7 +38,6 @@ export default {
   <router-link to="/login">Login</router-link>
   <router-link to="/admin">Admin</router-link>
   <router-link to="/advisees">Advisees</router-link>
-  <a href="/logout">Logout</a>
 
   <div id="homeMainDiv" class="d-flex flex-column justify-content-center" style="background-color: lightgray;">
     <div id="homeMainRow" class="d-flex flex-row" style="flex-basis: 0; gap: 20px; margin: 2%;">

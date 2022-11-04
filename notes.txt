@@ -5,15 +5,18 @@ Modules
   Databases
     Tables
       Columns
-  Features
+  Functionalities
   Frontend
     Components
     Pages
+      Functionalities
+      Variations
 
 Express Server Module
-  Features:
+  Functionalities:
     Initializing Express Server {NPM Dependencies: (express), Status: (Done, server.js)}
     Main Function {Status: Done}
+    Serve Static Frontend {Status: (Done, server.js > HTML Middleware + Serving Frontend), NPM Dependencies: (connect-history-api-fallback, path)}
 
 Database Module
   Databases:
@@ -34,7 +37,7 @@ Database Module
       Tables:
         session Table
           Columns:
-  Features:
+  Functionalities:
     Utility Function: Opening/Creating Databases {Status: (Done, database/database.js > openOrCreateDB), NPM Dependencies: (sqlite3)}
     Utility Function: Creating Tables {Status: (Done, database/database.js > createTable), NPM Dependencies: (sqlite3)}
     Utility Function: Running SQL Commands {Status: (Done, database/database.js > run), NPM Dependencies: (sqlite3)}
@@ -44,25 +47,35 @@ Database Module
     Creating Initial Rows {Status: (Done, database > initial.js), NPM Dependencies: (sqlite3)}
 
 Authentication Module
-  Features:
+  Functionalities:
     Passport Setup {Status: (Done), NPM Dependencies: (passport, express-session, connect-sqlite3, passport-google-oidc)}
       Configure GoogleStrategy {Status: (Done)}
       Serialize and Deserialize Functions {Status: (Done)}
     Session {Status: (Done), Dependencies : (db Database > user Table, session Database > session Table)}
     Auth Router {Status: (to do: register, edit, delete)}
   APIs:
+    Get All Users API (Admin Only)
     Authorize User API {Status: Done}
+    Register User API (Admin Only) {To do: Allow easy registration of many users}
     Login User API {Status: Done}
     Logout User API {Status: Done}
-    Register User API {To do: Allow easy registration of many users}
-    Edit User API
-    Delete User API
+    Edit User API (Admin Only)
+    Delete User API (Admin Only)
   Frontend:
     Components:
       Header Component
     Pages:
       Admin Dashboard Page
+        Functionalities:
+          User Dashboard
+            Get All Users
+            Register User
+            Edit User
+            Delete User
       Login Page
+        Variations:
+          ?error=1
+          ?loggedOut=true
 
 Announcement Module
   APIs:
@@ -78,6 +91,5 @@ Announcement Module
       Home Page
 
 Enrollment Module
-
 
 Miscellaneous Module

@@ -14,6 +14,7 @@ async function createInitialTables(db) {
 
 async function createInitialRows(db) {
   // users
+  // student jmlicup@up.edu.ph
   await database.run(db, `
     INSERT INTO user (
       id, role, up_mail, first_name, last_name
@@ -23,6 +24,17 @@ async function createInitialRows(db) {
   `, [
     uuidv4(),
     'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup'
+  ], true)
+  // admin jpmlicup@gmail.com
+  await database.run(db, `
+    INSERT INTO user (
+      id, role, up_mail, first_name, last_name
+    ) VALUES (
+      ?, ?, ?, ?, ?
+    )
+  `, [
+    uuidv4(),
+    'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup'
   ], true)
 }
 

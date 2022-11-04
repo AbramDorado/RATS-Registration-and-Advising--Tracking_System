@@ -4,6 +4,7 @@ const session = require('express-session')
 const SQLiteStore = require('connect-sqlite3')(session)
 const GoogleStrategy = require('passport-google-oidc')
 const database = require('../database/database')
+const { v4: uuidv4 } = require('uuid');
 
 async function main(app) {
   return new Promise(async (resolve, reject) => {
@@ -77,6 +78,20 @@ async function configureGoogleStrategy(db) {
 // Routes
 const router = express.Router();
 
+  // get all users
+  router.post('/api/getUsers', adminOnly, async (req, res) => {
+    try {
+      const rows = await database.get(db, `
+        SELECT * FROM user
+      `, [], false)
+      res.send(rows)
+    } catch (error) {
+      console.log('error on /api/getUsers') // temp
+      console.log(error)
+      res.send('Error')
+    }
+  })
+
   // authorize
   router.post('/api/authorize', (req, res) => {
     if (req.user) {
@@ -86,6 +101,37 @@ const router = express.Router();
     }
   })
   // end authorize
+
+  // register
+  router.post('/api/register', adminOnly, async (req, res) => {
+    try {
+      // body checker
+      if (!req.body.role || !req.body.up_mail || !req.body.first_name || !req.body.last_name) {
+        // invalid body
+        throw 'Invalid request body'
+      } else {
+        const source = './database/db.sqlite'
+        const db = await database.openOrCreateDB(source)
+        const row = await database.get(db, `
+          SELECT * FROM user WHERE up_mail = ?
+        `, [req.user.up_mail], false)
+        if (row) {
+          // user with up_mail already exists
+          throw 'User with up_mail already exists'
+        } else {
+          // insert the new user
+          await database.run(db, `
+            INSERT INTO user (id, role, up_mail, first_name, last_name) VALUES (?, ?, ?, ?, ?)
+          `, [uuidv4(), req.body.role, req.body.up_mail, req.body.first_name, req.body.last_name], false)
+          res.send('Register success.')
+        }
+      }
+    } catch (error) {
+      console.log('Error on /api/register') // temp
+      console.log(error) // temp
+      res.status(401).send(error)
+    }
+  })
 
   // login
   router.get('/api/login/federated/google', passport.authenticate('google'))
@@ -107,11 +153,90 @@ const router = express.Router();
   // logout
   router.post('/api/logout', function(req, res) {
     req.logout(function(err) {
-      if (err) { res.redirect('/') }
-      res.redirect('/')
+      if (err) { res.json({"message": "Error on logout.", "error": err, "redirect": "/"}).send() }
+      res.json({"message": "Logout success.", "redirect": "/login?loggedOut=true"})
     })
   })
   // end logout
+
+  // edit user
+  router.post('/api/editUser', adminOnly, async (req, res) => {
+    try {
+      // body checker
+      if (!req.body.role || !req.body.up_mail || !req.body.first_name || !req.body.last_name) {
+        // invalid body
+        throw 'Invalid request body'
+      } else {
+        const source = './database/db.sqlite'
+        const db = await database.openOrCreateDB(source)
+        const row = await database.get(db, `
+          SELECT * FROM user WHERE up_mail = ?
+        `, [req.user.up_mail], false)
+        if (row) {
+          // user with up_mail exists
+          // update user
+          await database.run(db, `
+            UPDATE user SET role = ?, first_name = ?, last_name = ? WHERE up_mail = ? 
+          `, [req.body.role, req.body.first_name, req.body.last_name, req.body.up_mail], false)
+          res.send('Edit success.')
+        } else {
+          throw 'No user with that upmail'
+        }
+      }
+    } catch (error) {
+      console.log('Error on /api/editUser') // temp
+      console.log(error) // temp
+      res.status(401).send(error)
+    }
+  })
+  // end edit user
+
+  // delete user
+  router.post('/api/deleteUser', adminOnly, async (req, res) => {
+    try {
+      // body checker
+      if (!req.body.up_mail) {
+        // invalid body
+        throw 'Invalid request body'
+      } else {
+        const source = './database/db.sqlite'
+        const db = await database.openOrCreateDB(source)
+        const row = await database.get(db, `
+          SELECT * FROM user WHERE up_mail = ?
+        `, [req.user.up_mail], false)
+        if (row) {
+          // user with up_mail exists
+          // delete user
+          await database.run(db, `
+            DELETE FROM user WHERE up_mail = ?
+          `, [req.body.up_mail], false)
+          res.send('Delete success.')
+        } else {
+          throw 'No user with that upmail'
+        }
+      }
+    } catch (error) {
+      console.log('Error on /api/deleteUser') // temp
+      console.log(error) // temp
+      res.status(401).send(error)
+    }
+  })
+  // end delete user
+
+  // middlewares
+  function adminOnly(req, res, next) {
+    try {
+      if (req.user.role !== 'admin') {
+        res.status(401).send('Not admin.')
+      } else {
+        next()
+      }
+    } catch (error) {
+      console.log('Error on auth.js > adminOnly middleware') // temp
+      console.log(error) // temp
+      res.status(401).send()
+    }
+  }
 
 // end Routes
 

@@ -25,8 +25,20 @@ async function main() {
     await auth.configureGoogleStrategy(db)
     // end Passport Auth and Session
 
+    // Body Parser
+    const bodyParser = require('body-parser')
+    app.use(bodyParser.json())
+
     // Routers
     app.use('/', auth.router)
+
+    // HTML Middleware
+    const history = require('connect-history-api-fallback')
+    app.use(history())
+
+    // Serving Frontend
+    const path = require('path')
+    app.use(express.static(path.join(__dirname, 'dist'))) // added
 
   // Start express server
   app.listen(port, () => {
