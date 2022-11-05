@@ -62,7 +62,8 @@ async function configureGoogleStrategy(db) {
       passport.deserializeUser(function(user, cb) {
         process.nextTick(function() {
           // console.log('deserializeUser > user is', user) // temp
-          return cb(null, user);
+          const userWithoutId = {role: user.role, up_mail: user.up_mail, first_name: user.first_name, last_name: user.last_name}
+          return cb(null, userWithoutId);
         })
       })
 
@@ -81,7 +82,9 @@ const router = express.Router();
   // get all users
   router.post('/api/getUsers', adminOnly, async (req, res) => {
     try {
-      const rows = await database.get(db, `
+      const source = './database/db.sqlite'
+      const db = await database.openOrCreateDB(source)
+      const rows = await database.all(db, `
         SELECT * FROM user
       `, [], false)
       res.send(rows)
@@ -114,7 +117,7 @@ const router = express.Router();
         const db = await database.openOrCreateDB(source)
         const row = await database.get(db, `
           SELECT * FROM user WHERE up_mail = ?
-        `, [req.user.up_mail], false)
+        `, [req.body.up_mail], false)
         if (row) {
           // user with up_mail already exists
           throw 'User with up_mail already exists'

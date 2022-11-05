@@ -14,16 +14,15 @@ export default {
     Header, Footer
   },
   async mounted() {
-    const thiss = this
     try {
       const response = await this.axios.post('/api/authorize')
       // console.log('response to api/authorize is', response.status) // temp
       if (response.status == 200) {
         // console.log('response.data is', response.data)
-        thiss.user = response.data
+        this.user = response.data
       }
     } catch(err) {
-      location.href = '/api/login/federated/google'
+      location.href = '/api/login/federated/google' // disable this if testing
     }
   }
 }

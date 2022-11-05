@@ -89,4 +89,28 @@ async function get(db, sql, params, ignoreErrs) {
   })
 }
 
-module.exports = {openOrCreateDB, createTable, run, get}
+// All SQL Query
+async function all(db, sql, params, ignoreErrs) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      db.all(sql, params, (err, rows) => {
+        if (err) {
+          if (ignoreErrs) {
+            resolve()
+          } else {
+            throw err
+          }
+        } else {
+          // console.log('database.js > all success.') // temp
+          resolve(rows)
+        }
+      })
+    } catch (error) {
+      console.log('Error on database.js > all') // temp
+      console.log(error) // temp
+      reject()
+    }
+  })
+}
+
+module.exports = {openOrCreateDB, createTable, run, get, all}

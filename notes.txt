@@ -8,6 +8,7 @@ Modules
   Functionalities
   Frontend
     Components
+      Props
     Pages
       Functionalities
       Variations
@@ -17,6 +18,22 @@ Express Server Module
     Initializing Express Server {NPM Dependencies: (express), Status: (Done, server.js)}
     Main Function {Status: Done}
     Serve Static Frontend {Status: (Done, server.js > HTML Middleware + Serving Frontend), NPM Dependencies: (connect-history-api-fallback, path)}
+
+Frontend Module
+  Frontend Module Features:
+    1. Import font families in App.vue
+    2. Import background images for Header Component in /public
+    3. Import logos for Header Component in /public
+  Components:
+    Header Component {Dependencies: (Frontend Module Feature 1, Frontend Module Feature 2, Frontend Module Feature 3)}
+      Header Component Features:
+        1. Header Middle Div buttons changes depending on the type of user logged in. {Status: ()}
+           For role 'student': Home, Enrollment
+           For role 'adviser': Home, Advising
+           For role 'ocs': Home, Dashboard
+           For role 'admin': Home, Dashboard
+        
+  Pages:
 
 Database Module
   Databases:
@@ -42,25 +59,26 @@ Database Module
     Utility Function: Creating Tables {Status: (Done, database/database.js > createTable), NPM Dependencies: (sqlite3)}
     Utility Function: Running SQL Commands {Status: (Done, database/database.js > run), NPM Dependencies: (sqlite3)}
     Utility Function: Get SQL Query {Status: (Done, database/database.js > get), NPM Dependencies: (sqlite3)}
+    Utility Function: All SQL Query {Status: (Done, database/database.js > all), NPM Dependencies: (sqlite3)}
     Creating Initial Databases {Status: (Done, server.js > main), NPM Dependencies: (sqlite3)}
     Creating Initial Tables {Status: (Done, database > initial.js), NPM Dependencies: (sqlite3)}
     Creating Initial Rows {Status: (Done, database > initial.js), NPM Dependencies: (sqlite3)}
 
 Authentication Module
   Functionalities:
-    Passport Setup {Status: (Done), NPM Dependencies: (passport, express-session, connect-sqlite3, passport-google-oidc)}
+    Passport Setup {Status: (Done), NPM Dependencies: (connect-sqlite3, express-session, passport, passport-google-oidc, sqlite3)}
       Configure GoogleStrategy {Status: (Done)}
       Serialize and Deserialize Functions {Status: (Done)}
     Session {Status: (Done), Dependencies : (db Database > user Table, session Database > session Table)}
     Auth Router {Status: (to do: register, edit, delete)}
   APIs:
-    Get All Users API (Admin Only)
+    Get All Users API (Admin Only) {Status: Done}
     Authorize User API {Status: Done}
-    Register User API (Admin Only) {To do: Allow easy registration of many users}
+    Register User API (Admin Only){Status: (Partial), To do: (Allow easy registration of many users)}
     Login User API {Status: Done}
     Logout User API {Status: Done}
-    Edit User API (Admin Only)
-    Delete User API (Admin Only)
+    Edit User API (Admin Only) {Status: (Not Started)}
+    Delete User API (Admin Only) {Status: Done}
   Frontend:
     Components:
       Header Component
