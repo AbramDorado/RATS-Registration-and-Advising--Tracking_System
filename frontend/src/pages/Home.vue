@@ -22,7 +22,7 @@ export default {
         this.user = response.data
       }
     } catch(err) {
-      location.href = '/api/login/federated/google' // disable this if testing
+      location.href = '/login' // disable this if testing
     }
   }
 }

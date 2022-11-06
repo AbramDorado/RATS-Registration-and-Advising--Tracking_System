@@ -10,6 +10,7 @@ Modules
     Components
       Props
     Pages
+      Components
       Functionalities
       Variations
 
@@ -24,16 +25,26 @@ Frontend Module
     1. Import font families in App.vue
     2. Import background images for Header Component in /public
     3. Import logos for Header Component in /public
+    4. Popover Methods in App.vue (hideAllPopovers() and rvClicked())
   Components:
-    Header Component {Dependencies: (Frontend Module Feature 1, Frontend Module Feature 2, Frontend Module Feature 3)}
+    Header Component {Dependencies: (Frontend Module Feature 1, Frontend Module Feature 2, Frontend Module Feature 3, Frontend Module Feature 4)}
+      Props:
+        user{role, up_mail, first_name, last_name} Prop
       Header Component Features:
         1. Header Middle Div buttons changes depending on the type of user logged in. {Status: ()}
-           For role 'student': Home, Enrollment
-           For role 'adviser': Home, Advising
-           For role 'ocs': Home, Dashboard
-           For role 'admin': Home, Dashboard
-        
+          For role 'student': Home, Enrollment
+          For role 'adviser': Home, Advising
+          For role 'ocs': Home, Dashboard
+          For role 'admin': Home, Dashboard
+        2. Notifications Popover
+          To Do: Waiting for Enrollment Module for notifications
+        3. Profile Popover
+          User can logout
   Pages:
+    Home Page
+      Components:
+        Header Component
+        Footer Component
 
 Database Module
   Databases:
