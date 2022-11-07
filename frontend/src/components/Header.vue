@@ -151,8 +151,12 @@ export default {
 .hoverTransform {
   cursor: pointer;
   transition: transform 0.1s linear;
+  user-select: none;
 }
   .hoverTransform:hover {
     transform: scale(1.05);
+  }
+  .hoverTransform:active {
+    transform: scale(0.95);
   }
 </style>

@@ -8,12 +8,13 @@ export default {
   },
   data () {
     return {
-      user: {},
-      users: [],
+      disableDelete: false,
       reg_role: '',
       reg_up_mail: '',
       reg_first_name: '',
-      reg_last_name: ''
+      reg_last_name: '',
+      user: {},
+      users: [],
     }
   },
   methods: {
@@ -27,6 +28,18 @@ export default {
       } catch (error) {
         console.log('Error on Admin.vue > authorize()', error) // temp
         location.href = '/'
+      }
+    },
+    async deleteUser(userToDelete) {
+      if (this.disableDelete) {
+        return
+      }
+      try {
+        this.disableDelete = true
+        const response = await this.axios.post('/api/deleteUser', userToDelete)
+        location.href = '/admin'
+      } catch (error) {
+        console.log('Error on Admin.vue > deleteUser', error) // temp
       }
     },
     async getAllUsers() {
@@ -46,14 +59,6 @@ export default {
         console.log('Error on Admin.vue > registerUser', error) // temp
       }
     },
-    async deleteUser(userToDelete) {
-      try {
-        const response = await this.axios.post('/api/deleteUser', userToDelete)
-        location.href = '/admin'
-      } catch (error) {
-        console.log('Error on Admin.vue > deleteUser', error) // temp
-      }
-    }
   },
   async mounted() {
     await this.authorize()
@@ -70,13 +75,22 @@ export default {
     <!-- Users Dashboard -->
     <div class="userDashboard" style="background-color: #F8F6F0; border: 2px solid black; width: 100%;">
       <!-- Users Dashboard Header -->
-      <div id="usersHeader" class="d-flex flex-row" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; padding: 15px 20px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" class="bi-people-fill" viewBox="0 0 16 16" style="margin-top: 1px; margin-right: 5px;">
-          <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-          <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
-          <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
-        </svg>
-        <h2 style="color: white; font-family: Open_Sans_Bold; font-size: 24px; margin: 0;">Users Dashboard</h2>
+      <div id="usersHeader" class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; padding: 10px 15px;">
+        <!-- Header Left -->
+        <div class="d-flex flex-row">
+          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" class="bi-people-fill" viewBox="0 0 16 16" style="margin-top: 1px; margin-right: 5px;">
+            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+            <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+          </svg>
+          <h2 style="color: white; font-family: Open_Sans_Bold; font-size: 24px; margin: 0;">Users Dashboard</h2>
+        </div>
+        <!-- end Header Left -->
+        <!-- Header Right -->
+        <div class="hoverTransform">
+          <span style="background-image: url('/footer_bg.png'); background-position: center; background-repeat: no-repeat; background-size: cover; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Register Users</span>
+        </div>
+        <!-- end Header Right -->
       </div>
       <!-- end Users Dashboard Header -->
       <!-- Users Dashboard Body -->
@@ -130,9 +144,14 @@ export default {
 <style scoped>
 .hoverTransform {
   cursor: pointer;
+  user-select: none;
   transition: transform 0.1s linear;
 }
   .hoverTransform:hover {
     transform: scale(1.05);
+  }
+
+  .hoverTransform:active {
+    transform: scale(0.95);
   }
 </style>
