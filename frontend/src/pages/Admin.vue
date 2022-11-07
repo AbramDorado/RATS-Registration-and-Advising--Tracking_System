@@ -1,10 +1,14 @@
 <script>
 import Header from '../components/Header.vue'
+import Footer from '../components/Footer.vue'
 export default {
   name: 'Admin',
-  components: {Header},
+  components: {
+    Header, Footer
+  },
   data () {
     return {
+      user: {},
       users: [],
       reg_role: '',
       reg_up_mail: '',
@@ -19,6 +23,7 @@ export default {
         if (!response.data.role === 'admin') {
           throw 'Not admin'
         }
+        this.user = response.data
       } catch (error) {
         console.log('Error on Admin.vue > authorize()', error) // temp
         location.href = '/'
@@ -59,13 +64,55 @@ export default {
 
 <template>
 <div>
-  <Header />
-  Admin View
-  <h1>Get All Users:</h1>
-  <div v-for="(obj, index) in users" :key="index">
-    <p>{{users[index]}}</p>
-    <button @click="deleteUser(this.users[index])">Delete user</button>
+  <Header :user="this.user" />
+  <div class="adminMainDiv align-items-center d-flex justify-content-center" style="background-color: lightgray; padding: 30px;">
+    
+    <!-- Users Dashboard -->
+    <div class="userDashboard" style="background-color: #F8F6F0; border: 2px solid black; width: 100%;">
+      <!-- Users Dashboard Header -->
+      <div id="usersHeader" class="d-flex flex-row" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; padding: 15px 20px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" class="bi-people-fill" viewBox="0 0 16 16" style="margin-top: 1px; margin-right: 5px;">
+          <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1H7zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+          <path fill-rule="evenodd" d="M5.216 14A2.238 2.238 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.325 6.325 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1h4.216z"/>
+          <path d="M4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/>
+        </svg>
+        <h2 style="color: white; font-family: Open_Sans_Bold; font-size: 24px; margin: 0;">Users Dashboard</h2>
+      </div>
+      <!-- end Users Dashboard Header -->
+      <!-- Users Dashboard Body -->
+      <div style="padding: 15px 20px;">
+        <table class="fixed-table-body table table-responsive">
+          <thead>
+            <tr>
+              <th class="text-center" scope="col" style="max-width: 200px;">ID</th>
+              <th class="text-center" scope="col">Role</th>
+              <th class="text-center" scope="col">UP Mail</th>
+              <th class="text-center" scope="col">First Name</th>
+              <th class="text-center" scope="col">Last Name</th>
+              <th class="text-center" scope="col">Edit</th>
+              <th class="text-center" scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(obj, index) in users" :key="index">
+              <th class="text-center" scope="row" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].id}}</th>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].role}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].up_mail}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].first_name}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].last_name}}</td>
+              <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><div class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #751518; border-radius: 5px; color: white; cursor: pointer; width: 70px;"><span style="font-family: Open_Sans_Semi_Bold;">Edit</span></div></td>
+              <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><div class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #751518; border-radius: 5px; color: white; cursor: pointer; width: 70px;"><span style="font-family: Open_Sans_Semi_Bold;">Delete</span></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- end Users Dashboard Body -->
+    </div>
+    <!-- end Users Dashboard -->
+
+
   </div>
+
   <h1>Register User</h1>
   <span>role</span>
   <input v-model="reg_role" type="text">
@@ -76,9 +123,16 @@ export default {
   <span>last_name</span>
   <input v-model="reg_last_name" type="text">
   <button @click="registerUser(this.reg_role, this.reg_up_mail, this.reg_first_name, this.reg_last_name)">Register</button>
+  <Footer />
 </div>
 </template>
 
 <style scoped>
-
+.hoverTransform {
+  cursor: pointer;
+  transition: transform 0.1s linear;
+}
+  .hoverTransform:hover {
+    transform: scale(1.05);
+  }
 </style>

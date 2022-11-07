@@ -1,5 +1,5 @@
 <script>
-// import AnnouncementCard from '../components/AnnouncementCard.vue'
+import AnnouncementCard from '../components/AnnouncementCard.vue'
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
 export default {
@@ -10,17 +10,13 @@ export default {
     }
   },
   components: {
-    // AnnouncementCard, Header, Footer
-    Header, Footer
+    AnnouncementCard, Header, Footer
   },
   async mounted() {
     try {
       const response = await this.axios.post('/api/authorize')
       // console.log('response to api/authorize is', response.status) // temp
-      if (response.status == 200) {
-        // console.log('response.data is', response.data)
-        this.user = response.data
-      }
+      this.user = response.data
     } catch(err) {
       location.href = '/login' // disable this if testing
     }
@@ -31,13 +27,6 @@ export default {
 <template>
 <div class="d-flex flex-column">
   <Header :user="this.user" />
-
-  User: {{this.user}}
-  Home View
-  <router-link to="/login">Login</router-link>
-  <router-link to="/admin">Admin</router-link>
-  <router-link to="/advisees">Advisees</router-link>
-
   <div id="homeMainDiv" class="d-flex flex-column justify-content-center" style="background-color: lightgray;">
     <div id="homeMainRow" class="d-flex flex-row" style="flex-basis: 0; gap: 20px; margin: 2%;">
       <div style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px;">

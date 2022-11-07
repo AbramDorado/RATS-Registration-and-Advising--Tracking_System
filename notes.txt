@@ -40,11 +40,23 @@ Frontend Module
           To Do: Waiting for Enrollment Module for notifications
         3. Profile Popover
           User can logout
+    Footer Component
   Pages:
     Home Page
       Components:
         Header Component
         Footer Component
+    Admin Dashboard Page
+      Components:
+        Header Component
+        Footer Component
+      Functionalities:
+        User Dashboard
+          Get All Users
+          Register User
+          Edit User
+          Delete User
+
 
 Database Module
   Databases:
@@ -77,30 +89,23 @@ Database Module
 
 Authentication Module
   Functionalities:
-    Passport Setup {Status: (Done), NPM Dependencies: (connect-sqlite3, express-session, passport, passport-google-oidc, sqlite3)}
+    1. Passport Setup {Status: (Done), NPM Dependencies: (connect-sqlite3, express-session, passport, passport-google-oidc, sqlite3)}
       Configure GoogleStrategy {Status: (Done)}
       Serialize and Deserialize Functions {Status: (Done)}
-    Session {Status: (Done), Dependencies : (db Database > user Table, session Database > session Table)}
-    Auth Router {Status: (to do: register, edit, delete)}
+    2. Session {Status: (Done), Dependencies : (db Database > user Table, session Database > session Table)}
+    3. Auth Router {Status: (To do: Edit User API)}
   APIs:
-    Get All Users API (Admin Only) {Status: Done}
-    Authorize User API {Status: Done}
+    Get All Users API (Admin Only) {Status: (Done)}
+    Authorize User API {Status: (Done)}
     Register User API (Admin Only){Status: (Partial), To do: (Allow easy registration of many users)}
-    Login User API {Status: Done}
-    Logout User API {Status: Done}
+    Login User API {Status: (Done)}
+    Logout User API {Status: (Done)}
     Edit User API (Admin Only) {Status: (Not Started)}
-    Delete User API (Admin Only) {Status: Done}
+    Delete User API (Admin Only) {Status: (Done)}
   Frontend:
     Components:
       Header Component
     Pages:
-      Admin Dashboard Page
-        Functionalities:
-          User Dashboard
-            Get All Users
-            Register User
-            Edit User
-            Delete User
       Login Page
         Variations:
           ?error=1
