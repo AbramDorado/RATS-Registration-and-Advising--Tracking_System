@@ -20,7 +20,7 @@ export default {
         console.log('#accIconDiv clicked') // temp
         return
       }
-      console.log('not popover nor icon clicked')
+      // console.log('not popover nor icon clicked') // temp
       this.hideAllPopovers()
     }
   }

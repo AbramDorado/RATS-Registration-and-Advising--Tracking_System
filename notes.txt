@@ -97,7 +97,7 @@ Authentication Module
   APIs:
     Get All Users API (Admin Only) {Status: (Done)}
     Authorize User API {Status: (Done)}
-    Register User API (Admin Only){Status: (Partial), To do: (Allow easy registration of many users)}
+    Register User API (Admin Only){Status: (Partial), To do: (Allow easy registration of many users; possibly import from csv?, input handling frontend)}
     Login User API {Status: (Done)}
     Logout User API {Status: (Done)}
     Edit User API (Admin Only) {Status: (Not Started)}

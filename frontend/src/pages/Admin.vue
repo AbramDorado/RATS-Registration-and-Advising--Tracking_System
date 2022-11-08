@@ -50,6 +50,9 @@ export default {
         console.log('Error on Admin.vue > getAllUsers', error) // temp
       }
     },
+    hideDiv(ref) {
+      this.$refs[ref].style.display = 'none'
+    },
     async registerUser(role, up_mail, first_name, last_name) {
       try {
         const body = {role: role, up_mail: up_mail, first_name: first_name, last_name: last_name}
@@ -59,6 +62,9 @@ export default {
         console.log('Error on Admin.vue > registerUser', error) // temp
       }
     },
+    showDiv(ref) {
+      this.$refs[ref].style.display = 'flex'
+    }
   },
   async mounted() {
     await this.authorize()
@@ -70,10 +76,62 @@ export default {
 <template>
 <div>
   <Header :user="this.user" />
-  <div class="adminMainDiv align-items-center d-flex justify-content-center" style="background-color: lightgray; padding: 30px;">
-    
+  <!-- Admin Div -->
+  <div class="adminMainDiv align-items-center d-flex flex-column justify-content-center" style="background-color: lightgray; gap: 20px; padding: 30px;">
+    <!-- Register User Div -->
+    <div ref="registerUserDiv" class="flex-column registerUserDiv" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 100%;">
+      <!-- Register User Header -->
+      <div id="usersHeader" class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; padding: 10px 15px;">
+        <!-- Header Left -->
+        <div class="d-flex flex-row">
+          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" class="bi-person-plus-fill" viewBox="0 0 16 16" style="margin-top: 1px; margin-right: 5px;">
+            <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+            <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+          </svg>
+          <h2 style="color: white; font-family: Open_Sans_Bold; font-size: 24px; margin: 0;">Register User</h2>
+        </div>
+        <!-- end Header Left -->
+        <!-- Header Right -->
+        <div class="hoverTransform">
+          <span @click="hideDiv('registerUserDiv'); showDiv('usersDashboard')" style="background-image: url(/footer_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Cancel</span>
+        </div>
+        <!-- end Header Right -->
+      </div>
+      <!-- end Register User Header -->
+      <!-- Register User Body -->
+      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 70px;">
+        <!-- Column -->
+        <div class="d-flex flex-row" style="gap: 70px;">
+          <!-- Rows -->
+          <div class="d-flex flex-grow-1 flex-column">
+            <span style="font-family: Open_Sans_Bold;">Role</span>
+            <input v-model="reg_role" type="text" style="margin-bottom: 10px;">
+            <span style="font-family: Open_Sans_Bold;">First Name</span>
+            <input v-model="reg_first_name" type="text" style="margin-bottom: 10px;">
+          </div>
+          <!-- end Rows -->
+          <!-- Rows -->
+          <div class="d-flex flex-grow-1 flex-column">
+            <span style="font-family: Open_Sans_Bold;">UP Mail</span>
+            <input v-model="reg_up_mail" type="text" style="margin-bottom: 10px;">
+            <span style="font-family: Open_Sans_Bold;">Last Name</span>
+            <input v-model="reg_last_name" type="text" style="margin-bottom: 10px;">
+          </div>
+          <!-- end Rows -->
+        </div>
+        <!-- end Column -->
+        <!-- Register Button -->
+          <div @click="registerUser(this.reg_role, this.reg_up_mail, this.reg_first_name, this.reg_last_name)" class="align-items-center d-flex justify-content-center hoverTransform">
+            <span style="background-image: url(/footer_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Register User</span>
+          </div>
+        <!-- end Register Button -->        
+      </div>
+      <!-- end Register User Body -->
+    </div>
+    <!-- end Register User Div -->    
+
     <!-- Users Dashboard -->
-    <div class="userDashboard" style="background-color: #F8F6F0; border: 2px solid black; width: 100%;">
+    <div ref="usersDashboard" class="flex-column userDashboard" style="background-color: #F8F6F0; border: 2px solid black; width: 100%;">
       <!-- Users Dashboard Header -->
       <div id="usersHeader" class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; padding: 10px 15px;">
         <!-- Header Left -->
@@ -88,7 +146,7 @@ export default {
         <!-- end Header Left -->
         <!-- Header Right -->
         <div class="hoverTransform">
-          <span style="background-image: url('/footer_bg.png'); background-position: center; background-repeat: no-repeat; background-size: cover; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Register Users</span>
+          <span @click="hideDiv('usersDashboard'); showDiv('registerUserDiv')" style="background-image: url(/footer_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Register User</span>
         </div>
         <!-- end Header Right -->
       </div>
@@ -115,7 +173,7 @@ export default {
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].first_name}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].last_name}}</td>
               <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><div class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #751518; border-radius: 5px; color: white; cursor: pointer; width: 70px;"><span style="font-family: Open_Sans_Semi_Bold;">Edit</span></div></td>
-              <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><div class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #751518; border-radius: 5px; color: white; cursor: pointer; width: 70px;"><span style="font-family: Open_Sans_Semi_Bold;">Delete</span></div></td>
+              <td @click="deleteUser(users[index])" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><div class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #751518; border-radius: 5px; color: white; cursor: pointer; width: 70px;"><span style="font-family: Open_Sans_Semi_Bold;">Delete</span></div></td>
             </tr>
           </tbody>
         </table>
@@ -123,20 +181,8 @@ export default {
       <!-- end Users Dashboard Body -->
     </div>
     <!-- end Users Dashboard -->
-
-
   </div>
-
-  <h1>Register User</h1>
-  <span>role</span>
-  <input v-model="reg_role" type="text">
-  <span>up_mail</span>
-  <input v-model="reg_up_mail" type="text">
-  <span>first_name</span>
-  <input v-model="reg_first_name" type="text">
-  <span>last_name</span>
-  <input v-model="reg_last_name" type="text">
-  <button @click="registerUser(this.reg_role, this.reg_up_mail, this.reg_first_name, this.reg_last_name)">Register</button>
+  <!-- end Admin Div -->
   <Footer />
 </div>
 </template>
