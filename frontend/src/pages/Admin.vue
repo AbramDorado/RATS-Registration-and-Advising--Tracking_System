@@ -44,7 +44,7 @@ export default {
     },
     async getAllUsers() {
       try {
-        const response = await this.axios.post('/api/getUsers')
+        const response = await this.axios.post('/api/getUsers', {column: 'role', order: 'ASC'})
         this.users = response.data
       } catch (error) {
         console.log('Error on Admin.vue > getAllUsers', error) // temp
