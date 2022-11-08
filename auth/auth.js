@@ -83,7 +83,6 @@ const router = express.Router();
   router.post('/api/getUsers', adminOnly, async (req, res) => {
     try {
       // req.body.column req.body.order e.g. 'up_mail ASC', 'first_name DESC'
-      console.log(req.body.column, req.body.order) // temp
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       const rows = await database.all(db, `

@@ -92,8 +92,6 @@ async function get(db, sql, params, ignoreErrs) {
 // All SQL Query
 async function all(db, sql, params, ignoreErrs) {
   return new Promise(async (resolve, reject) => {
-    console.log(sql) // temp
-    console.log(params) // temp
     try {
       db.all(sql, params, (err, rows) => {
         if (err) {
