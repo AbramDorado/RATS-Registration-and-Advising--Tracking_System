@@ -86,8 +86,7 @@ const router = express.Router();
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       const rows = await database.all(db, `
-        SELECT * FROM user ORDER BY
-      ` + req.body.column + ' ' + req.body.order, [], false)
+        SELECT * FROM user ORDER BY ${req.body.column} ${req.body.order}`, [], false)
       res.send(rows)
     } catch (error) {
       console.log('error on /api/getUsers') // temp
