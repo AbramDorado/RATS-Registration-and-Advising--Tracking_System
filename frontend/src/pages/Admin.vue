@@ -1,14 +1,24 @@
 <script>
+import 'vue3-easy-data-table/dist/style.css'
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
+import Vue3EasyDataTable from 'vue3-easy-data-table'
 export default {
   name: 'Admin',
   components: {
-    Header, Footer
+    Header, Footer, Vue3EasyDataTable
   },
   data () {
     return {
       disableDelete: false,
+      headers: [
+        {text: 'Role', value: 'role'},
+        {text: 'UP Mail', value: 'up_mail'},
+        {text: 'First Name', value: 'first_name'},
+        {text: 'Last Name', value: 'last_name'},
+        {text: 'Edit', value: 'edit'},
+        {text: 'Delete', value: 'delete'}
+      ],
       reg_role: '',
       reg_up_mail: '',
       reg_first_name: '',
@@ -53,6 +63,9 @@ export default {
     hideDiv(ref) {
       this.$refs[ref].style.display = 'none'
     },
+    myAlert(item) {
+      console.log(item)
+    },
     async registerUser(role, up_mail, first_name, last_name) {
       try {
         const body = {role: role, up_mail: up_mail, first_name: first_name, last_name: last_name}
@@ -76,6 +89,20 @@ export default {
 <template>
 <div>
   <Header :user="this.user" />
+
+  <Vue3EasyDataTable @click-row="" show-index alternating buttons-pagination :headers="headers" :items="users">
+    <template #item-edit="item">
+      <div class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #751518; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
+        <span @click="editUser(item)" style="font-family: Open_Sans_Semi_Bold;">Edit</span>
+      </div>
+    </template>
+    <template #item-delete="item">
+      <div class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #751518; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
+        <span @click="deleteUser(item)" style="font-family: Open_Sans_Semi_Bold;">Delete</span>
+      </div>
+    </template>    
+  </Vue3EasyDataTable>
+
   <!-- Admin Div -->
   <div class="adminMainDiv align-items-center d-flex flex-column justify-content-center" style="background-color: lightgray; gap: 20px; padding: 30px;">
     <!-- Register User Div -->
