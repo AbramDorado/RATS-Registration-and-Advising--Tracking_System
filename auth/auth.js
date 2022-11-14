@@ -86,7 +86,7 @@ const router = express.Router();
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       const rows = await database.all(db, `
-        SELECT * FROM user ORDER BY ${req.body.column} ${req.body.order}`, [], false)
+        SELECT role, up_mail, first_name, last_name FROM user ORDER BY ${req.body.column} ${req.body.order}`, [], false)
       res.send(rows)
     } catch (error) {
       console.log('error on /api/getUsers') // temp
@@ -125,7 +125,7 @@ const router = express.Router();
           // insert the new user
           await database.run(db, `
             INSERT INTO user (id, role, up_mail, first_name, last_name) VALUES (?, ?, ?, ?, ?)
-          `, [uuidv4(), req.body.role, req.body.up_mail, req.body.first_name, req.body.last_name], false)
+          `, [uuidv4(), req.body.role.toLowerCase(), req.body.up_mail.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase()], false)
           res.send('Register success.')
         }
       }
@@ -180,7 +180,7 @@ const router = express.Router();
           // update user
           await database.run(db, `
             UPDATE user SET role = ?, first_name = ?, last_name = ? WHERE up_mail = ? 
-          `, [req.body.role, req.body.first_name, req.body.last_name, req.body.up_mail], false)
+          `, [req.body.role.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.up_mail.toLowerCase()], false)
           res.send('Edit success.')
         } else {
           throw 'No user with that upmail'
