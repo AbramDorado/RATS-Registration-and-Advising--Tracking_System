@@ -8,36 +8,37 @@ export default {
   },
   data () {
     return {
-      batchUploadProgress: '',
-      currentPage: 1,
-      currentPage_static: 1,
-      del_user_role: '',
-      del_user_up_mail: '',
-      del_user_first_name: '',
-      del_user_last_name: '',
-      disableDelete: false,
-      edit_role: '',
-      edit_up_mail: '',
-      edit_first_name: '',
-      edit_last_name: '',
-      filterByRole: '',
-      reg_role: '',
-      reg_up_mail: '',
-      reg_first_name: '',
-      reg_last_name: '',
-      registerUserEnabled: true,
-      resultsLimit: 50,
-      resultsLimit_static: 50,
-      searchString: '',
-      sortBy: 'role',
-      sortOrder: 'ASC',
-      user: {},
-      users: [],
-      usersCount: 0
+      batchUploadProgress: '', // Shows log/history of batch upload
+      currentPage: 1, // v-model with input; used in pagination
+      currentPage_static: 1, // Corrected value
+      del_user_role: '', // Used in deleteUser() and deleteUserAPI()
+      del_user_up_mail: '', // Used in deleteUser() and deleteUserAPI()
+      del_user_first_name: '', // Used in deleteUser() and deleteUserAPI()
+      del_user_last_name: '', // Used in deleteUser() and deleteUserAPI()
+      deleteDisabled: false, // For spam-handling deleteUserAPI()
+      edit_role: '', // Used in editUser()
+      edit_up_mail: '', // Used in editUser()
+      edit_first_name: '', // Used in editUser()
+      edit_last_name: '', // Used in editUser()
+      filterByRole: '', // Passed in getAllUsers API
+      reg_role: '', // Used in registerUser()
+      reg_up_mail: '', // Used in registerUser()
+      reg_first_name: '', // Used in registerUser()
+      reg_last_name: '', // Used in registerUser()
+      registerUserDisabled: true, // For spam-handling registerUser()
+      resultsLimit: 50, // v-model with input; used in pagination
+      resultsLimit_static: 50, // Correct value
+      searchString: '', // Passed in getAllUsers API
+      sortBy: 'role', // Passed in getAllUsers API
+      sortOrder: 'ASC', // Passed in getAllUsers API
+      user: {}, // Stores response of authorizeAPI; passed as prop in Header component
+      users: [], // Main list of rows shown in table
+      usersCount: 0, // Stores reponse of countUsers API
+      view_user: {} // Used in viewUser()
     }
   },
   computed: {
-    pages() {
+    pages() { // Returns number of pages needed to store all rows in groups 
       return Math.ceil(this.usersCount / this.resultsLimit_static)
     }
   },
@@ -56,18 +57,14 @@ export default {
     },
     batchRegister() {
       try {
-        // console.log(this.$refs['batchUploadCSV'].files[0]) // temp
-        var myReader = new FileReader();
+        var myReader = new FileReader()
         if (this.$refs.batchUploadCSV) {
           myReader.readAsText(this.$refs.batchUploadCSV.files[0])
         }
         var thiss = this
         myReader.onload = async function(e) {
           var content = myReader.result;
-          // split csv file using "\n" for new line ( each row)
           var lines = content.split("\r");
-          // loop all rows
-          thiss.batchUploadProgress += '\n'
           thiss.batchUploadProgress += `\nRegistering ${lines.length-1} users...`
           for (let count = 1; count < lines.length; count++) {
             // split each row content
@@ -82,25 +79,20 @@ export default {
             userObj.up_mail = rowContent[1]
             userObj.first_name = rowContent[2]
             userObj.last_name = rowContent[3]
-            console.log('userObj is', userObj) // temp
-            thiss.batchUploadProgress += '\n'
-            thiss.batchUploadProgress += `Registering ${userObj.up_mail}...`
-            console.log('thiss.batchUploadProgress is', thiss.batchUploadProgress) // temp
+            thiss.batchUploadProgress += `\nRegistering ${userObj.up_mail}...`
             try {
               const response = await thiss.axios.post('/api/register', userObj)
-              thiss.batchUploadProgress += '\n'
-              thiss.batchUploadProgress += `Successfully registered ${userObj.up_mail}...`
+              thiss.batchUploadProgress += `\nSuccessfully registered ${userObj.up_mail}...`
             } catch (error) {
-              thiss.batchUploadProgress += '\n'
-              thiss.batchUploadProgress += `Error on registering ${userObj.up_mail}: ${error.response.data}`
+              thiss.batchUploadProgress += `\nError on registering ${userObj.up_mail}: ${error.response.data}`
             }
-            
           }
         }
       } catch (error) {
         console.log('Error on Admin.vue > batchRegister') // temp
-        console.log(error)
+        console.log(error) // temp
         alert('Error on batchRegister()') // temp
+        thiss.batchUploadProgress += `Error on batchRegister(): ${error}` // temp
       }
     },
     clearBatchUploadDiv() {
@@ -149,11 +141,11 @@ export default {
       this.del_user_last_name = userToDelete.last_name
     },
     async deleteUserAPI() {
-      if (this.disableDelete) {
+      if (this.deleteDisabled) {
         return
       }
       try {
-        this.disableDelete = true
+        this.deleteDisabled = true
         const userToDelete = {}
         userToDelete.role = this.del_user_role
         userToDelete.up_mail = this.del_user_up_mail
@@ -163,7 +155,7 @@ export default {
         await this.getAllUsers()
         this.hideDiv('deleteUserDiv')
         this.showDiv('usersDashboard')        
-        this.disableDelete = false
+        this.deleteDisabled = false
       } catch (error) {
         console.log('Error on Admin.vue > deleteUser', error) // temp
       }
@@ -212,7 +204,6 @@ export default {
       }
     },
     hideDiv(ref) {
-      console.log('hiding div', ref) // temp
       this.$refs[ref].style.display = 'none'
     },
     async nextPage() {
@@ -229,34 +220,35 @@ export default {
     },
     async registerUser(role, up_mail, first_name, last_name) {
       try {
-        if (!this.registerUserEnabled) {
+        if (this.registerUserDisabled) {
           return
         } else if (!role || !up_mail || !first_name || !last_name) {
           alert('Input cannot be blank')
           return
         } else {
-          this.registerUserEnabled = false
+          this.registerUserDisabled = true
           const body = {role: role, up_mail: up_mail, first_name: first_name, last_name: last_name}
           const response = await this.axios.post('/api/register', body)
-          this.registerUserEnabled = true
           await this.getAllUsers()
           this.clearRegisterUserInputs();
+          this.registerUserDisabled = false
           this.hideDiv('registerUserDiv');
           this.showDiv('usersDashboard')
         }
       } catch (error) {
         console.log('Error on Admin.vue > registerUser', error) // temp
-        this.registerUserEnabled = true
+        alert('Error on register') // temp
+        this.registerUserDisabled = false
       }
     },
     showDiv(ref) {
-      console.log('showing div', ref) // temp
       this.$refs[ref].style.display = 'flex'
     },
     viewUser(user) {
-      // To do
-      alert('Unimplemented: View user') // temp
-      console.log('viewUser() user is', user) // temp
+      this.view_user = user
+      this.hideDiv('usersDashboard')
+      this.showDiv('viewUserDiv')
+      // To do: Retrieve other info
     }
 
   },
@@ -456,6 +448,45 @@ export default {
       <!-- end Register User Body -->
     </div>    
     <!-- end Register User Div -->
+    <!-- View User Div -->
+    <div ref="viewUserDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
+      <!-- View User Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- View User Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <!-- View User Header Left Div Icon -->
+          <i class="align-items-center bi bi-person-x-fill d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">View User</span>
+          <!-- end View User Header Left Div Icon -->
+        </div>
+        <!-- end Delete User Header Left Div -->
+        <!-- Delete User Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Close -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('viewUserDiv'); showDiv('usersDashboard')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Close</span>
+          </div>
+          <!-- end Close -->          
+        </div>
+        <!-- end View User Header Right Div -->
+      </div>
+      <!-- end View User Header -->
+      <!-- View User Body -->
+      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
+        <span>Role</span>
+        <span>{{this.view_user.role}}</span>
+        <span>UP Mail</span>
+        <span>{{this.view_user.up_mail}}</span>
+        <span>First Name</span>
+        <span>{{this.view_user.first_name}}</span>
+        <span>Last Name</span>
+        <span>{{this.view_user.last_name}}</span>
+        <!-- Add Other Info Here -->
+        <span>Add Other Info Here</span>
+      </div>
+      <!-- end View User Body -->      
+    </div>
+    <!-- end View User Div -->    
     <!-- User Dashboard -->
     <div ref="usersDashboard" class="flex-column" style="background-color: #f3f3f3; border: 2px solid black; display: flex; min-height: 300px; width: 1200px;">
       <!-- User Dashboard Header -->

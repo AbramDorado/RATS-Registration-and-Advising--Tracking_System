@@ -1,15 +1,15 @@
 <script>
 export default {
   name: 'Header',
-  props: ['user'],
+  props: ['user'], // Stores the user passed from parent's Authorize API call
   data() {
     return {
-      popOversArr: ['notifsPopover', 'accPopover']
+      popOversArr: ['notifsPopover', 'accPopover'] // Used in hideAllPopovers()
     }
   },
   computed: {
-    formatted_name() {
-      return this.user.first_name + " " + this.user.last_name
+    formatted_name() { // Used in Account Popover
+      return this.user.first_name + ' ' + this.user.last_name
     } 
   },  
   methods: {
@@ -53,43 +53,42 @@ export default {
 </script>
 
 <template>
-<!-- Header Component -->
 <!-- Header Main Div -->
-<div class="headerDiv align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; color: white; height: 92px; padding: 14px 23px 13px 23px; user-select: none;">
+<div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; color: white; height: 92px; padding: 14px 23px 13px 23px; user-select: none;">
   <!-- Header Left Div -->
   <div @click="redirect('/')" class="align-items-center d-flex flex-row" style="cursor: pointer;">
-      <img src="/UPM_CAS_logo.png" alt="UPM CAS Logo" style="height: 65px; margin-right: 8px; width: 65px; ">
-      <h1 style="font-family: IBM_Plex_Sans_Condensed_Bold; font-size: 40px; margin: 0;">CAS R.A.T.</h1>
-    </div>
+    <img src="/UPM_CAS_logo.png" alt="UPM CAS Logo" style="height: 65px; margin-right: 8px; width: 65px; ">
+    <h1 style="font-family: IBM_Plex_Sans_Condensed_Bold; font-size: 40px; margin: 0;">CAS R.A.T.</h1>
+  </div>
   <!-- end Header Left Div -->
   <!-- Header Middle Div -->
   <div class="d-flex flex-row" style="gap: 30px;">
-      <!-- Home Button -->
-      <div class="hoverTransform align-items-center d-flex flex-row">
-        <!-- Home Icon -->
-        <i class="align-items-center bi bi-house-fill d-flex" style="color: white; font-size: 22px; margin-right: 5px;"></i>
-        <!-- end Home Icon -->
-        <h3 @click="this.redirect('/')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Home</h3>
-      </div>
-      <!-- end Home Button -->
-      <!-- Advising Button -->
-      <div class="hoverTransform align-items-center d-flex flex-row">
-        <!-- Advising Icon -->
-        <i class="align-items-center bi bi-ui-checks d-flex" style="color: white; font-size: 22px; margin-right: 5px;"></i>
-        <!-- end Advising Icon -->
-        <h3 v-if="user.role === 'student'" @click="this.redirect('/ecf')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Enrollment</h3>
-        <h3 v-else-if="user.role === 'adviser'" @click="this.redirect('/advising')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Advising</h3>
-        <h3 v-else-if="user.role === 'ocs'" @click="this.redirect('/ocs')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Dashbord</h3>
-        <h3 v-else @click="this.redirect('/admin')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Dashboard</h3>
-      </div>
-      <!-- end Enrollment Button -->
-      <div class="hoverTransform align-items-center d-flex flex-row">
-        <!-- Schedule of Classes Icon -->
-        <i class="align-items-center bi bi-calendar-week-fill d-flex" style="color: white; font-size: 22px; margin-right: 5px;"></i>
-        <!-- end Schedule of Classes Icon -->
-        <h3 style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Schedule of Classes</h3>
-      </div>
+    <!-- Home Button -->
+    <div class="hoverTransform align-items-center d-flex flex-row">
+      <!-- Home Icon -->
+      <i class="align-items-center bi bi-house-fill d-flex" style="color: white; font-size: 22px; margin-right: 5px;"></i>
+      <!-- end Home Icon -->
+      <h3 @click="this.redirect('/')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Home</h3>
     </div>
+    <!-- end Home Button -->
+    <!-- Advising Button -->
+    <div class="hoverTransform align-items-center d-flex flex-row">
+      <!-- Advising Icon -->
+      <i class="align-items-center bi bi-ui-checks d-flex" style="color: white; font-size: 22px; margin-right: 5px;"></i>
+      <!-- end Advising Icon -->
+      <h3 v-if="user.role === 'student'" @click="this.redirect('/advising')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Advising</h3>
+      <h3 v-else-if="user.role === 'adviser'" @click="this.redirect('/adviser')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Dashboard</h3>
+      <h3 v-else-if="user.role === 'ocs'" @click="this.redirect('/ocs')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Dashboard</h3>
+      <h3 v-else @click="this.redirect('/admin')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Dashboard</h3>
+    </div>
+    <!-- end Enrollment Button -->
+    <div class="hoverTransform align-items-center d-flex flex-row">
+      <!-- Schedule of Classes Icon -->
+      <i class="align-items-center bi bi-calendar-week-fill d-flex" style="color: white; font-size: 22px; margin-right: 5px;"></i>
+      <!-- end Schedule of Classes Icon -->
+      <h3 style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Schedule of Classes</h3>
+    </div>
+  </div>
   <!-- end Header Middle Div -->
 
   <!-- Header Right Div -->
@@ -138,7 +137,6 @@ export default {
     <!-- end Account Icon -->
     </div>
   <!-- end Header Right Div -->
-
 </div>
 <!-- end Header Main Div -->
 </template>
