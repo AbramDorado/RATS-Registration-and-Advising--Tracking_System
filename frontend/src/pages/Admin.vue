@@ -597,7 +597,6 @@ export default {
     <!-- end User Dashboard -->
   </div>
   <!-- end Admin Div -->
-
   <Footer />
 </div>
 </template>
