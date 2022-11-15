@@ -8,18 +8,26 @@ export default {
   },
   data () {
     return {
+      batchUploadProgress: '',
       currentPage: 1,
+      currentPage_static: 1,
+      del_user_role: '',
+      del_user_up_mail: '',
+      del_user_first_name: '',
+      del_user_last_name: '',
       disableDelete: false,
       edit_role: '',
       edit_up_mail: '',
       edit_first_name: '',
       edit_last_name: '',
+      filterByRole: '',
       reg_role: '',
       reg_up_mail: '',
       reg_first_name: '',
       reg_last_name: '',
       registerUserEnabled: true,
-      resultsLimit: 20,
+      resultsLimit: 50,
+      resultsLimit_static: 50,
       searchString: '',
       sortBy: 'role',
       sortOrder: 'ASC',
@@ -30,7 +38,7 @@ export default {
   },
   computed: {
     pages() {
-      return Math.ceil(this.usersCount / this.resultsLimit)
+      return Math.ceil(this.usersCount / this.resultsLimit_static)
     }
   },
   methods: {
@@ -46,9 +54,58 @@ export default {
         location.href = '/'
       }
     },
-    batchUpload() {
-      // to do
-      alert('Unimplemented: Batch Upload') // temp
+    batchRegister() {
+      try {
+        // console.log(this.$refs['batchUploadCSV'].files[0]) // temp
+        var myReader = new FileReader();
+        if (this.$refs.batchUploadCSV) {
+          myReader.readAsText(this.$refs.batchUploadCSV.files[0])
+        }
+        var thiss = this
+        myReader.onload = async function(e) {
+          var content = myReader.result;
+          // split csv file using "\n" for new line ( each row)
+          var lines = content.split("\r");
+          // loop all rows
+          thiss.batchUploadProgress += '\n'
+          thiss.batchUploadProgress += `\nRegistering ${lines.length-1} users...`
+          for (let count = 1; count < lines.length; count++) {
+            // split each row content
+            var rowContent = lines[count].split(",");
+            var userObj = {}
+            if (count === 0) {
+              // if header row
+              userObj.role = rowContent[0]
+            } else {
+              userObj.role = rowContent[0].slice(1)
+            }
+            userObj.up_mail = rowContent[1]
+            userObj.first_name = rowContent[2]
+            userObj.last_name = rowContent[3]
+            console.log('userObj is', userObj) // temp
+            thiss.batchUploadProgress += '\n'
+            thiss.batchUploadProgress += `Registering ${userObj.up_mail}...`
+            console.log('thiss.batchUploadProgress is', thiss.batchUploadProgress) // temp
+            try {
+              const response = await thiss.axios.post('/api/register', userObj)
+              thiss.batchUploadProgress += '\n'
+              thiss.batchUploadProgress += `Successfully registered ${userObj.up_mail}...`
+            } catch (error) {
+              thiss.batchUploadProgress += '\n'
+              thiss.batchUploadProgress += `Error on registering ${userObj.up_mail}: ${error.response.data}`
+            }
+            
+          }
+        }
+      } catch (error) {
+        console.log('Error on Admin.vue > batchRegister') // temp
+        console.log(error)
+        alert('Error on batchRegister()') // temp
+      }
+    },
+    clearBatchUploadDiv() {
+      this.$refs.batchUploadCSV.value = ''
+      this.batchUploadProgress = ''
     },
     clearRegisterUserInputs() {
       this.reg_role = ''
@@ -59,16 +116,54 @@ export default {
     consoleLog(msg) {
       console.log(msg)
     },
-    async deleteUser(userToDelete) {
+    async correctLimits() {
+      this.currentPage_static = this.currentPage
+      this.resultsLimit_static = this.resultsLimit
+      if (this.currentPage_static < 1) {
+        this.currentPage_static = 1
+        this.currentPage = 1
+      }
+      if (this.currentPage_static > this.pages) {
+        this.currentPage_static = this.pages
+        this.currentPage = this.pages
+      }
+      if (this.resultsLimit_static < 1) {
+        this.resultsLimit_static = 1
+        this.resultsLimit = 1
+      }
+      if (this.resultsLimit_static > 200) {
+        this.resultsLimit_static = 200
+        this.resultsLimit = 200
+      }
+      if (this.resultsLimit_static > this.usersCount) {
+        this.resultsLimit_static = this.usersCount
+        this.resultsLimit = this.usersCount
+      }
+    },
+    deleteUser(userToDelete) {
+      this.hideDiv('usersDashboard')
+      this.showDiv('deleteUserDiv')
+      this.del_user_role = userToDelete.role
+      this.del_user_up_mail = userToDelete.up_mail
+      this.del_user_first_name = userToDelete.first_name
+      this.del_user_last_name = userToDelete.last_name
+    },
+    async deleteUserAPI() {
       if (this.disableDelete) {
         return
       }
       try {
         this.disableDelete = true
-        // To do: Confirmation
-        alert('To do: Confirmation')
+        const userToDelete = {}
+        userToDelete.role = this.del_user_role
+        userToDelete.up_mail = this.del_user_up_mail
+        userToDelete.first_name = this.del_user_first_name
+        userToDelete.last_name = this.del_user_last_name
         const response = await this.axios.post('/api/deleteUser', userToDelete)
         await this.getAllUsers()
+        this.hideDiv('deleteUserDiv')
+        this.showDiv('usersDashboard')        
+        this.disableDelete = false
       } catch (error) {
         console.log('Error on Admin.vue > deleteUser', error) // temp
       }
@@ -100,7 +195,9 @@ export default {
     async getAllUsers() {
       try {
         await this.getUsersCount()
-        const response = await this.axios.post('/api/getUsers', {column: this.sortBy, order: this.sortOrder, offset: (this.currentPage-1) * this.resultsLimit, limit: this.resultsLimit, searchString: this.searchString})
+        this.resultsLimit = 50 // reset to default
+        await this.correctLimits()
+        const response = await this.axios.post('/api/getUsers', {column: this.sortBy, order: this.sortOrder, offset: (this.currentPage_static-1) * this.resultsLimit_static, limit: this.resultsLimit_static, searchString: this.searchString, filterByRole: this.filterByRole})
         this.users = response.data
       } catch (error) {
         console.log('Error on Admin.vue > getAllUsers', error) // temp
@@ -108,7 +205,7 @@ export default {
     },
     async getUsersCount() {
       try {
-        const response = await this.axios.post('/api/countUsers')
+        const response = await this.axios.post('/api/countUsers', {filterByRole: this.filterByRole})
         this.usersCount = response.data.count
       } catch (error) {
         console.log('Error on Admin.vue > getUsersCount', error) // temp
@@ -174,7 +271,75 @@ export default {
 <div class="d-flex flex-column justify-content-between" style="min-height: 100vh;">
   <Header :user="this.user" />
   <!-- Admin Div -->
-  <div class="align-items-center d-flex flex-column justify-content-center" style="background-color: white; gap: 20px; padding: 30px;">  
+  <div class="align-items-center d-flex flex-column justify-content-center" style="background-color: white; gap: 20px; padding: 30px;">
+    <!-- Batch Upload Div -->
+    <div ref="batchUploadDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
+      <!-- Batch Upload Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- Batch Upload Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <!-- Batch Upload Header Left Div Icon -->
+          <i class="align-items-center bi bi-person-plus-fill d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Batch Upload Users</span>
+          <!-- end Batch Upload Header Left Div Icon -->
+        </div>
+        <!-- end Batch Upload Header Left Div -->
+        <!-- Batch Upload Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Close -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('batchUploadDiv'); getAllUsers(); showDiv('usersDashboard')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Close</span>
+          </div>
+          <!-- end Close -->          
+        </div>
+        <!-- end Batch Upload Header Right Div -->
+      </div>
+      <!-- end Batch Upload Header -->
+      <!-- Batch Upload Body -->
+      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
+        <span style="font-family: Open_Sans_Bold;">Upload CSV containing users</span>
+        <input ref="batchUploadCSV" type="file">
+        <button @click="batchRegister()">Batch Register</button>
+        <span>Current Progress: <span style="white-space: pre-line">{{batchUploadProgress}}</span></span>
+      </div>
+      <!-- end Batch Upload Body -->
+    </div>
+    <!-- end Batch Upload Div -->
+    <!-- Delete User Div -->
+    <div ref="deleteUserDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
+      <!-- Delete User Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- Delete User Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <!-- Delete User Header Left Div Icon -->
+          <i class="align-items-center bi bi-person-x-fill d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Delete User</span>
+          <!-- end Delete User Header Left Div Icon -->
+        </div>
+        <!-- end Delete User Header Left Div -->
+        <!-- Delete User Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Cancel -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('deleteUserDiv'); showDiv('usersDashboard')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
+          </div>
+          <!-- end Cancel -->          
+        </div>
+        <!-- end Delete User Header Right Div -->
+      </div>
+      <!-- end Delete User Header -->
+      <!-- Delete User Body -->
+      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
+        <span>Confirm Deletion</span>
+        <span>Role: <span style="text-transform: capitalize;">{{this.del_user_role}}</span></span>
+        <span>UP Mail: <span>{{this.del_user_up_mail}}</span></span>
+        <span>First Name: <span style="text-transform: capitalize;">{{this.del_user_first_name}}</span></span>
+        <span>Last Name: <span style="text-transform: capitalize;">{{this.del_user_last_name}}</span></span>
+        <button @click="deleteUserAPI()">Delete</button>
+      </div>
+      <!-- end Delete User Body -->      
+    </div>
+    <!-- end Delete User Div -->
     <!-- Edit User Div -->
     <div ref="editUserDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
       <!-- Edit User Header -->
@@ -232,7 +397,7 @@ export default {
       </div>
       <!-- end Edit User Body -->
     </div>    
-    <!-- end Edit User -->
+    <!-- end Edit User Div -->
     <!-- Register User Div -->
     <div ref="registerUserDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
       <!-- Register User Header -->
@@ -290,7 +455,7 @@ export default {
       </div>
       <!-- end Register User Body -->
     </div>    
-    <!-- end Register User -->
+    <!-- end Register User Div -->
     <!-- User Dashboard -->
     <div ref="usersDashboard" class="flex-column" style="background-color: #f3f3f3; border: 2px solid black; display: flex; min-height: 300px; width: 1200px;">
       <!-- User Dashboard Header -->
@@ -307,7 +472,7 @@ export default {
         <div class="align-items-center d-flex flex-row" style="gap: 10px;">
           <!-- Batch Upload -->
           <div class="hoverTransform">
-            <span @click="batchUpload()" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Batch Upload</span>
+            <span @click="hideDiv('usersDashboard'); clearBatchUploadDiv(); showDiv('batchUploadDiv')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Batch Upload</span>
           </div>
           <!-- end Batch Upload -->
           <!-- Register User -->
@@ -322,10 +487,12 @@ export default {
       <!-- Pagination Div -->
       <div>
         <span>Total users: {{this.usersCount}}</span>
-        <p>Showing {{this.resultsLimit}} results per page</p>
-        <p>Page {{this.currentPage}} of {{this.pages}}</p>
-        <button @click="this.previousPage()" v-if="this.currentPage > 1">Previous</button>
-        <button @click="this.nextPage()" v-if="this.currentPage < this.pages">Next</button>
+        <p>Showing <input type="number" v-model="this.resultsLimit"> results per page</p>
+        <button @click="getAllUsers()">Go</button>
+        <p>Page <input v-model="this.currentPage" type="number"> of {{this.pages}}</p>
+        <button @click="getAllUsers()">Go</button>
+        <button @click="this.previousPage()" v-if="this.currentPage_static > 1">Previous</button>
+        <button @click="this.nextPage()" v-if="this.currentPage_static < this.pages">Next</button>
         <span style="font-family: Open_Sans_Bold;">Sort</span>
         <select v-model="sortBy" @change="getAllUsers()">
           <option value="role">Role</option>
@@ -339,7 +506,14 @@ export default {
         </select>
         <span style="font-family: Open_Sans_Bold;">Search</span>
         <input v-model="searchString" type="text">
-        <button @click="getAllUsers()">Search</button>    
+        <button @click="getAllUsers()">Go</button>
+        <span style="font-family: Open_Sans_Bold">Filter by Role</span>
+        <select v-model="filterByRole" @change="getAllUsers()">
+          <option value="">Any</option>
+          <option value="admin">Admin</option>
+          <option value="adviser">Adviser</option>
+          <option value="student">Student</option>
+        </select>         
       </div>
       <!-- end Pagination Div -->        
       <!-- Users Dashboard Body -->

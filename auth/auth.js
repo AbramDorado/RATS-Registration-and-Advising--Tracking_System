@@ -82,10 +82,14 @@ const router = express.Router();
   // count users
   router.post('/api/countUsers', adminOnly, async (req, res) => {
     try {
+      var filterByRoleText = ''
+      if (req.body.filterByRole) {
+        filterByRoleText = ` WHERE role = '${req.body.filterByRole}'`
+      }
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       const rows = await database.get(db, `
-        SELECT COUNT(*) AS count FROM user
+        SELECT COUNT(*) AS count FROM user${filterByRoleText}
       `, [], false)
       res.json({'count': rows.count}).send()
     } catch (error) {
@@ -119,17 +123,22 @@ const router = express.Router();
       if (req.body.searchString) {
         searchString = req.body.searchString
       }
+      var filterByRoleText = ''
+      if (req.body.filterByRole) {
+        filterByRoleText = `AND (role = '${req.body.filterByRole}')`
+      }
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       const rows = await database.all(db, `
         SELECT role, up_mail, first_name, last_name 
         FROM user 
         WHERE
-          up_mail LIKE '%${searchString}%'
-          or first_name LIKE '%${searchString}%'
-          or last_name LIKE '%${searchString}%'
+          (up_mail LIKE '%${searchString}%'
+          OR first_name LIKE '%${searchString}%'
+          OR last_name LIKE '%${searchString}%')
+          ${filterByRoleText}
         ORDER BY ${sortColumn} ${sortOrder}
-        LIMIT 50
+        LIMIT ${myLimit}
         OFFSET ${myOffset}`, [], false)
       res.send(rows)
     } catch (error) {
