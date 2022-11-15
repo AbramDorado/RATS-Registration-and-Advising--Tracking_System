@@ -79,14 +79,58 @@ async function configureGoogleStrategy(db) {
 // Routes
 const router = express.Router();
 
+  // count users
+  router.post('/api/countUsers', adminOnly, async (req, res) => {
+    try {
+      const source = './database/db.sqlite'
+      const db = await database.openOrCreateDB(source)
+      const rows = await database.get(db, `
+        SELECT COUNT(*) AS count FROM user
+      `, [], false)
+      res.json({'count': rows.count}).send()
+    } catch (error) {
+      console.log('error on /api/countUsers') // temp
+      console.log(error)
+      res.send('Error')
+    }
+  })
+
   // get all users
   router.post('/api/getUsers', adminOnly, async (req, res) => {
     try {
       // req.body.column req.body.order e.g. 'up_mail ASC', 'first_name DESC'
+      var myOffset = 0
+      if (req.body.offset) {
+        myOffset = req.body.offset
+      }
+      var myLimit = 50
+      if (req.body.limit) {
+        myLimit = req.body.limit
+      }
+      var sortColumn = 'role'
+      if (req.body.column) {
+        sortColumn = req.body.column
+      }
+      var sortOrder = 'ASC'
+      if (req.body.order) {
+        sortOrder = req.body.order
+      }
+      var searchString = ''
+      if (req.body.searchString) {
+        searchString = req.body.searchString
+      }
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       const rows = await database.all(db, `
-        SELECT role, up_mail, first_name, last_name FROM user ORDER BY ${req.body.column} ${req.body.order}`, [], false)
+        SELECT role, up_mail, first_name, last_name 
+        FROM user 
+        WHERE
+          up_mail LIKE '%${searchString}%'
+          or first_name LIKE '%${searchString}%'
+          or last_name LIKE '%${searchString}%'
+        ORDER BY ${sortColumn} ${sortOrder}
+        LIMIT 50
+        OFFSET ${myOffset}`, [], false)
       res.send(rows)
     } catch (error) {
       console.log('error on /api/getUsers') // temp
@@ -229,7 +273,7 @@ const router = express.Router();
   // middlewares
   function adminOnly(req, res, next) {
     try {
-      if (req.user.role !== 'admin') {
+      if ((req.user.role !== 'admin') || (!req.user.role)) {
         res.status(401).send('Not admin.')
       } else {
         next()
