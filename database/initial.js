@@ -10,10 +10,18 @@ async function createInitialTables(db) {
     first_name TEXT,
     last_name TEXT
   `)
+  // announcement
+  await database.createTable(db, 'announcement', `
+    id TEXT UNIQUE PRIMARY KEY,
+    title TEXT,
+    body TEXT UNIQUE,
+    created TEXT,
+    modified TEXT
+  `)
 }
 
 async function createInitialRows(db) {
-  // users
+  // Users
   // student jmlicup@up.edu.ph
   await database.run(db, `
     INSERT INTO user (
@@ -36,6 +44,16 @@ async function createInitialRows(db) {
     uuidv4(),
     'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup'
   ], true)
+  // end Users
+  // Announcements
+  await database.run(db, `
+    INSERT INTO announcement (
+      id, title, body, created, modified
+    ) VALUES (?, ?, ?, ?, ?)
+  `, [
+    uuidv4(), 'Hello World!', 'Lorem ipsum dolor', Date.now(), Date.now()
+  ], true)
+  // end Announcements
 }
 
 module.exports = {createInitialTables, createInitialRows}
