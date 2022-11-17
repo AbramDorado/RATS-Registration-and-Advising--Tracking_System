@@ -606,9 +606,28 @@ export default {
     </div>
     <!-- end Users Dashboard -->
     <!-- Announcement Dashboard -->
-    <div ref="announcementDashboard" style="display: none;">
-      Announcement Dashboard
-      <a @click="hideDiv('announcementDashboard'); showDiv('menuDiv')" href="#">Back to Menu</a>
+    <div ref="announcementDashboard" class="flex-column" style="background-color: #f3f3f3; border: 2px solid black; display: none; min-height: 300px; width: 1200px;">
+      <!-- Announcement Dashboard Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- Announcement Dashboard Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Announcement Dashboard Header Left Div Icon -->
+          <i class="align-items-center bi bi-file-earmark-post d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Announcement Dashboard</span>
+          <!-- end Announcement Dashboard Header Left Div Icon -->
+        </div>
+        <!-- end Announcement Dashboard Header Left Div -->
+        <!-- Announcement Dashboard Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Back to Menu -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('announcementDashboard'); showDiv('menuDiv');" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Back to Menu</span>
+          </div>
+          <!-- end Back to Menu -->
+        </div>
+        <!-- end Announcement Dashboard Header Right Div -->
+      </div>
+      <!-- end Announcement Dashboard Header -->
     </div>
     <!-- end Announcement Dashboard -->
   </div>
