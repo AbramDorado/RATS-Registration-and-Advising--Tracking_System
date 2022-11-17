@@ -29,10 +29,14 @@ const router = express.Router()
   // Get Announcements
   router.post('/api/announcement/all', OCSandAdminOnly, async (req, res) => {
     try {
+      var myOffset = 0
+      if (req.body.offset) {
+        myOffset = req.body.offset
+      }
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       const rows = await database.all(db, `
-        SELECT * FROM announcement ORDER BY modified ASC
+        SELECT * FROM announcement ORDER BY modified ASC OFFSET ${myOffset}
       `, [], false)
       res.json({rows: rows}).send()
     } catch (error) {
