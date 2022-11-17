@@ -264,6 +264,15 @@ export default {
   <Header :user="this.user" />
   <!-- Admin Div -->
   <div class="align-items-center d-flex flex-column justify-content-center" style="background-color: white; gap: 20px; padding: 30px;">
+
+    <!-- Menu Div -->
+    <div ref="menuDiv">
+      Menu Div
+      <a @click="hideDiv('menuDiv'); showDiv('announcementDashboard');" href="#">Announcement Dashboard</a>
+      <a @click="hideDiv('menuDiv'); showDiv('usersDashboard');" href="#">User Dashboard</a>
+    </div>
+    <!-- end Menu Div -->
+
     <!-- Batch Upload Div -->
     <div ref="batchUploadDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
       <!-- Batch Upload Header -->
@@ -487,19 +496,20 @@ export default {
       <!-- end View User Body -->      
     </div>
     <!-- end View User Div -->    
-    <!-- User Dashboard -->
-    <div ref="usersDashboard" class="flex-column" style="background-color: #f3f3f3; border: 2px solid black; display: flex; min-height: 300px; width: 1200px;">
-      <!-- User Dashboard Header -->
+    <!-- Users Dashboard -->
+    <div ref="usersDashboard" class="flex-column" style="background-color: #f3f3f3; border: 2px solid black; display: none; min-height: 300px; width: 1200px;">
+      <a @click="hideDiv('usersDashboard'); showDiv('menuDiv');" href="#">Back to Menu</a>
+      <!-- Users Dashboard Header -->
       <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
-        <!-- User Dashboard Header Left Div -->
+        <!-- Users Dashboard Header Left Div -->
         <div class="align-items-center d-flex flex-row" style="gap: 5px;">
-          <!-- User Dashboard Header Left Div Icon -->
+          <!-- Users Dashboard Header Left Div Icon -->
           <i class="align-items-center bi bi-people-fill d-flex" style="color: white; font-size: 20px;"></i>
-          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">User Dashboard</span>
-          <!-- end User Dashboard Header Left Div Icon -->
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Users Dashboard</span>
+          <!-- end Users Dashboard Header Left Div Icon -->
         </div>
-        <!-- end User Dashboard Header Left Div -->
-        <!-- User Dashboard Header Right Div -->
+        <!-- end Users Dashboard Header Left Div -->
+        <!-- Users Dashboard Header Right Div -->
         <div class="align-items-center d-flex flex-row" style="gap: 10px;">
           <!-- Batch Upload -->
           <div class="hoverTransform">
@@ -512,7 +522,7 @@ export default {
           </div>
           <!-- end Register User -->          
         </div>
-        <!-- end User Dashboard Header Right Div -->
+        <!-- end Users Dashboard Header Right Div -->
       </div>
       <!-- end User Dashboard Header -->
       <!-- Pagination Div -->
@@ -594,7 +604,13 @@ export default {
       </div>
       <!-- end Users Dashboard Body -->
     </div>
-    <!-- end User Dashboard -->
+    <!-- end Users Dashboard -->
+    <!-- Announcement Dashboard -->
+    <div ref="announcementDashboard" style="display: none;">
+      Announcement Dashboard
+      <a @click="hideDiv('announcementDashboard'); showDiv('menuDiv')" href="#">Back to Menu</a>
+    </div>
+    <!-- end Announcement Dashboard -->
   </div>
   <!-- end Admin Div -->
   <Footer />
