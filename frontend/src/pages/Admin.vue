@@ -264,6 +264,11 @@ export default {
         console.log('Error on Admin.vue > editUserAPI', error) // temp
       }
     },
+    formatted_date(miliseconds) {
+      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+      var myDate = new Date(parseInt(miliseconds))
+      return myDate.toLocaleDateString("en-US", options)
+    },    
     async getAllAnnouncements() {
       try {
         const limit = 10
@@ -897,8 +902,8 @@ export default {
           <tbody>
             <tr v-for="(obj, index) in announcements" :key="index">
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{announcements[index].title}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{announcements[index].modified}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{announcements[index].created}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{this.formatted_date(announcements[index].modified)}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{this.formatted_date(announcements[index].created)}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{announcements[index].body}}</td>
               <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 <!-- View Button -->
