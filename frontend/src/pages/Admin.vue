@@ -549,7 +549,7 @@ export default {
       <!-- end Pagination Div -->        
       <!-- Users Dashboard Body -->
       <div style="padding: 15px 20px;">
-        <table class="fixed-table-body searchable sortable table table-responsive">
+        <table class="fixed-table-body table table-responsive">
           <thead>
             <tr>
               <th class="text-center" scope="col">Role</th>

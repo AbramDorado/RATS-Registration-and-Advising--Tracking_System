@@ -1,9 +1,10 @@
+const database = require('../database/database')
 const express = require('express')
+const GoogleStrategy = require('passport-google-oidc')
 const passport = require('passport')
+const router = express.Router();
 const session = require('express-session')
 const SQLiteStore = require('connect-sqlite3')(session)
-const GoogleStrategy = require('passport-google-oidc')
-const database = require('../database/database')
 const { v4: uuidv4 } = require('uuid');
 
 async function main(app) {
@@ -77,7 +78,6 @@ async function configureGoogleStrategy(db) {
 }
 
 // Routes
-const router = express.Router();
 
   // count users
   router.post('/api/countUsers', adminOnly, async (req, res) => {

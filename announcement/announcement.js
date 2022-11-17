@@ -1,11 +1,12 @@
 const express = require('express')
 const database = require('../database/database')
+const { v4: uuidv4 } = require('uuid');
 
 // Routes
 const router = express.Router()
 
   // Create Announcement
-  router.post('/api/announcement/create', OCSandAdminOnly, (req, res) => {
+  router.post('/api/announcement/create', OCSandAdminOnly, async (req, res) => {
     try {
       // check body
       if (!req.body.title || !req.body.body) {
@@ -13,14 +14,78 @@ const router = express.Router()
       }
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
-      await database.run()
+      await database.run(`
+        INSERT INTO announcement (id, title, body, created, modified)
+      `, [uuidv4(), req.body.title, req.body.body, Date.now(), Date.now()], false)
+      res.json({message: `Announcement added: ${req.body.title}`}).send()
     } catch (error) {
-      console.log('Error on api/announcement/create') // temp
+      console.log('Error on api announcement create') // temp
       console.log(error) // temp
-      res.send({message: error})
+      res.json({message: error}).send()
     }
   })
   // end Create Announcement
+
+  // Get Announcements
+  router.post('/api/announcement/all', OCSandAdminOnly, async (req, res) => {
+    try {
+      const source = './database/db.sqlite'
+      const db = await database.openOrCreateDB(source)
+      const rows = await database.all(db, `
+        SELECT * FROM announcement ORDER BY modified ASC
+      `, [], false)
+      res.json({rows: rows}).send()
+    } catch (error) {
+      console.log('Error on api announcement all')
+      console.log(error)
+      res.json({message: error}).send()
+    }
+  })
+  // end Get Announcements
+
+  // Update Announcement
+  router.post('/api/announcement/edit', OCSandAdminOnly, async (req, res) => {
+    try {
+      // check body
+      if (!req.body.old_body || !req.body.new_title || !req.body.new_body) {
+        throw 'Invalid request body'
+      } else {
+        const source = './database/db.sqlite'
+        const db = database.openOrCreateDB(source)
+        // get original row
+        const row = await database.get(db, `SELECT * FROM announcement WHERE body = ?`, [req.body.old_body], false)
+        await database.run(db, `
+          UPDATE announcement SET title = ?, body = ?, modified = ? WHERE body = ?
+        `, [req.body.new_title, req.body.new_body, Date.now(), row.body], false)
+        res.json({message: `Edit success for announcement ${row.title}`}).send()
+      }
+    } catch (error) {
+      console.log('Error on api announcement edit')
+      console.log(error)
+      res.json({message: error}).send()
+    }
+  })
+  // end Update Announcement
+
+  // Delete Announcement
+  router.post('/api/announcement/delete', OCSandAdminOnly, async (req, res) => {
+    try {
+      // check body
+      if (!req.body.body) {
+        throw 'Invalid request body'
+      } else {
+        const source = './database/db.sqlite'
+        const db = database.openOrCreateDB(source)
+        await database.run(db, `DELETE FROM announcement WHERE body = ?`, [req.body.body], false)
+        res.json({message: `Delete success for body: ${req.body.body}`}).send()
+      }
+    } catch (error) {
+      console.log('Error on api announcement delete')
+      console.log(error)
+      res.json({message: error}).json()
+    }
+  })
+  // end Delete Announcement
 
 // end Routes
 
@@ -39,11 +104,6 @@ function OCSandAdminOnly(req, res, next) {
     console.log('Error on announcements.js > OCSandAdminOnly') // temp
     console.log(error)
     res.send({message: error})
-  }
-  if (!req.user) {
-    return res.send({message: 'User not logged in'})
-  } else {
-    if (req.user.role )
   }
 }
 // end Middlewares
