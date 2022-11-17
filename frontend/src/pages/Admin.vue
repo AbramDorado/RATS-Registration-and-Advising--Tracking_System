@@ -8,6 +8,11 @@ export default {
   },
   data () {
     return {
+      addAnnouncementDisabled: false, // For spam handling addAnnouncement()
+      add_announcement: { // Used in addAnnouncement()
+        title: '',
+        body: ''
+      },
       announcements: [], // Main list of rows shown in announcement table
       batchUploadProgress: '', // Shows log/history of batch upload
       currentPage: 1, // v-model with input; used in pagination
@@ -49,6 +54,29 @@ export default {
     }
   },
   methods: {
+    async addAnnouncement() {
+      try {
+        if (this.addAnnouncementDisabled) {
+          return
+        } else if (!this.add_announcement.title || !this.add_announcement.body) {
+          alert('Input cannot be blank')
+          return
+        } else {
+          this.addAnnouncementDisabled = true
+          const body = {title: this.add_announcement.title, body: this.add_announcement.body}
+          const response = await this.axios.post('/api/announcement/create', body)
+          await this.getAllAnnouncements()
+          this.clearAddAnnouncementInputs();
+          this.addAnnouncementDisabled = false
+          this.hideDiv('addAnnouncementDiv');
+          this.showDiv('announcementDashboard')
+        }
+      } catch (error) {
+        console.log('Error on Admin.vue > addAnnouncement', error) // temp
+        alert('Error on posting announcement') // temp
+        this.addAnnouncementDisabled = false
+      }
+    },    
     async authorize() {
       try {
         const response = await this.axios.post('/api/authorize')
@@ -101,6 +129,10 @@ export default {
         thiss.batchUploadProgress += `Error on batchRegister(): ${error}` // temp
       }
     },
+    clearAddAnnouncementInputs() {
+      this.add_announcement.title = ''
+      this.add_announcement.body = ''
+    },    
     clearBatchUploadDiv() {
       this.$refs.batchUploadCSV.value = ''
       this.batchUploadProgress = ''
@@ -326,7 +358,6 @@ export default {
   <Header :user="this.user" />
   <!-- Admin Div -->
   <div class="align-items-center d-flex flex-column justify-content-center" style="background-color: white; gap: 20px; padding: 30px;">
-
     <!-- Menu Div -->
     <div ref="menuDiv">
       Menu Div
@@ -334,7 +365,6 @@ export default {
       <a @click="hideDiv('menuDiv'); showDiv('usersDashboard');" href="#">User Dashboard</a>
     </div>
     <!-- end Menu Div -->
-
     <!-- Batch Upload Div -->
     <div ref="batchUploadDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
       <!-- Batch Upload Header -->
@@ -667,6 +697,47 @@ export default {
       <!-- end Users Dashboard Body -->
     </div>
     <!-- end Users Dashboard -->
+
+    <!-- Add Announcement Div -->
+    <div ref="addAnnouncementDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
+      <!-- Add Announcement Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- Add Announcement Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <!-- Add Announcement Header Left Div Icon -->
+          <i class="align-items-center bi bi-file-earmark-plus-fill d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">New Announcement</span>
+          <!-- end Add Announcement Header Left Div Icon -->
+        </div>
+        <!-- end Add Announcement Header Left Div -->
+        <!-- Add Announcement Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Cancel -->
+          <div class="hoverTransform">
+            <span @click="clearAddAnnouncementInputs(); hideDiv('addAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
+          </div>
+          <!-- end Cancel -->          
+        </div>
+        <!-- end Add Announcement Header Right Div -->
+      </div>
+      <!-- end Add Announcement Header -->      
+      <!-- Add Announcement Body -->
+      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
+        <span style="font-family: Open_Sans_Bold;">Title</span>
+        <input v-model="add_announcement.title" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Body</span>
+        <input v-model="add_announcement.body" type="text" style="margin-bottom: 10px;">
+        <!-- Add Button -->
+          <div @click="addAnnouncement()" class="align-items-center d-flex justify-content-center hoverTransform">
+            <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Post Announcement</span>
+          </div>
+        <!-- end Add Button -->        
+      </div>
+      <!-- end Add Announcement Body -->
+    </div>    
+    <!-- end Add Announcement Div -->
+
+
     <!-- Delete Announcement Div -->
     <div ref="deleteAnnouncementDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
       <!-- Delete Announcement Header -->
@@ -795,6 +866,11 @@ export default {
         <!-- end Announcement Dashboard Header Left Div -->
         <!-- Announcement Dashboard Header Right Div -->
         <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Add Announcement -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('announcementDashboard'); showDiv('addAnnouncementDiv')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">New Announcement</span>
+          </div>
+          <!-- end Add Announcement -->            
           <!-- Back to Menu -->
           <div class="hoverTransform">
             <span @click="hideDiv('announcementDashboard'); showDiv('menuDiv');" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Back to Menu</span>

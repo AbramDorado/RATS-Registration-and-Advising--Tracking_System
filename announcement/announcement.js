@@ -14,8 +14,8 @@ const router = express.Router()
       }
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
-      await database.run(`
-        INSERT INTO announcement (id, title, body, created, modified)
+      await database.run(db, `
+        INSERT INTO announcement (id, title, body, created, modified) VALUES (?, ?, ?, ?, ?)
       `, [uuidv4(), req.body.title, req.body.body, Date.now(), Date.now()], false)
       res.json({message: `Announcement added: ${req.body.title}`}).send()
     } catch (error) {
