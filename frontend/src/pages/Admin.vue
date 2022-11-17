@@ -12,6 +12,7 @@ export default {
       batchUploadProgress: '', // Shows log/history of batch upload
       currentPage: 1, // v-model with input; used in pagination
       currentPage_static: 1, // Corrected value
+      del_announcement: {}, // Used in deleteAnnouncement() and deleteAnnouncementAPI()
       del_user_role: '', // Used in deleteUser() and deleteUserAPI()
       del_user_up_mail: '', // Used in deleteUser() and deleteUserAPI()
       del_user_first_name: '', // Used in deleteUser() and deleteUserAPI()
@@ -140,7 +141,7 @@ export default {
     deleteAnnouncement(announcementToDelete) {
       this.hideDiv('announcementDashboard')
       this.showDiv('deleteAnnouncementDiv') // To do
-      this.del_announcement_body = announcementToDelete.body // To do  
+      this.del_announcement = JSON.parse(JSON.stringify(announcementToDelete))
     },
     async deleteAnnouncementAPI() {
       if (this.deleteAnnouncementDisabled) {
@@ -148,18 +149,13 @@ export default {
       }
       try {
         this.deleteAnnouncementDisabled = true
-        const userToDelete = {}
-        userToDelete.role = this.del_user_role
-        userToDelete.up_mail = this.del_user_up_mail
-        userToDelete.first_name = this.del_user_first_name
-        userToDelete.last_name = this.del_user_last_name
-        const response = await this.axios.post('/api/deleteUser', userToDelete)
-        await this.getAllUsers()
-        this.hideDiv('deleteUserDiv')
-        this.showDiv('usersDashboard')        
+        const response = await this.axios.post('/api/announcement/delete', {body: this.del_announcement.body})
+        await this.getAllAnnouncements()
+        this.hideDiv('deleteAnnouncementDiv')
+        this.showDiv('announcementDashboard')        
         this.deleteAnnouncementDisabled = false
       } catch (error) {
-        console.log('Error on Admin.vue > deleteUser', error) // temp
+        console.log('Error on Admin.vue > deleteAnnouncement', error) // temp
       }
     },
     deleteUser(userToDelete) {
@@ -671,7 +667,45 @@ export default {
       <!-- end Users Dashboard Body -->
     </div>
     <!-- end Users Dashboard -->
-
+    <!-- Delete Announcement Div -->
+    <div ref="deleteAnnouncementDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
+      <!-- Delete Announcement Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- Delete Announcement Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <!-- Delete Announcement Header Left Div Icon -->
+          <i class="align-items-center bi bi-file-earmark-x-fill d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Delete Announcement</span>
+          <!-- end Delete Announcement Header Left Div Icon -->
+        </div>
+        <!-- end Delete Announcement Header Left Div -->
+        <!-- Delete Announcement Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Cancel -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('deleteAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
+          </div>
+          <!-- end Cancel -->          
+        </div>
+        <!-- end Delete Announcement Header Right Div -->
+      </div>
+      <!-- end Delete Announcement Header -->
+      <!-- Delete Announcement Body -->
+      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
+        <span>Confirm Deletion</span>
+        <span>Title</span>
+        <span>{{this.del_announcement.title}}</span>
+        <span>Created</span>
+        <span>{{this.del_announcement.created}}</span>
+        <span>Last Modified</span>
+        <span>{{this.del_announcement.modified}}</span>
+        <span>Body</span>
+        <span>{{this.del_announcement.body}}</span>
+        <button @click="deleteAnnouncementAPI()">Delete</button>
+      </div>
+      <!-- end Delete User Body -->      
+    </div>
+    <!-- end Delete User Div -->
     <!-- Edit Announcement Div -->
     <div ref="editAnnouncementDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
       <!-- Edit Announcement Header -->
