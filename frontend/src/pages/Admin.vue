@@ -8,6 +8,7 @@ export default {
   },
   data () {
     return {
+      announcements: [], // Main list of rows shown in announcement table
       batchUploadProgress: '', // Shows log/history of batch upload
       currentPage: 1, // v-model with input; used in pagination
       currentPage_static: 1, // Corrected value
@@ -15,7 +16,10 @@ export default {
       del_user_up_mail: '', // Used in deleteUser() and deleteUserAPI()
       del_user_first_name: '', // Used in deleteUser() and deleteUserAPI()
       del_user_last_name: '', // Used in deleteUser() and deleteUserAPI()
-      deleteDisabled: false, // For spam-handling deleteUserAPI()
+      deleteAnnouncementDisabled: false, // For spam handling deleteAnnouncementAPI()
+      deleteUserDisabled: false, // For spam-handling deleteUserAPI()
+      edit_announcement: {}, // Used in editAnnouncement(), v-model'ed to changes
+      edit_announcement_original: {}, // Used in editAnnouncement(), stores the original content before editing
       edit_role: '', // Used in editUser()
       edit_up_mail: '', // Used in editUser()
       edit_first_name: '', // Used in editUser()
@@ -32,8 +36,9 @@ export default {
       sortBy: 'role', // Passed in getAllUsers API
       sortOrder: 'ASC', // Passed in getAllUsers API
       user: {}, // Stores response of authorizeAPI; passed as prop in Header component
-      users: [], // Main list of rows shown in table
+      users: [], // Main list of rows shown in users table
       usersCount: 0, // Stores reponse of countUsers API
+      view_announcement: {}, // Used in viewAnnouncement()
       view_user: {} // Used in viewUser()
     }
   },
@@ -132,20 +137,17 @@ export default {
         this.resultsLimit = this.usersCount
       }
     },
-    deleteUser(userToDelete) {
-      this.hideDiv('usersDashboard')
-      this.showDiv('deleteUserDiv')
-      this.del_user_role = userToDelete.role
-      this.del_user_up_mail = userToDelete.up_mail
-      this.del_user_first_name = userToDelete.first_name
-      this.del_user_last_name = userToDelete.last_name
+    deleteAnnouncement(announcementToDelete) {
+      this.hideDiv('announcementDashboard')
+      this.showDiv('deleteAnnouncementDiv') // To do
+      this.del_announcement_body = announcementToDelete.body // To do  
     },
-    async deleteUserAPI() {
-      if (this.deleteDisabled) {
+    async deleteAnnouncementAPI() {
+      if (this.deleteAnnouncementDisabled) {
         return
       }
       try {
-        this.deleteDisabled = true
+        this.deleteAnnouncementDisabled = true
         const userToDelete = {}
         userToDelete.role = this.del_user_role
         userToDelete.up_mail = this.del_user_up_mail
@@ -155,9 +157,59 @@ export default {
         await this.getAllUsers()
         this.hideDiv('deleteUserDiv')
         this.showDiv('usersDashboard')        
-        this.deleteDisabled = false
+        this.deleteAnnouncementDisabled = false
       } catch (error) {
         console.log('Error on Admin.vue > deleteUser', error) // temp
+      }
+    },
+    deleteUser(userToDelete) {
+      this.hideDiv('usersDashboard')
+      this.showDiv('deleteUserDiv')
+      this.del_user_role = userToDelete.role
+      this.del_user_up_mail = userToDelete.up_mail
+      this.del_user_first_name = userToDelete.first_name
+      this.del_user_last_name = userToDelete.last_name
+    },
+    async deleteUserAPI() {
+      if (this.deleteUserDisabled) {
+        return
+      }
+      try {
+        this.deleteUserDisabled = true
+        const userToDelete = {}
+        userToDelete.role = this.del_user_role
+        userToDelete.up_mail = this.del_user_up_mail
+        userToDelete.first_name = this.del_user_first_name
+        userToDelete.last_name = this.del_user_last_name
+        const response = await this.axios.post('/api/deleteUser', userToDelete)
+        await this.getAllUsers()
+        this.hideDiv('deleteUserDiv')
+        this.showDiv('usersDashboard')        
+        this.deleteUserDisabled = false
+      } catch (error) {
+        console.log('Error on Admin.vue > deleteUser', error) // temp
+      }
+    },
+    editAnnouncement(announcement) {
+      this.edit_announcement = JSON.parse(JSON.stringify(announcement))
+      this.edit_announcement_original = JSON.parse(JSON.stringify(announcement))
+      this.hideDiv('announcementDashboard')
+      this.showDiv('editAnnouncementDiv')
+    },
+    async editAnnouncementAPI() {
+      try {
+        if (!this.edit_announcement_original.body || !this.edit_announcement.title || !this.edit_announcement.body) {
+          alert('Input cannot be blank') // temp
+          return
+        } else {
+          const body = {old_body: this.edit_announcement_original.body, new_title: this.edit_announcement.title, new_body: this.edit_announcement.body}
+          const response = await this.axios.post('/api/announcement/edit', body)
+          await this.getAllAnnouncements()
+          this.hideDiv('editAnnouncementDiv');
+          this.showDiv('announcementDashboard')
+        }
+      } catch(error) {
+        console.log('Error on Admin.vue > editAnnouncementAPI', error) // temp
       }
     },
     editUser(user) {
@@ -184,6 +236,15 @@ export default {
         console.log('Error on Admin.vue > editUserAPI', error) // temp
       }
     },
+    async getAllAnnouncements() {
+      try {
+        const limit = 10
+        const response = await this.axios.post('/api/announcement/all', {limit: limit})
+        this.announcements = response.data.rows
+      } catch (error) {
+        console.log('Error on Admin.vue > getAllAnnouncements', error) // temp
+      }
+    },    
     async getAllUsers() {
       try {
         await this.getUsersCount()
@@ -248,13 +309,18 @@ export default {
       this.view_user = user
       this.hideDiv('usersDashboard')
       this.showDiv('viewUserDiv')
-      // To do: Retrieve other info
-    }
-
+      // To do: Retrieve other info, needs advising module
+    },
+    viewAnnouncement(announcement) {
+      this.view_announcement = announcement
+      this.hideDiv('announcementDashboard')
+      this.showDiv('viewAnnouncementDiv')
+    },
   },
   async mounted() {
     await this.authorize()
     await this.getAllUsers()
+    await this.getAllAnnouncements()
   }
 }
 </script>
@@ -464,12 +530,12 @@ export default {
         <!-- View User Header Left Div -->
         <div class="align-items-center d-flex flex-row" style="gap: 5px;">
           <!-- View User Header Left Div Icon -->
-          <i class="align-items-center bi bi-person-x-fill d-flex" style="color: white; font-size: 20px;"></i>
+          <i class="align-items-center bi bi-person-bounding-box d-flex" style="color: white; font-size: 20px;"></i>
           <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">View User</span>
           <!-- end View User Header Left Div Icon -->
         </div>
-        <!-- end Delete User Header Left Div -->
-        <!-- Delete User Header Right Div -->
+        <!-- end View User Header Left Div -->
+        <!-- View User Header Right Div -->
         <div class="align-items-center d-flex flex-row" style="gap: 10px;">
           <!-- Close -->
           <div class="hoverTransform">
@@ -605,6 +671,82 @@ export default {
       <!-- end Users Dashboard Body -->
     </div>
     <!-- end Users Dashboard -->
+
+    <!-- Edit Announcement Div -->
+    <div ref="editAnnouncementDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
+      <!-- Edit Announcement Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- Edit Announcement Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <!-- Edit Announcement Header Left Div Icon -->
+          <i class="align-items-center bi bi-pencil-square d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Edit Announcement</span>
+          <!-- end Edit Announcement Header Left Div Icon -->
+        </div>
+        <!-- end Edit Announcement Header Left Div -->
+        <!-- Edit Announcement Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Cancel -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('editAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
+          </div>
+          <!-- end Cancel -->          
+        </div>
+        <!-- end Edit Announcement Header Right Div -->
+      </div>
+      <!-- end Edit Announcement Header -->      
+      <!-- Edit Announcement Body -->
+      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
+        <span style="font-family: Open_Sans_Bold;">Title</span>
+        <input v-model="edit_announcement.title" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Body</span>
+        <input v-model="edit_announcement.body" type="text" style="margin-bottom: 10px;">
+        <!-- Edit Button -->
+          <div @click="editAnnouncementAPI()" class="align-items-center d-flex justify-content-center hoverTransform">
+            <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Edit Announcement</span>
+          </div>
+        <!-- end Edit Button -->        
+      </div>
+      <!-- end Edit Announcement Body -->
+    </div>    
+    <!-- end Edit Announcement Div -->
+    <!-- View Announcement Div -->
+    <div ref="viewAnnouncementDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
+      <!-- View Announcement Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- View Announcement Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <!-- View Announcement Header Left Div Icon -->
+          <i class="align-items-center bi bi-file-earmark-post d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">View Announcement</span>
+          <!-- end View Announcement Header Left Div Icon -->
+        </div>
+        <!-- end View Announcement Header Left Div -->
+        <!-- View Announcement Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Close -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('viewAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Close</span>
+          </div>
+          <!-- end Close -->          
+        </div>
+        <!-- end View Announcement Header Right Div -->
+      </div>
+      <!-- end View Announcement Header -->
+      <!-- View Announcement Body -->
+      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
+        <span>Title</span>
+        <span>{{this.view_announcement.title}}</span>
+        <span>Created</span>
+        <span>{{this.view_announcement.created}}</span>
+        <span>Last Modified</span>
+        <span>{{this.view_announcement.modified}}</span>
+        <span>Body</span>
+        <span>{{this.view_announcement.body}}</span>
+      </div>
+      <!-- end View Announcement Body -->               
+    </div>
+    <!-- end View Announcement Div -->
     <!-- Announcement Dashboard -->
     <div ref="announcementDashboard" class="flex-column" style="background-color: #f3f3f3; border: 2px solid black; display: none; min-height: 300px; width: 1200px;">
       <!-- Announcement Dashboard Header -->
@@ -628,6 +770,52 @@ export default {
         <!-- end Announcement Dashboard Header Right Div -->
       </div>
       <!-- end Announcement Dashboard Header -->
+      <!-- Announcement Dashboard Body -->
+      <div style="padding: 15px 20px;">
+        <table class="fixed-table-body table table-responsive">
+          <thead>
+            <tr>
+              <th class="text-center" scope="col">Title</th>
+              <th class="text-center" scope="col">Last Modified</th>
+              <th class="text-center" scope="col">Date Created</th>
+              <th class="text-center" scope="col">Body</th>
+              <th class="text-center" scope="col">View</th>
+              <th class="text-center" scope="col">Edit</th>
+              <th class="text-center" scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(obj, index) in announcements" :key="index">
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{announcements[index].title}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{announcements[index].modified}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{announcements[index].created}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{announcements[index].body}}</td>
+              <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <!-- View Button -->
+                <div @click="viewAnnouncement(announcements[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #093405; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
+                  <span style="font-family: Open_Sans_Semi_Bold;">View</span>
+                </div>
+                <!-- end View Button -->
+              </td>
+              <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; position: relative; text-overflow: ellipsis; white-space: nowrap;">
+                <!-- Edit Button -->
+                <div @click="editAnnouncement(announcements[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #7F6000; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
+                  <span style="font-family: Open_Sans_Semi_Bold;">Edit</span>
+                </div>
+                <!-- end Edit Button -->
+              </td>
+              <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                <!-- Delete Button -->
+                <div @click="deleteAnnouncement(announcements[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #751518; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
+                  <span style="font-family: Open_Sans_Semi_Bold;">Delete</span>
+                </div>
+                <!-- end Delete Button -->
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- end Announcement Dashboard Body -->
     </div>
     <!-- end Announcement Dashboard -->
   </div>

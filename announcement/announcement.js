@@ -29,15 +29,17 @@ const router = express.Router()
   // Get Announcements
   router.post('/api/announcement/all', OCSandAdminOnly, async (req, res) => {
     try {
+      // check body
+      if (!req.body.limit) {
+        throw 'Invalid request body'
+      }
       var myOffset = 0
       if (req.body.offset) {
         myOffset = req.body.offset
       }
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
-      const rows = await database.all(db, `
-        SELECT * FROM announcement ORDER BY modified ASC OFFSET ${myOffset}
-      `, [], false)
+      const rows = await database.all(db, `SELECT * FROM announcement ORDER BY modified DESC LIMIT ${req.body.limit} OFFSET ${myOffset}`, [], false)
       res.json({rows: rows}).send()
     } catch (error) {
       console.log('Error on api announcement all')
@@ -55,7 +57,7 @@ const router = express.Router()
         throw 'Invalid request body'
       } else {
         const source = './database/db.sqlite'
-        const db = database.openOrCreateDB(source)
+        const db = await database.openOrCreateDB(source)
         // get original row
         const row = await database.get(db, `SELECT * FROM announcement WHERE body = ?`, [req.body.old_body], false)
         await database.run(db, `
@@ -79,7 +81,7 @@ const router = express.Router()
         throw 'Invalid request body'
       } else {
         const source = './database/db.sqlite'
-        const db = database.openOrCreateDB(source)
+        const db = await database.openOrCreateDB(source)
         await database.run(db, `DELETE FROM announcement WHERE body = ?`, [req.body.body], false)
         res.json({message: `Delete success for body: ${req.body.body}`}).send()
       }
@@ -112,4 +114,4 @@ function OCSandAdminOnly(req, res, next) {
 }
 // end Middlewares
 
-module.exports = router
+module.exports = {router}

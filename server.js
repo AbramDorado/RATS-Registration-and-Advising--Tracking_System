@@ -4,6 +4,7 @@ const port = 3000
 
 const database = require('./database/database')
 const initial = require('./database/initial')
+const announcement = require('./announcement/announcement')
 const auth = require('./auth/auth')
 
 // Main
@@ -31,6 +32,7 @@ async function main() {
 
     // Routers
     app.use('/', auth.router)
+    app.use('/', announcement.router)
 
     // HTML Middleware
     const history = require('connect-history-api-fallback')
