@@ -15,6 +15,7 @@
   },
   "homepage": "https://github.com/zrfvnzr/cmsc-122-final-proj#readme",
   "dependencies": {
+    "bootstrap-icons": "^1.10.2",
     "connect-history-api-fallback": "^2.0.0",
     "connect-sqlite3": "^0.9.13",
     "cookie-parser": "^1.4.6",
