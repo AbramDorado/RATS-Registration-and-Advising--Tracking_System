@@ -29,7 +29,7 @@ export default {
     },    
     async getAllAnnouncements() {
       try {
-        const limit = 10
+        const limit = 50
         const response = await this.axios.post('/api/announcement/all', {limit: limit})
         this.announcements = response.data.rows
       } catch (error) {

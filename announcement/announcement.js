@@ -27,7 +27,7 @@ const router = express.Router()
   // end Create Announcement
 
   // Get Announcements
-  router.post('/api/announcement/all', OCSandAdminOnly, async (req, res) => {
+  router.post('/api/announcement/all', async (req, res) => {
     try {
       // check body
       if (!req.body.limit) {
