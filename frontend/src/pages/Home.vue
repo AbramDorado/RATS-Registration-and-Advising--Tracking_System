@@ -6,20 +6,40 @@ export default {
   name: 'Home',
   data() {
     return {
+      announcements: [],
       user: {}
     }
   },
   components: {
     AnnouncementCard, Header, Footer
   },
+  methods: {
+    async authorize() {
+      try {
+        const response = await this.axios.post('/api/authorize')
+        this.user = response.data
+      } catch(err) {
+        location.href = '/login' // to do: allow logging in as 'guest' for non-cas students
+      }
+    },
+    formatted_date(miliseconds) {
+      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+      var myDate = new Date(parseInt(miliseconds))
+      return myDate.toLocaleDateString("en-US", options)
+    },    
+    async getAllAnnouncements() {
+      try {
+        const limit = 10
+        const response = await this.axios.post('/api/announcement/all', {limit: limit})
+        this.announcements = response.data.rows
+      } catch (error) {
+        console.log('Error on Home.vue > getAllAnnouncements', error) // temp
+      }
+    },  
+  },
   async mounted() {
-    try {
-      const response = await this.axios.post('/api/authorize')
-      // console.log('response to api/authorize is', response.status) // temp
-      this.user = response.data
-    } catch(err) {
-      location.href = '/login' // disable this if testing
-    }
+    this.authorize()
+    this.getAllAnnouncements()
   }
 }
 </script>
@@ -36,8 +56,7 @@ export default {
           </svg>
           <h2 style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">ANNOUNCEMENTS</h2>
         </div>
-        <AnnouncementCard header="Lorem ipsum dolor sit amet, consectetur adipiscing elit" date="October 31, 2022 12:41PM" content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." />
-        <AnnouncementCard header="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo." date="October 31, 2022 1:02PM" content="Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?" />
+        <AnnouncementCard v-for="(obj, index) in announcements" :key="index" :header="announcements[index].title" :date="this.formatted_date(announcements[index].modified)" :content="announcements[index].body" />
       </div>
       <div style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px;">
         <div id="statusHeader" class="d-flex flex-row">

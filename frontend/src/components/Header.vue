@@ -38,6 +38,19 @@ export default {
       // refs: notifsPopover, accPopover
       this.$refs[ref].style.display = 'flex'
     },
+    toAdvising() {
+      if (this.user.role === 'student') {
+        location.href = '/advising'
+      } else if (this.user.role === 'adviser') {
+        location.href = 'adviser'
+      } else if (this.user.role === 'ocs') {
+        location.href = '/ocs'
+      } else if (this.user.role === 'admin') {
+        location.href = '/admin'
+      } else {
+        location.href = '/login'
+      }
+    },
     togglePopover(ref) {
       // refs: notifsPopover, accPopover
       if (this.$refs[ref].style.display === 'none') {
@@ -64,24 +77,24 @@ export default {
   <!-- Header Middle Div -->
   <div class="d-flex flex-row" style="gap: 30px;">
     <!-- Home Button -->
-    <div class="hoverTransform align-items-center d-flex flex-row">
+    <div @click="this.redirect('/')" class="hoverTransform align-items-center d-flex flex-row">
       <!-- Home Icon -->
       <i class="align-items-center bi bi-house-fill d-flex" style="color: white; font-size: 22px; margin-right: 5px;"></i>
       <!-- end Home Icon -->
-      <h3 @click="this.redirect('/')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Home</h3>
+      <h3 style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Home</h3>
     </div>
     <!-- end Home Button -->
     <!-- Advising Button -->
-    <div class="hoverTransform align-items-center d-flex flex-row">
+    <div @click="toAdvising()" class="hoverTransform align-items-center d-flex flex-row">
       <!-- Advising Icon -->
       <i class="align-items-center bi bi-ui-checks d-flex" style="color: white; font-size: 22px; margin-right: 5px;"></i>
       <!-- end Advising Icon -->
-      <h3 v-if="user.role === 'student'" @click="this.redirect('/advising')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Advising</h3>
-      <h3 v-else-if="user.role === 'adviser'" @click="this.redirect('/adviser')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Dashboard</h3>
-      <h3 v-else-if="user.role === 'ocs'" @click="this.redirect('/ocs')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Dashboard</h3>
-      <h3 v-else @click="this.redirect('/admin')" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Dashboard</h3>
+      <h3 v-if="user.role === 'student'" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Advising</h3>
+      <h3 v-else-if="user.role === 'adviser'" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Dashboard</h3>
+      <h3 v-else-if="user.role === 'ocs'" style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Dashboard</h3>
+      <h3 v-else style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Dashboard</h3>
     </div>
-    <!-- end Enrollment Button -->
+    <!-- end Advising Button -->
     <div class="hoverTransform align-items-center d-flex flex-row">
       <!-- Schedule of Classes Icon -->
       <i class="align-items-center bi bi-calendar-week-fill d-flex" style="color: white; font-size: 22px; margin-right: 5px;"></i>
