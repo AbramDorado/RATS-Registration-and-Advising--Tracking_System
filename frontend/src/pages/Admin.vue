@@ -35,7 +35,7 @@ export default {
       reg_up_mail: '', // Used in registerUser()
       reg_first_name: '', // Used in registerUser()
       reg_last_name: '', // Used in registerUser()
-      registerUserDisabled: true, // For spam-handling registerUser()
+      registerUserDisabled: false, // For spam-handling registerUser()
       resultsLimit: 50, // v-model with input; used in pagination
       resultsLimit_static: 50, // Correct value
       searchString: '', // Passed in getAllUsers API
@@ -281,7 +281,6 @@ export default {
     async getAllUsers() {
       try {
         await this.getUsersCount()
-        this.resultsLimit = 50 // reset to default
         await this.correctLimits()
         const response = await this.axios.post('/api/getUsers', {column: this.sortBy, order: this.sortOrder, offset: (this.currentPage_static-1) * this.resultsLimit_static, limit: this.resultsLimit_static, searchString: this.searchString, filterByRole: this.filterByRole})
         this.users = response.data
