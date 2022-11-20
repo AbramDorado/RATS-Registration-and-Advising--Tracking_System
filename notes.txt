@@ -1,0 +1,10 @@
+idea on: loading announcements and pagination
+  frontend keeps a counter of (total announcements currently displayed), default 0
+  frontend sends (counter+10) to backend
+  backend counts total announcements
+    if total announcements - (counter+10) <= 0, backend sends (more: 'false')
+    if total announcements - (counter+10) <= 10, backend sends (announcements: remainingAnnouncements, more: 'false)
+    else (if total announcements - (counter+10) > 10)
+      nextTenAnnouncements = query limit 10 offset (counter+10)
+      backend sends (announcements: nextTenAnnouncements, more: 'true')
+

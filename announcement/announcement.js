@@ -26,6 +26,36 @@ const router = express.Router()
   })
   // end Create Announcement
 
+  // Get Next Announcements
+  router.post('/api/announcement/next', async (req, res) => {
+    try {
+      // check body
+      if (req.body.loaded == undefined) {
+        throw 'Invalid request body'
+      }
+      // count announcements
+      const source = './database/db.sqlite'
+      const db = await database.openOrCreateDB(source)
+      const result = await database.get(db, `SELECT COUNT(*) as count FROM announcement`, [], false)
+      const difference = result.count - (req.body.loaded)
+      if (difference <= 0) {
+        res.json({more: 'false'}).send()
+      } else if (difference > 0 && difference <= 10) {
+        const result = await database.all(db, `SELECT * FROM announcement ORDER BY modified DESC LIMIT 10`, [], false)
+        res.json({announcements: result, more: 'false'}).send()
+      } else {
+        const toLoad = req.body.loaded + 10
+        const result = await database.all(db, `SELECT * FROM announcement ORDER BY modified DESC LIMIT 10 OFFSET ${toLoad}`, [], false)
+        res.json({announcements: result, more: 'true'}).send()
+      }
+    } catch (error) {
+      console.log('Error on api announcement next')
+      console.log(error)
+      res.status(401).json({message: error}).send()
+    }
+  })
+  // end Get Next Announcements  
+
   // Get Announcements
   router.post('/api/announcement/all', async (req, res) => {
     try {
