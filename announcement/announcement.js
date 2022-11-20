@@ -41,11 +41,10 @@ const router = express.Router()
       if (difference <= 0) {
         res.json({more: 'false'}).send()
       } else if (difference > 0 && difference <= 10) {
-        const result = await database.all(db, `SELECT * FROM announcement ORDER BY modified DESC LIMIT 10`, [], false)
+        const result = await database.all(db, `SELECT * FROM announcement ORDER BY modified DESC LIMIT 10 OFFSET ${req.body.loaded}`, [], false)
         res.json({announcements: result, more: 'false'}).send()
       } else {
-        const toLoad = req.body.loaded + 10
-        const result = await database.all(db, `SELECT * FROM announcement ORDER BY modified DESC LIMIT 10 OFFSET ${toLoad}`, [], false)
+        const result = await database.all(db, `SELECT * FROM announcement ORDER BY modified DESC LIMIT 10 OFFSET ${req.body.loaded}`, [], false)
         res.json({announcements: result, more: 'true'}).send()
       }
     } catch (error) {

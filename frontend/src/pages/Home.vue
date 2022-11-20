@@ -77,6 +77,9 @@ export default {
 
 <template>
 <div class="d-flex flex-column">
+  <!-- Temp -->
+  <span>announcementsCounter: {{this.announcementsCounter}}</span>
+  <!-- end Temp -->
   <Header :user="this.user" />
   <div id="homeMainDiv" class="d-flex flex-column justify-content-center" style="background-color: lightgray;">
     <div id="homeMainRow" class="d-flex flex-row" style="flex-basis: 0; gap: 20px; margin: 2%;">
@@ -86,7 +89,7 @@ export default {
           <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">ANNOUNCEMENTS</span>
         </div>
         <AnnouncementCard v-for="(obj, index) in announcements" :key="index" :header="announcements[index].title" :date="this.formatted_date(announcements[index].modified)" :content="announcements[index].body" />
-        <a @click="getNextAnnouncements()" v-if="!this.announcementsEmpty" href="#">Show more</a>
+        <a @click="getNextAnnouncements()" v-if="!this.announcementsEmpty" href="javascript:;">Show more</a>
       </div>
       <div v-if="this.user.role === 'student'" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px;">
         <div id="statusHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 10px;">
