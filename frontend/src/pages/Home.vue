@@ -77,9 +77,6 @@ export default {
 
 <template>
 <div class="d-flex flex-column">
-  <!-- Temp -->
-  <span>announcementsCounter: {{this.announcementsCounter}}</span>
-  <!-- end Temp -->
   <Header :user="this.user" />
   <div id="homeMainDiv" class="d-flex flex-column justify-content-center" style="background-color: lightgray;">
     <div id="homeMainRow" class="d-flex flex-row" style="flex-basis: 0; gap: 20px; margin: 2%;">
