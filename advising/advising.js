@@ -34,7 +34,7 @@ function loggedIn(req, res, next) {
       next()
     }
   } catch (error) {
-    console.log('Error in advising.js > loggedIn middlware')
+    console.log('Error in advising.js > loggedIn middleware')
     console.log(error)
     res.json({message: error}).send()
   }
