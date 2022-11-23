@@ -11,7 +11,13 @@ export default {
     formatted_name() { // Used in Account Popover
       return this.user.first_name + ' ' + this.user.last_name
     } 
-  },  
+  },
+  mounted() {
+    // Initialize Bootstrap Popper Tooltip
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    // end Initialize Bootstrap Popper Tooltip 
+  },
   methods: {
     async doLogout() {
       try {
@@ -95,12 +101,6 @@ export default {
       <h3 v-else style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Dashboard</h3>
     </div>
     <!-- end Advising Button -->
-    <div class="hoverTransform align-items-center d-flex flex-row">
-      <!-- Schedule of Classes Icon -->
-      <i class="align-items-center bi bi-calendar-week-fill d-flex" style="color: white; font-size: 22px; margin-right: 5px;"></i>
-      <!-- end Schedule of Classes Icon -->
-      <h3 style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Schedule of Classes</h3>
-    </div>
   </div>
   <!-- end Header Middle Div -->
 
@@ -108,7 +108,7 @@ export default {
   <div class="headerRight align-items-center d-flex flex-row justify-content-end" style="gap: 20px;">
     <!-- Notifications Icon -->
     <div id="notifsIconDiv" style="position: relative;">
-      <div @click="togglePopover('notifsPopover')" class="notifsIcon hoverTransform">
+      <div @click="togglePopover('notifsPopover')" data-bs-toggle="tooltip" data-bs-title="Notifications" data-bs-placement="left" class="notifsIcon hoverTransform">
         <!-- Notifications Icon -->
         <i class="align-items-center bi bi-bell-fill d-flex" style="color: white; font-size: 30px;"></i>
         <!-- end Notifications Icon -->
@@ -122,7 +122,7 @@ export default {
     <!-- end Notifications Icon -->
     <!-- Account Icon -->
     <div id="accIconDiv" style="position: relative">
-      <div @click="togglePopover('accPopover')" class="accIcon hoverTransform">
+      <div @click="togglePopover('accPopover')" data-bs-toggle="tooltip" data-bs-title="Account" data-bs-placement="left" class="accIcon hoverTransform">
         <!-- Account Icon -->
         <i class="align-items-center bi bi-person-circle d-flex" style="color: white; font-size: 30px;"></i>
         <!-- end Account Icon -->

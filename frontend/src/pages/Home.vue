@@ -2,6 +2,7 @@
 import AnnouncementCard from '../components/AnnouncementCard.vue'
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
+import ScheduleOfClasses from '../components/ScheduleOfClasses.vue'
 export default {
   name: 'Home',
   data() {
@@ -17,7 +18,7 @@ export default {
     }
   },
   components: {
-    AnnouncementCard, Header, Footer
+    AnnouncementCard, Header, Footer, ScheduleOfClasses
   },
   methods: {
     async authorize() {
@@ -71,12 +72,13 @@ export default {
 </script>
 
 <template>
+<ScheduleOfClasses />
 <div class="d-flex flex-column">
   <Header :user="this.user" />
   <div id="homeMainDiv" class="d-flex flex-column justify-content-center" style="background-color: lightgray;">
     <div id="homeMainRow" class="align-items-start d-flex flex-row" style="flex-basis: 0; gap: 20px; margin: 2%;">
       <div class="d-flex flex-column justify-content-center" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px;">
-        <div id="announcementsHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 10px;">
+        <div id="announcementsHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
           <i class="align-items-center bi bi-megaphone-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
           <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">ANNOUNCEMENTS</span>
         </div>
@@ -84,8 +86,8 @@ export default {
         <a @click="getNextAnnouncements()" v-if="!this.announcementsEmpty" href="javascript:;">Show more</a>
       </div>
       <!-- Status Div -->
-      <div v-if="this.user.role === 'student'" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 20px;">
-        <div id="statusHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 10px;">
+      <div v-if="this.user.role === 'student'" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px 20px 20px;">
+        <div id="statusHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
           <i class="align-items-center bi bi-clipboard-check-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
           <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">STATUS</span>
         </div>
