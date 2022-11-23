@@ -24,7 +24,9 @@ async function createInitialTables(db) {
   await database.createTable(db, 'advising_status', `
     student_up_mail TEXT UNIQUE PRIMARY KEY,
     adviser_up_mail TEXT,
-    status TEXT
+    step1_status TEXT,
+    step2_status TEXT,
+    step3_status TEXT
   `)
   // end advising_status table
 }
@@ -37,9 +39,11 @@ async function createInitialRows(db) {
       INSERT INTO advising_status (
         student_up_mail,
         adviser_up_mail,
-        status
-      ) VALUES (?, ?, ?)
-    `, ['jmlicup@up.edu.ph', 'johnpaolomlicup@gmail.com', 'not started'], true)
+        step1_status,
+        step2_status,
+        step3_status
+      ) VALUES (?, ?, ?, ?, ?)
+    `, ['jmlicup@up.edu.ph', 'johnpaolomlicup@gmail.com', 'not started', 'not started', 'no access'], true)
     // end student jmlicup@up.edu.ph
   // end Advising Status
 

@@ -10,7 +10,9 @@ export default {
       announcementsCounter: 0, // counter for total announcements loaded
       announcementsEmpty: false, // v-if 'Show more (announcements)' button; true if all announcements from backend are already loaded here
       getNextAnnouncementsDisabled: false, // for spam handling getNextAnnouncements()
-      status: '',
+      step1_status: '',
+      step2_status: '',
+      step3_status: '',
       user: {}
     }
   },
@@ -34,7 +36,9 @@ export default {
     async getAdvisingStatus() {
       try {
         const response = await this.axios.post('/api/advising/getStatus', {student_up_mail: this.user.up_mail})
-        this.status = response.data.result.status
+        this.step1_status = response.data.step1_status
+        this.step2_status = response.data.step2_status
+        this.step3_status = response.data.step3_status
       } catch (error) {
         console.log('Error on Home.vue > getAdvisingStatus', error)
       }
@@ -70,7 +74,7 @@ export default {
 <div class="d-flex flex-column">
   <Header :user="this.user" />
   <div id="homeMainDiv" class="d-flex flex-column justify-content-center" style="background-color: lightgray;">
-    <div id="homeMainRow" class="d-flex flex-row" style="flex-basis: 0; gap: 20px; margin: 2%;">
+    <div id="homeMainRow" class="align-items-start d-flex flex-row" style="flex-basis: 0; gap: 20px; margin: 2%;">
       <div class="d-flex flex-column justify-content-center" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px;">
         <div id="announcementsHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 10px;">
           <i class="align-items-center bi bi-megaphone-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
@@ -80,24 +84,21 @@ export default {
         <a @click="getNextAnnouncements()" v-if="!this.announcementsEmpty" href="javascript:;">Show more</a>
       </div>
       <!-- Status Div -->
-      <div v-if="this.user.role === 'student'" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px;">
+      <div v-if="this.user.role === 'student'" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 20px;">
         <div id="statusHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 10px;">
           <i class="align-items-center bi bi-clipboard-check-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
           <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">STATUS</span>
         </div>
-        <div ref="statusDivBody">
-          {{this.status}}
-        </div>
 
         <!-- Status Timeline -->
-        <div class="d-flex flex-column justify-content-center">         
+        <div class="d-flex flex-column justify-content-center" style="gap: 20px;">         
           
           <!-- Curriculum Progress -->
           <div class="d-flex flex-column" style="background-color: white; border: 2px solid black; border-radius: 10px; padding: 10px 15px;">
             <span style="font-family: Open_Sans_Bold; font-size: 16px; margin-bottom: 10px;">Step 1: Update Curriculum Progress</span>
             <span style="align-self: center; font-family: Open_Sans_Bold; font-size: 20px; margin-bottom: 5px;">
               Status:
-              <span style="font-family: Open_Sans; font-size: 20px;">Not Started</span>
+              <span style="font-family: Open_Sans; font-size: 20px; text-transform: capitalize;">{{this.step1_status}}</span>
             </span>
             <!-- Start Button -->
             <div class="d-flex hoverTransform" style="align-self: center; width: 100px;">
@@ -108,6 +109,40 @@ export default {
             <!-- end Start Button -->               
           </div>
           <!-- end Curriculum Progress -->
+
+          <!-- Advising  -->
+          <div class="d-flex flex-column" style="background-color: white; border: 2px solid black; border-radius: 10px; padding: 10px 15px;">
+            <span style="font-family: Open_Sans_Bold; font-size: 16px; margin-bottom: 10px;">Step 2: Obtain Approved Enrollment Checklist Form</span>
+            <span style="align-self: center; font-family: Open_Sans_Bold; font-size: 20px; margin-bottom: 5px;">
+              Status:
+              <span style="font-family: Open_Sans; font-size: 20px; text-transform: capitalize;">{{this.step2_status}}</span>
+            </span>
+            <!-- Start Button -->
+            <div class="d-flex hoverTransform" style="align-self: center; width: 100px;">
+              <span @click="" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
+                Start
+              </span>
+            </div>
+            <!-- end Start Button -->               
+          </div>
+          <!-- end Advising -->
+
+          <!-- SAIS  -->
+          <div class="d-flex flex-column" style="background-color: white; border: 2px solid black; border-radius: 10px; padding: 10px 15px;">
+            <span style="font-family: Open_Sans_Bold; font-size: 16px; margin-bottom: 10px;">Step 3: Get SAIS Enlistment Access</span>
+            <span style="align-self: center; font-family: Open_Sans_Bold; font-size: 20px; margin-bottom: 5px;">
+              Status:
+              <span style="font-family: Open_Sans; font-size: 20px; text-transform: capitalize;">{{this.step3_status}}</span>
+            </span>
+            <!-- Start Button -->
+            <div class="d-flex hoverTransform" style="align-self: center; width: 100px;">
+              <span @click="" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
+                Start
+              </span>
+            </div>
+            <!-- end Start Button -->               
+          </div>
+          <!-- end SAIS -->          
 
         </div>
         <!-- end Status Timeline -->

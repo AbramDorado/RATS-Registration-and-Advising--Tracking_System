@@ -12,9 +12,9 @@ router.post('/api/advising/getStatus', loggedIn, async (req, res) => {
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       const result = await database.get(db, `
-        SELECT status FROM advising_status WHERE student_up_mail = ?
+        SELECT step1_status, step2_status, step3_status FROM advising_status WHERE student_up_mail = ?
       `, [req.body.student_up_mail], false)
-      res.json({result: result}).send()
+      res.json({step1_status: result.step1_status, step2_status: result.step2_status, step3_status: result.step3_status}).send()
     }
   } catch (error) {
     console.log('Error in api advising getStatus')
