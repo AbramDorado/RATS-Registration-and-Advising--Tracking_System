@@ -101,6 +101,14 @@ export default {
       <h3 v-else style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Dashboard</h3>
     </div>
     <!-- end Advising Button -->
+    <!-- Contact Button -->
+    <div @click="redirect('/contact')" class="hoverTransform align-items-center d-flex flex-row">
+      <!-- Contact Icon -->
+      <i class="align-items-center bi bi-question-circle-fill d-flex" style="color: white; font-size: 22px; margin-right: 5px;"></i>
+      <!-- end Contact Icon -->
+      <h3 style="font-family: Open_Sans_Semi_Bold; font-size: 22px; margin-bottom: 0;">Contact</h3>
+    </div>
+    <!-- end Advising Button -->    
   </div>
   <!-- end Header Middle Div -->
 

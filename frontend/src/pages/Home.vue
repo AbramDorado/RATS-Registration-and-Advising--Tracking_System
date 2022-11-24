@@ -64,7 +64,6 @@ export default {
   },
   async mounted() {
     await this.authorize()
-    // await this.getAllAnnouncements()
     await this.getNextAnnouncements()
     await this.getAdvisingStatus()
   }
