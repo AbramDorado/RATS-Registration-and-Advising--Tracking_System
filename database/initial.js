@@ -29,6 +29,14 @@ async function createInitialTables(db) {
     step3_status TEXT
   `)
   // end advising_status table
+  // curri_progress table
+  await database.createTable(db, 'curri_progress', `
+    student_up_mail TEXT UNIQUE PRIMARY KEY,
+    curri_progress TEXT,
+    created TEXT,
+    modified TEXT
+  `)
+  // end curri_progress table
 }
 
 async function createInitialRows(db) {

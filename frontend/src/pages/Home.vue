@@ -60,6 +60,9 @@ export default {
         console.log('Error on Home.vue > getNextAnnouncements()', error)
         this.getNextAnnouncementsDisabled = false
       }
+    },
+    redirect(to) {
+      location.href = to
     }
   },
   async mounted() {
@@ -106,13 +109,16 @@ export default {
               Status:
               <span style="font-family: Open_Sans; font-size: 20px; text-transform: capitalize;">{{this.step1_status}}</span>
             </span>
-            <!-- Start Button -->
+            <!-- Start/Edit Button -->
             <div class="d-flex hoverTransform" style="align-self: center; width: 100px;">
-              <span @click="" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
+              <span @click="redirect('/advising')" v-if="this.step1_status === 'not started'" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
                 Start
               </span>
+              <span @click="redirect('/advising')" v-else style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
+                Edit
+              </span>              
             </div>
-            <!-- end Start Button -->               
+            <!-- end Start/Edit Button -->               
           </div>
           <!-- end Curriculum Progress -->
 
@@ -125,7 +131,7 @@ export default {
             </span>
             <!-- Start Button -->
             <div class="d-flex hoverTransform" style="align-self: center; width: 100px;">
-              <span @click="" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
+              <span @click="redirect('/advising#ecfDiv')" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
                 Start
               </span>
             </div>
@@ -142,7 +148,7 @@ export default {
             </span>
             <!-- Start Button -->
             <div class="d-flex hoverTransform" style="align-self: center; width: 100px;">
-              <span @click="" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
+              <span @click="redirect('/advising')" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
                 Start
               </span>
             </div>

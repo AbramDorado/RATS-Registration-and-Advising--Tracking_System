@@ -41,6 +41,9 @@ export default {
   margin: 0;
   padding: 0;
 }
+html {
+  scroll-behavior: smooth;
+}
 @font-face {
   font-family: IBM_Plex_Serif;
   src: url(/IBM_Plex_Serif/IBMPlexSerif-Regular.ttf);

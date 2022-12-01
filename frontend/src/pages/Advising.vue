@@ -24,6 +24,7 @@ export default {
   },
   async mounted() {
     await this.authorize()
+    await this.update_curri_progress()
   },
   methods: {
     addCurriProgressRow() {
@@ -43,10 +44,35 @@ export default {
         location.href = '/login' // to do: allow logging in as 'guest' for non-cas students
       }
     },
+    async deleteRow(index) {
+      this.curri_progress.splice(index, 1)
+      // update to backend
+      try {
+        const response = await this.axios.post('/api/advising/curri/update', {curri_progress: this.curri_progress})
+      } catch (error) {
+        console.log('Error on Advising.vue > finishEditingCurri', error)
+        alert('Error')
+      }
+    },
     async finishEditingCurri() {
       // update to backend
-
+      try {
+        const response = await this.axios.post('/api/advising/curri/update', {curri_progress: this.curri_progress})
+      } catch (error) {
+        console.log('Error on Advising.vue > finishEditingCurri', error)
+        alert('Error')
+      }
       this.toggleEditMode(false)
+    },
+    async update_curri_progress() {
+      // to do
+      try {
+        const response = await this.axios.post('/api/advising/curri/read')
+        this.curri_progress = JSON.parse(response.data.row.curri_progress)
+      } catch (error) {
+        console.log('Error on Advising.vue > update_curri_progress', error)
+        // alert('Error')
+      }
     },
     toggleEditMode(bool) {
       this.editMode = bool
@@ -90,15 +116,17 @@ export default {
               <th scope="col" class="text-center" style="color: rgb(70, 12, 15);">Instructor</th>
               <th scope="col" class="text-center" style="color: rgb(70, 12, 15);">Units</th>
               <th scope="col" class="text-center" style="color: rgb(70, 12, 15);">Grade</th>
+              <th v-if="this.editMode" scope="col" class="text-center" style="color: rgb(70, 12, 15);">Action</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(obj, index) in curri_progress" :key="index">
-              <th scope="row"><input :disabled="!this.editMode" type="text" :value="curri_progress[index].course" class="text-center" style="width: 100%;"></th>
-              <td><input :disabled="!this.editMode" type="text" :value="curri_progress[index].section" class="text-center" style="width: 100%;"></td>
-              <td><input :disabled="!this.editMode" type="text" :value="curri_progress[index].instructor" class="text-center" style="width: 100%;"></td>
-              <td><input :disabled="!this.editMode" type="text" :value="curri_progress[index].units" class="text-center" style="width: 100%;"></td>
-              <td><input :disabled="!this.editMode" type="text" :value="curri_progress[index].grade" class="text-center" style="width: 100%;"></td>
+              <th scope="row"><input v-model="curri_progress[index].course" :disabled="!this.editMode" type="text" :value="curri_progress[index].course" class="text-center" style="width: 100%;"></th>
+              <td><input v-model="curri_progress[index].section" :disabled="!this.editMode" type="text" :value="curri_progress[index].section" class="text-center" style="width: 100%;"></td>
+              <td><input v-model="curri_progress[index].instructor" :disabled="!this.editMode" type="text" :value="curri_progress[index].instructor" class="text-center" style="width: 100%;"></td>
+              <td><input v-model="curri_progress[index].units" :disabled="!this.editMode" type="text" :value="curri_progress[index].units" class="text-center" style="width: 100%;"></td>
+              <td><input v-model="curri_progress[index].grade" :disabled="!this.editMode" type="text" :value="curri_progress[index].grade" class="text-center" style="width: 100%;"></td>
+              <td v-if="this.editMode" class="d-flex justify-content-center"><span @click="deleteRow(index)" class="hoverTransform" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Delete Row</span></td>
             </tr>          
           </tbody>           
         </table>
@@ -118,7 +146,7 @@ export default {
     </div>
     <!-- end Curriculum Progress -->
     <!-- ECF -->
-    <div class="div2">
+    <div class="div2" id="ecfDiv">
       <!-- ECF Header -->
       <div ref="ecfHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
         <i class="align-items-center bi bi-list-check d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
