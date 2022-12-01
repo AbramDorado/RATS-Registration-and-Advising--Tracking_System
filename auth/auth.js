@@ -95,7 +95,7 @@ async function configureGoogleStrategy(db) {
     } catch (error) {
       console.log('error on /api/countUsers') // temp
       console.log(error)
-      res.send('Error')
+      res.status(401).json({message: error}).send()
     }
   })
 

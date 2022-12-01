@@ -16,8 +16,8 @@ async function createInitialTables(db) {
     id TEXT UNIQUE PRIMARY KEY,
     title TEXT,
     body TEXT UNIQUE,
-    created TEXT,
-    modified TEXT
+    created INTEGER,
+    modified INTEGER
   `)
   // end announcement table
   // advising_status table
@@ -48,13 +48,13 @@ async function createInitialRows(db) {
   // end Advising Status
 
   // Announcements
-    await database.run(db, `
-    INSERT INTO announcement (
-      id, title, body, created, modified
-    ) VALUES (?, ?, ?, ?, ?)
-  `, [
-    uuidv4(), 'Hello World!', 'Lorem ipsum dolor', Date.now(), Date.now()
-  ], true)
+  //   await database.run(db, `
+  //   INSERT INTO announcement (
+  //     id, title, body, created, modified
+  //   ) VALUES (?, ?, ?, ?, ?)
+  // `, [
+  //   uuidv4(), 'Hello World!', 'Lorem ipsum dolor', Date.now(), Date.now()
+  // ], true)
   // end Announcements
 
   // Users

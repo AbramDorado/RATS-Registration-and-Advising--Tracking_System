@@ -64,22 +64,27 @@ export default {
   },
   async mounted() {
     await this.authorize()
+    console.log('calling getNextAnn')
     await this.getNextAnnouncements()
-    await this.getAdvisingStatus()
+    if (this.user.role === 'student') {
+      await this.getAdvisingStatus()
+    }
+    console.log('this called')
+    this.$refs.home.style.display = 'flex'
   }
 }
 </script>
 
 <template>
 <ScheduleOfClasses />
-<div class="d-flex flex-column">
+<div ref="home" class="flex-column" style="display: none;">
   <Header :user="this.user" />
   <div id="homeMainDiv" class="d-flex flex-column justify-content-center" style="background-color: lightgray;">
     <div id="homeMainRow" class="align-items-start d-flex flex-row" style="flex-basis: 0; gap: 20px; margin: 2%;">
       <div class="d-flex flex-column justify-content-center" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px;">
         <div id="announcementsHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
           <i class="align-items-center bi bi-megaphone-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
-          <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">ANNOUNCEMENTS</span>
+          <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Announcements</span>
         </div>
         <AnnouncementCard v-for="(obj, index) in announcements" :key="index" :header="announcements[index].title" :date="this.formatted_date(announcements[index].modified)" :content="announcements[index].body" />
         <a @click="getNextAnnouncements()" v-if="!this.announcementsEmpty" href="javascript:;">Show more</a>
@@ -88,7 +93,7 @@ export default {
       <div v-if="this.user.role === 'student'" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px 20px 20px;">
         <div id="statusHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
           <i class="align-items-center bi bi-clipboard-check-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
-          <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">STATUS</span>
+          <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Enrollment Status</span>
         </div>
 
         <!-- Status Timeline -->

@@ -43,7 +43,7 @@ export default {
 </script>
 
 <template>
-<div ref="login" class="align-items-center justify-content-center" style="background-image: url('login_bg.png'); background-position: center; background-repeat: no-repeat; background-size: cover; display: none; width: 100%; height: 100%;">
+<div ref="login" class="align-items-center justify-content-center" style="background-image: url('login_bg.png'); background-position: center; background-repeat: no-repeat; background-size: cover; display: none; flex-grow: 1; width: 100%; height: 100%;">
   <div class="mainLoginDiv">
     <div class="loginMainDiv align-items-center d-flex justify-content-center" style="background-color: white; height: 500px; width: 1000px;">
       <div class="loginDiv d-flex flex-row" style="height: 100%; min-height: 400px;">

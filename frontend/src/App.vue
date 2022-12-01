@@ -29,7 +29,7 @@ export default {
 </script>
 
 <template>
-<div @click="this.rvClicked($event)" style="height: 100%;">
+<div @click="this.rvClicked($event)" style="display: flex; flex-direction: column; min-height: 100vh;">
   <router-view />
 </div>
 </template>

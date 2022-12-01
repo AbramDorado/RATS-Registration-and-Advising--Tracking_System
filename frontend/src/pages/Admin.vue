@@ -718,7 +718,7 @@ export default {
         <div class="align-items-center d-flex flex-row" style="gap: 10px;">
           <!-- Cancel -->
           <div class="hoverTransform">
-            <span @click="clearAddAnnouncementInputs(); hideDiv('addAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
+            <span @click="clearAddAnnouncementInputs(); hideDiv('addAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
           </div>
           <!-- end Cancel -->          
         </div>
@@ -758,7 +758,7 @@ export default {
         <div class="align-items-center d-flex flex-row" style="gap: 10px;">
           <!-- Cancel -->
           <div class="hoverTransform">
-            <span @click="hideDiv('deleteAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
+            <span @click="hideDiv('deleteAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
           </div>
           <!-- end Cancel -->          
         </div>
@@ -767,7 +767,7 @@ export default {
       <!-- end Delete Announcement Header -->
       <!-- Delete Announcement Body -->
       <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
-        <span>Confirm Deletion</span>
+        <!-- <span>Confirm Deletion</span>
         <span>Title</span>
         <span>{{this.del_announcement.title}}</span>
         <span>Created</span>
@@ -775,12 +775,25 @@ export default {
         <span>Last Modified</span>
         <span>{{this.del_announcement.modified}}</span>
         <span>Body</span>
-        <span>{{this.del_announcement.body}}</span>
-        <button @click="deleteAnnouncementAPI()">Delete</button>
+        <span>{{this.del_announcement.body}}</span> -->
+        <span style="font-family: Open_Sans_Bold;">Title</span>
+        <textarea disabled :value="del_announcement.title" style="overflow: auto; white-space: normal;"></textarea>
+        <span style="font-family: Open_Sans_Bold;">Created</span>
+        <textarea disabled style="overflow: auto;">{{this.del_announcement.created}}</textarea>
+        <span style="font-family: Open_Sans_Bold;">Last Modified</span>
+        <textarea disabled style="overflow: auto;">{{this.del_announcement.modified}}</textarea>
+        <span style="font-family: Open_Sans_Bold;">Body</span>
+        <span v-html="del_announcement.body" style="background-color: rgba(239, 239, 239, 0.3); border: 1px solid gray; cursor: normal; min-height: 300px; overflow: auto; white-space: normal;"></span>        
+        <!-- <button @click="deleteAnnouncementAPI()">Delete</button> -->
+        <!-- Delete Button -->
+        <div @click="deleteAnnouncementAPI()" class="align-items-center d-flex justify-content-center hoverTransform">
+          <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Delete Announcement</span>
+        </div>
+        <!-- end Delete Button -->          
       </div>
-      <!-- end Delete User Body -->      
+      <!-- end Delete Announcement Body -->      
     </div>
-    <!-- end Delete User Div -->
+    <!-- end Delete Announcement Div -->
     <!-- Edit Announcement Div -->
     <div ref="editAnnouncementDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
       <!-- Edit Announcement Header -->
@@ -797,7 +810,7 @@ export default {
         <div class="align-items-center d-flex flex-row" style="gap: 10px;">
           <!-- Cancel -->
           <div class="hoverTransform">
-            <span @click="hideDiv('editAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
+            <span @click="hideDiv('editAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
           </div>
           <!-- end Cancel -->          
         </div>
@@ -807,9 +820,9 @@ export default {
       <!-- Edit Announcement Body -->
       <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
         <span style="font-family: Open_Sans_Bold;">Title</span>
-        <input v-model="edit_announcement.title" type="text" style="margin-bottom: 10px;">
+        <textarea v-model="edit_announcement.title" type="text" style="margin-bottom: 10px;"></textarea>
         <span style="font-family: Open_Sans_Bold;">Body</span>
-        <input v-model="edit_announcement.body" type="text" style="margin-bottom: 10px;">
+        <textarea v-model="edit_announcement.body" type="text" style="margin-bottom: 10px; min-height: 300px;"></textarea>
         <!-- Edit Button -->
           <div @click="editAnnouncementAPI()" class="align-items-center d-flex justify-content-center hoverTransform">
             <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Edit Announcement</span>
@@ -835,7 +848,7 @@ export default {
         <div class="align-items-center d-flex flex-row" style="gap: 10px;">
           <!-- Close -->
           <div class="hoverTransform">
-            <span @click="hideDiv('viewAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Close</span>
+            <span @click="hideDiv('viewAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Close</span>
           </div>
           <!-- end Close -->          
         </div>
@@ -844,14 +857,14 @@ export default {
       <!-- end View Announcement Header -->
       <!-- View Announcement Body -->
       <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
-        <span>Title</span>
-        <span>{{this.view_announcement.title}}</span>
-        <span>Created</span>
-        <span>{{this.view_announcement.created}}</span>
-        <span>Last Modified</span>
-        <span>{{this.view_announcement.modified}}</span>
-        <span>Body</span>
-        <span>{{this.view_announcement.body}}</span>
+        <span style="font-family: Open_Sans_Bold;">Title</span>
+        <textarea disabled :value="view_announcement.title" style="overflow: auto; white-space: normal;"></textarea>
+        <span style="font-family: Open_Sans_Bold;">Created</span>
+        <textarea disabled style="overflow: auto;">{{this.view_announcement.created}}</textarea>
+        <span style="font-family: Open_Sans_Bold;">Last Modified</span>
+        <textarea disabled style="overflow: auto;">{{this.view_announcement.modified}}</textarea>
+        <span style="font-family: Open_Sans_Bold;">Body</span>
+        <span v-html="view_announcement.body" style="background-color: rgba(239, 239, 239, 0.3); border: 1px solid gray; cursor: normal; min-height: 300px; overflow: auto; white-space: normal;"></span>
       </div>
       <!-- end View Announcement Body -->               
     </div>
@@ -877,7 +890,7 @@ export default {
           <!-- end Add Announcement -->            
           <!-- Back to Menu -->
           <div class="hoverTransform">
-            <span @click="hideDiv('announcementDashboard'); showDiv('menuDiv');" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Back to Menu</span>
+            <span @click="hideDiv('announcementDashboard'); showDiv('menuDiv');" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Back to Menu</span>
           </div>
           <!-- end Back to Menu -->
         </div>
@@ -900,11 +913,12 @@ export default {
           </thead>
           <tbody>
             <tr v-for="(obj, index) in announcements" :key="index">
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{announcements[index].title}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{this.formatted_date(announcements[index].modified)}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{this.formatted_date(announcements[index].created)}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{announcements[index].body}}</td>
-              <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              <td class="text-start" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{announcements[index].title}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{this.formatted_date(announcements[index].modified)}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{this.formatted_date(announcements[index].created)}}</td>
+              <!-- <td class="text-start" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis; white-space: pre-line;">{{announcements[index].body}}</td> -->
+              <td v-html="announcements[index].body" class="text-start" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis; white-space: normal;"></td>
+              <td style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis; white-space: nowrap;">
                 <!-- View Button -->
                 <div @click="viewAnnouncement(announcements[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #093405; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
                   <span style="font-family: Open_Sans_Semi_Bold;">View</span>

@@ -9,13 +9,32 @@ export default {
   },
   data() {
     return {
-      user: {}
+      curri_progress: [{
+        course: '',
+        section: '',
+        instructor: '',
+        units: null,
+        grade: ''
+      }],
+      curri_shown: false,
+      editMode: false,
+      user: {},
+      ECF_shown: false
     }
   },
   async mounted() {
     await this.authorize()
   },
   methods: {
+    addCurriProgressRow() {
+      this.curri_progress.push({
+        course: '',
+        section: '',
+        instructor: '',
+        units: null,
+        grade: ''     
+      })
+    },
     async authorize() {
       try {
         const response = await this.axios.post('/api/authorize')
@@ -24,6 +43,14 @@ export default {
         location.href = '/login' // to do: allow logging in as 'guest' for non-cas students
       }
     },
+    async finishEditingCurri() {
+      // update to backend
+
+      this.toggleEditMode(false)
+    },
+    toggleEditMode(bool) {
+      this.editMode = bool
+    }
   }
 }
 </script>
@@ -31,18 +58,78 @@ export default {
 <template>
 <ScheduleOfClasses />
 <!-- Advising Div -->
-<div>
+<div class="d-flex flex-column" style="min-height: 100vh;">
   <Header :user="this.user"/>
   <!-- Advising Page Body -->
-  <div class="align-items-start d-flex flex-row justify-content-center" style="gap: 20px; margin: 2%; min-height: 50vh;">
+  <div class="align-items-start d-flex flex-column justify-content-center" style="flex-grow: 1; gap: 20px; margin: 2%;">
     <!-- Curriculum Progress -->
     <div class="div2">
-      Curriculum Progress
+      <!-- Curriculum Progress Header -->
+      <div ref="curriculumHeader" class="align-items-center d-flex flex-row justify-content-between" style="margin-bottom: 15px;">
+        <!-- Left -->
+        <div class="d-flex">
+          <i class="align-items-center bi bi-mortarboard-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
+          <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Curriculum Progress</span>
+        </div>
+        <!-- end Left -->
+        <!-- Right -->
+        <div class="d-flex">
+          <span v-if="!this.editMode" @click="toggleEditMode(true)" class="hoverTransform" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Edit</span>  
+          <span v-else @click="finishEditingCurri()" class="hoverTransform" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Finish Editing</span>      
+        </div>
+        <!-- end Right -->
+      </div>
+      <!-- end Curriculum Progress Header -->
+      <!-- Curriculum Progress Body -->
+      <div ref="curri_body">
+        <table class="table table-sm" style="overflow-x: scroll; table-layout: fixed;">
+          <thead>
+            <tr>
+              <th scope="col" class="text-center" style="color: rgb(70, 12, 15);">Course</th>
+              <th scope="col" class="text-center" style="color: rgb(70, 12, 15);">Section</th>
+              <th scope="col" class="text-center" style="color: rgb(70, 12, 15);">Instructor</th>
+              <th scope="col" class="text-center" style="color: rgb(70, 12, 15);">Units</th>
+              <th scope="col" class="text-center" style="color: rgb(70, 12, 15);">Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(obj, index) in curri_progress" :key="index">
+              <th scope="row"><input :disabled="!this.editMode" type="text" :value="curri_progress[index].course" class="text-center" style="width: 100%;"></th>
+              <td><input :disabled="!this.editMode" type="text" :value="curri_progress[index].section" class="text-center" style="width: 100%;"></td>
+              <td><input :disabled="!this.editMode" type="text" :value="curri_progress[index].instructor" class="text-center" style="width: 100%;"></td>
+              <td><input :disabled="!this.editMode" type="text" :value="curri_progress[index].units" class="text-center" style="width: 100%;"></td>
+              <td><input :disabled="!this.editMode" type="text" :value="curri_progress[index].grade" class="text-center" style="width: 100%;"></td>
+            </tr>          
+          </tbody>           
+        </table>
+        <!-- Add Button -->
+        <div v-if="this.editMode" class="d-flex hoverTransform justify-content-center" style="margin-bottom: 10px;">
+          <span @click="addCurriProgressRow()" class="hoverTransform" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Add Row</span>
+        </div>
+        <!-- end Add Button -->
+        <!-- Copy of Buttons -->
+        <div class="d-flex justify-content-center">
+          <span v-if="!this.editMode" @click="toggleEditMode(true)" class="hoverTransform" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Edit</span>  
+          <span v-else @click="finishEditingCurri()" class="hoverTransform" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Finish Editing</span>      
+        </div>
+        <!-- end Copy of Buttons -->
+      </div>
+      <!-- end Curriculum Progress Body -->
     </div>
     <!-- end Curriculum Progress -->
     <!-- ECF -->
     <div class="div2">
-      ECF
+      <!-- ECF Header -->
+      <div ref="ecfHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
+        <i class="align-items-center bi bi-list-check d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
+        <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">ECF</span>
+      </div>
+      <!-- end ECF Header -->
+      <!-- ECF Body -->
+      <div ref="ECF_body">
+
+      </div>
+      <!-- end ECF Body -->
     </div>
     <!-- end ECF -->
   </div>
@@ -60,7 +147,21 @@ export default {
   background-color: #F8F6F0;
   border: 2px solid #093405;
   border-radius: 10px;
-  flex: 1 1 0;
   padding: 15px 20px;
+  width: 100%;
 }
+.hoverTransform {
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.1s linear;
+}
+  .hoverTransform:hover {
+    transform: scale(1.05);
+    transform-origin: center;
+  }
+
+  .hoverTransform:active {
+    transform: scale(0.95);
+    transform-origin: center;
+  }
 </style>

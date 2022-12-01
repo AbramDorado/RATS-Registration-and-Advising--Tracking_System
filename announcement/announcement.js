@@ -26,6 +26,29 @@ const router = express.Router()
   })
   // end Create Announcement
 
+  // Get Announcements
+  router.post('/api/announcement/all', async (req, res) => {
+    try {
+      // check body
+      if (!req.body.limit) {
+        throw 'Invalid request body'
+      }
+      var myOffset = 0
+      if (req.body.offset) {
+        myOffset = req.body.offset
+      }
+      const source = './database/db.sqlite'
+      const db = await database.openOrCreateDB(source)
+      const rows = await database.all(db, `SELECT * FROM announcement ORDER BY modified DESC LIMIT ${req.body.limit} OFFSET ${myOffset}`, [], false)
+      res.json({rows: rows}).send()
+    } catch (error) {
+      console.log('Error on api announcement all')
+      console.log(error)
+      res.json({message: error}).send()
+    }
+  })
+  // end Get Announcements
+
   // Get Next Announcements
   router.post('/api/announcement/next', async (req, res) => {
     try {
