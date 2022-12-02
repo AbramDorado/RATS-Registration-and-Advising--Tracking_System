@@ -396,7 +396,9 @@ export default {
       <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
         <span style="font-family: Open_Sans_Bold;">Upload CSV containing users</span>
         <input ref="batchUploadCSV" type="file">
-        <button @click="batchRegister()">Batch Register</button>
+        <div @click="batchRegister()" class="hoverTransform" style="align-self: center;">
+          <span style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Batch Register</span>
+        </div>
         <span>Current Progress: <span style="white-space: pre-line">{{batchUploadProgress}}</span></span>
       </div>
       <!-- end Batch Upload Body -->
@@ -594,7 +596,7 @@ export default {
     <!-- end View User Div -->    
     <!-- Users Dashboard -->
     <div ref="usersDashboard" class="flex-column" style="background-color: #f3f3f3; border: 2px solid black; display: none; min-height: 300px; width: 1200px;">
-      <a @click="hideDiv('usersDashboard'); showDiv('menuDiv');" href="#">Back to Menu</a>
+      <!-- <a @click="hideDiv('usersDashboard'); showDiv('menuDiv');" href="#">Back to Menu</a> -->
       <!-- Users Dashboard Header -->
       <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
         <!-- Users Dashboard Header Left Div -->
@@ -616,7 +618,10 @@ export default {
           <div class="hoverTransform">
             <span @click="hideDiv('usersDashboard'); showDiv('registerUserDiv')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Register User</span>
           </div>
-          <!-- end Register User -->          
+          <!-- end Register User -->  
+          <div class="hoverTransform">
+            <span @click="hideDiv('usersDashboard'); showDiv('menuDiv');" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Back to Menu</span>
+          </div>                  
         </div>
         <!-- end Users Dashboard Header Right Div -->
       </div>
