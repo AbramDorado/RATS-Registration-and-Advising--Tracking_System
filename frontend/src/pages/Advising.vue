@@ -86,8 +86,9 @@ export default {
 <!-- Advising Div -->
 <div class="d-flex flex-column" style="min-height: 100vh;">
   <Header :user="this.user"/>
-  <!-- Advising Page Body -->
-  <div class="align-items-start d-flex flex-column justify-content-center" style="flex-grow: 1; gap: 20px; margin: 2%;">
+
+  <!-- Student View: Advising Page Body -->
+  <div v-if="this.user.role === 'student'" class="align-items-start d-flex flex-column justify-content-center" style="flex-grow: 1; gap: 20px; margin: 2%;">
     <!-- Curriculum Progress -->
     <div class="div2">
       <!-- Curriculum Progress Header -->
@@ -161,7 +162,8 @@ export default {
     </div>
     <!-- end ECF -->
   </div>
-  <!-- end Advising Page Body -->
+  <!-- end Student View: Advising Page Body -->
+
   <Footer />
 </div>
 <!-- end Advising Div -->
