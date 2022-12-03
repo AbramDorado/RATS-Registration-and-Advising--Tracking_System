@@ -44,6 +44,16 @@ export default {
 html {
   scroll-behavior: smooth;
 }
+span, td {
+  line-height: 1;
+}
+/* always show arrows input type number */
+input[type=number]::-webkit-inner-spin-button {
+  opacity: 1
+}
+td {
+  vertical-align: middle;
+}
 @font-face {
   font-family: IBM_Plex_Serif;
   src: url(/IBM_Plex_Serif/IBMPlexSerif-Regular.ttf);

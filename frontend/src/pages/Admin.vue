@@ -1,10 +1,11 @@
 <script>
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
+import ScheduleOfClasses from '../components/ScheduleOfClasses.vue'
 export default {
   name: 'Admin',
   components: {
-    Header, Footer
+    Header, Footer, ScheduleOfClasses
   },
   data () {
     return {
@@ -54,29 +55,29 @@ export default {
     }
   },
   methods: {
-    async addAnnouncement() {
-      try {
-        if (this.addAnnouncementDisabled) {
-          return
-        } else if (!this.add_announcement.title || !this.add_announcement.body) {
-          alert('Input cannot be blank')
-          return
-        } else {
-          this.addAnnouncementDisabled = true
-          const body = {title: this.add_announcement.title, body: this.add_announcement.body}
-          const response = await this.axios.post('/api/announcement/create', body)
-          await this.getAllAnnouncements()
-          this.clearAddAnnouncementInputs();
-          this.addAnnouncementDisabled = false
-          this.hideDiv('addAnnouncementDiv');
-          this.showDiv('announcementDashboard')
-        }
-      } catch (error) {
-        console.log('Error on Admin.vue > addAnnouncement', error) // temp
-        alert('Error on posting announcement') // temp
-        this.addAnnouncementDisabled = false
-      }
-    },    
+    // async addAnnouncement() {
+    //   try {
+    //     if (this.addAnnouncementDisabled) {
+    //       return
+    //     } else if (!this.add_announcement.title || !this.add_announcement.body) {
+    //       alert('Input cannot be blank')
+    //       return
+    //     } else {
+    //       this.addAnnouncementDisabled = true
+    //       const body = {title: this.add_announcement.title, body: this.add_announcement.body}
+    //       const response = await this.axios.post('/api/announcement/create', body)
+    //       await this.getAllAnnouncements()
+    //       this.clearAddAnnouncementInputs();
+    //       this.addAnnouncementDisabled = false
+    //       this.hideDiv('addAnnouncementDiv');
+    //       this.showDiv('announcementDashboard')
+    //     }
+    //   } catch (error) {
+    //     console.log('Error on Admin.vue > addAnnouncement', error) // temp
+    //     alert('Error on posting announcement') // temp
+    //     this.addAnnouncementDisabled = false
+    //   }
+    // },    
     async authorize() {
       try {
         const response = await this.axios.post('/api/authorize')
@@ -129,10 +130,10 @@ export default {
         thiss.batchUploadProgress += `Error on batchRegister(): ${error}` // temp
       }
     },
-    clearAddAnnouncementInputs() {
-      this.add_announcement.title = ''
-      this.add_announcement.body = ''
-    },    
+    // clearAddAnnouncementInputs() {
+    //   this.add_announcement.title = ''
+    //   this.add_announcement.body = ''
+    // },    
     clearBatchUploadDiv() {
       this.$refs.batchUploadCSV.value = ''
       this.batchUploadProgress = ''
@@ -142,6 +143,10 @@ export default {
       this.reg_up_mail = ''
       this.reg_first_name = ''
       this.reg_last_name = ''
+    },
+    clearSearchField() {
+      this.searchString = ''
+      this.getAllUsers()
     },
     consoleLog(msg) {
       console.log(msg)
@@ -170,26 +175,26 @@ export default {
         this.resultsLimit = this.usersCount
       }
     },
-    deleteAnnouncement(announcementToDelete) {
-      this.hideDiv('announcementDashboard')
-      this.showDiv('deleteAnnouncementDiv') // To do
-      this.del_announcement = JSON.parse(JSON.stringify(announcementToDelete))
-    },
-    async deleteAnnouncementAPI() {
-      if (this.deleteAnnouncementDisabled) {
-        return
-      }
-      try {
-        this.deleteAnnouncementDisabled = true
-        const response = await this.axios.post('/api/announcement/delete', {body: this.del_announcement.body})
-        await this.getAllAnnouncements()
-        this.hideDiv('deleteAnnouncementDiv')
-        this.showDiv('announcementDashboard')        
-        this.deleteAnnouncementDisabled = false
-      } catch (error) {
-        console.log('Error on Admin.vue > deleteAnnouncement', error) // temp
-      }
-    },
+    // deleteAnnouncement(announcementToDelete) {
+    //   this.hideDiv('announcementDashboard')
+    //   this.showDiv('deleteAnnouncementDiv') // To do
+    //   this.del_announcement = JSON.parse(JSON.stringify(announcementToDelete))
+    // },
+    // async deleteAnnouncementAPI() {
+    //   if (this.deleteAnnouncementDisabled) {
+    //     return
+    //   }
+    //   try {
+    //     this.deleteAnnouncementDisabled = true
+    //     const response = await this.axios.post('/api/announcement/delete', {body: this.del_announcement.body})
+    //     await this.getAllAnnouncements()
+    //     this.hideDiv('deleteAnnouncementDiv')
+    //     this.showDiv('announcementDashboard')        
+    //     this.deleteAnnouncementDisabled = false
+    //   } catch (error) {
+    //     console.log('Error on Admin.vue > deleteAnnouncement', error) // temp
+    //   }
+    // },
     deleteUser(userToDelete) {
       this.hideDiv('usersDashboard')
       this.showDiv('deleteUserDiv')
@@ -218,28 +223,28 @@ export default {
         console.log('Error on Admin.vue > deleteUser', error) // temp
       }
     },
-    editAnnouncement(announcement) {
-      this.edit_announcement = JSON.parse(JSON.stringify(announcement))
-      this.edit_announcement_original = JSON.parse(JSON.stringify(announcement))
-      this.hideDiv('announcementDashboard')
-      this.showDiv('editAnnouncementDiv')
-    },
-    async editAnnouncementAPI() {
-      try {
-        if (!this.edit_announcement_original.body || !this.edit_announcement.title || !this.edit_announcement.body) {
-          alert('Input cannot be blank') // temp
-          return
-        } else {
-          const body = {old_body: this.edit_announcement_original.body, new_title: this.edit_announcement.title, new_body: this.edit_announcement.body}
-          const response = await this.axios.post('/api/announcement/edit', body)
-          await this.getAllAnnouncements()
-          this.hideDiv('editAnnouncementDiv');
-          this.showDiv('announcementDashboard')
-        }
-      } catch(error) {
-        console.log('Error on Admin.vue > editAnnouncementAPI', error) // temp
-      }
-    },
+    // editAnnouncement(announcement) {
+    //   this.edit_announcement = JSON.parse(JSON.stringify(announcement))
+    //   this.edit_announcement_original = JSON.parse(JSON.stringify(announcement))
+    //   this.hideDiv('announcementDashboard')
+    //   this.showDiv('editAnnouncementDiv')
+    // },
+    // async editAnnouncementAPI() {
+    //   try {
+    //     if (!this.edit_announcement_original.body || !this.edit_announcement.title || !this.edit_announcement.body) {
+    //       alert('Input cannot be blank') // temp
+    //       return
+    //     } else {
+    //       const body = {old_body: this.edit_announcement_original.body, new_title: this.edit_announcement.title, new_body: this.edit_announcement.body}
+    //       const response = await this.axios.post('/api/announcement/edit', body)
+    //       await this.getAllAnnouncements()
+    //       this.hideDiv('editAnnouncementDiv');
+    //       this.showDiv('announcementDashboard')
+    //     }
+    //   } catch(error) {
+    //     console.log('Error on Admin.vue > editAnnouncementAPI', error) // temp
+    //   }
+    // },
     editUser(user) {
       this.edit_role = user.role
       this.edit_up_mail = user.up_mail
@@ -264,20 +269,20 @@ export default {
         console.log('Error on Admin.vue > editUserAPI', error) // temp
       }
     },
-    formatted_date(miliseconds) {
-      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-      var myDate = new Date(parseInt(miliseconds))
-      return myDate.toLocaleDateString("en-US", options)
-    },    
-    async getAllAnnouncements() {
-      try {
-        const limit = 10
-        const response = await this.axios.post('/api/announcement/all', {limit: limit})
-        this.announcements = response.data.rows
-      } catch (error) {
-        console.log('Error on Admin.vue > getAllAnnouncements', error) // temp
-      }
-    },    
+    // formatted_date(miliseconds) {
+    //   var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+    //   var myDate = new Date(parseInt(miliseconds))
+    //   return myDate.toLocaleDateString("en-US", options)
+    // },    
+    // async getAllAnnouncements() {
+    //   try {
+    //     const limit = 10
+    //     const response = await this.axios.post('/api/announcement/all', {limit: limit})
+    //     this.announcements = response.data.rows
+    //   } catch (error) {
+    //     console.log('Error on Admin.vue > getAllAnnouncements', error) // temp
+    //   }
+    // },    
     async getAllUsers() {
       try {
         await this.getUsersCount()
@@ -343,30 +348,34 @@ export default {
       this.showDiv('viewUserDiv')
       // To do: Retrieve other info, needs advising module
     },
-    viewAnnouncement(announcement) {
-      this.view_announcement = announcement
-      this.hideDiv('announcementDashboard')
-      this.showDiv('viewAnnouncementDiv')
-    },
+    // viewAnnouncement(announcement) {
+    //   this.view_announcement = announcement
+    //   this.hideDiv('announcementDashboard')
+    //   this.showDiv('viewAnnouncementDiv')
+    // },
   },
   async mounted() {
     await this.authorize()
     await this.getAllUsers()
-    await this.getAllAnnouncements()
+    // await this.getAllAnnouncements()
   }
 }
 </script>
 
 <template>
+<ScheduleOfClasses />
 <div class="d-flex flex-column justify-content-between" style="min-height: 100vh;">
   <Header :user="this.user" />
   <!-- Admin Div -->
   <div class="align-items-center d-flex flex-column justify-content-center" style="background-color: white; gap: 20px; padding: 30px;">
     <!-- Menu Div -->
-    <div ref="menuDiv">
+    <div ref="menuDiv" style="display: flex; flex-direction: column; gap: 20px;">
       Menu Div
-      <a @click="hideDiv('menuDiv'); showDiv('announcementDashboard');" href="#">Announcement Dashboard</a>
-      <a @click="hideDiv('menuDiv'); showDiv('usersDashboard');" href="#">User Dashboard</a>
+      <!-- <a @click="hideDiv('menuDiv'); showDiv('announcementDashboard');" href="#">Announcement Dashboard</a> -->
+      <!-- <a @click="hideDiv('menuDiv'); showDiv('usersDashboard');" href="#">User Dashboard</a> -->
+      <div class="hoverTransform">
+        <span @click="hideDiv('menuDiv'); showDiv('usersDashboard');" style="background-color: rgb(117, 21, 24); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Users Dashboard</span>
+      </div>      
     </div>
     <!-- end Menu Div -->
     <!-- Batch Upload Div -->
@@ -627,8 +636,73 @@ export default {
       </div>
       <!-- end User Dashboard Header -->
       <!-- Pagination Div -->
-      <div>
-        <span>Total users: {{this.usersCount}}</span>
+      <div style="display: flex; flex-direction: row; gap: 20px; margin: 20px;">
+        <!-- Pages -->
+        <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 20px 15px;">
+          <span>Total users: <b>{{this.usersCount}}</b></span>
+          <span>Showing <input type="number" v-model="this.resultsLimit" style="text-align: center; width: 50px;"> results per page</span>
+          <div style="display: flex; flex-direction: row; gap: 10px;">
+            <div class="hoverTransform">
+              <span @click="this.previousPage()" v-if="this.currentPage_static > 1" class="myButton1" style="background-color: #751518;">
+                <i class="bi bi-caret-left-fill"></i>
+              </span>
+            </div>
+            <span>Page <input v-model="this.currentPage" type="number" style="text-align: center; width: 50px;"> of {{this.pages}}</span>
+            <div class="hoverTransform">
+              <span @click="this.nextPage()" v-if="this.currentPage_static < this.pages" class="myButton1" style="background-color: #751518;">
+                <i class="bi bi-caret-right-fill"></i>
+              </span>
+            </div>            
+          </div>
+          <div>
+            <div class="hoverTransform" style="margin-top: 5px;">
+              <span @click="getAllUsers()" class="myButton1" style="background-color: #751518;">Apply</span>
+            </div>                                 
+          </div>
+        </div>
+        <!-- end Pages -->
+        <!-- Sort and Filter -->
+        <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 15px;">
+          <span style="font-family: Open_Sans_Bold;">Sort</span>
+          <div style="display: flex; flex-direction: row; gap: 10px;">
+            <select v-model="sortBy" @change="getAllUsers()">
+              <option value="role">Role</option>
+              <option value="up_mail">UP Mail</option>
+              <option value="first_name">First Name</option>
+              <option value="last_name">Last Name</option>
+            </select>
+            <select v-model="sortOrder" @change="getAllUsers()">
+              <option value="ASC">Ascending</option>
+              <option value="DESC">Descending</option>
+            </select>
+          </div>
+          <div><div style="line-height: 1; margin-top: 10px;"><span style="font-family: Open_Sans_Bold;">Filter by Role</span></div></div>
+          <select v-model="filterByRole" @change="getAllUsers()">
+            <option value="">Any</option>
+            <option value="admin">Admin</option>
+            <option value="adviser">Adviser</option>
+            <option value="student">Student</option>
+          </select>           
+        </div>           
+        <!-- end Sort and Filter -->
+        <!-- Search -->
+        <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 15px;">
+          <span style="font-family: Open_Sans_Bold;">Search Current Page</span>
+          <div style="align-items: center; display: flex; flex-direction: row; gap: 5px;">
+            <input v-model="searchString" type="text">
+            <div @click="clearSearchField()" v-if="this.searchString !== ''" class="hoverTransform">
+              <span class="align-items-center d-flex myButton1" style="background-color: #751518; padding: 3px 7px;">Clear</span>
+            </div>            
+          </div>
+          <div>
+            <div @click="getAllUsers()" class="hoverTransform" style="margin-top: 5px;">
+              <span class="myButton1" style="background-color: #751518;">Search</span>
+            </div>
+          </div>
+        </div>
+        <!-- end Search -->
+
+        <!-- <span>Total users: {{this.usersCount}}</span>
         <p>Showing <input type="number" v-model="this.resultsLimit"> results per page</p>
         <button @click="getAllUsers()">Go</button>
         <p>Page <input v-model="this.currentPage" type="number"> of {{this.pages}}</p>
@@ -655,7 +729,8 @@ export default {
           <option value="admin">Admin</option>
           <option value="adviser">Adviser</option>
           <option value="student">Student</option>
-        </select>         
+        </select> -->
+
       </div>
       <!-- end Pagination Div -->        
       <!-- Users Dashboard Body -->
@@ -680,22 +755,22 @@ export default {
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].last_name}}</td>
               <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 <!-- View Button -->
-                <div @click="viewUser(users[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #093405; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
-                  <span style="font-family: Open_Sans_Semi_Bold;">View</span>
+                <div @click="viewUser(users[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto">
+                  <span class="myButton1" style="background-color: #093405;">View</span>
                 </div>
                 <!-- end View Button -->
               </td>
               <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; position: relative; text-overflow: ellipsis; white-space: nowrap;">
                 <!-- Edit Button -->
-                <div @click="editUser(users[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #7F6000; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
-                  <span style="font-family: Open_Sans_Semi_Bold;">Edit</span>
+                <div @click="editUser(users[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto">
+                  <span class="myButton1" style="background-color: #7F6000;">Edit</span>
                 </div>
                 <!-- end Edit Button -->
               </td>
               <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 <!-- Delete Button -->
-                <div @click="deleteUser(users[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #751518; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
-                  <span style="font-family: Open_Sans_Semi_Bold;">Delete</span>
+                <div @click="deleteUser(users[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto">
+                  <span class="myButton1" style="background-color: #751518;">Delete</span>
                 </div>
                 <!-- end Delete Button -->
               </td>
@@ -706,7 +781,6 @@ export default {
       <!-- end Users Dashboard Body -->
     </div>
     <!-- end Users Dashboard -->
-
     <!-- Add Announcement Div -->
     <div ref="addAnnouncementDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
       <!-- Add Announcement Header -->
@@ -745,8 +819,6 @@ export default {
       <!-- end Add Announcement Body -->
     </div>    
     <!-- end Add Announcement Div -->
-
-
     <!-- Delete Announcement Div -->
     <div ref="deleteAnnouncementDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
       <!-- Delete Announcement Header -->
@@ -970,4 +1042,22 @@ export default {
   .hoverTransform:active {
     transform: scale(0.95);
   }
+span, td {
+  line-height: 1;
+}
+/* always show arrows input type number */
+input[type=number]::-webkit-inner-spin-button {
+  opacity: 1
+}
+td {
+  vertical-align: middle;
+}
+.myButton1 {
+  border: 1px solid white;
+  border-radius: 5px; color:
+  white; cursor: pointer;
+  font-family: Open_Sans;
+  font-size: 14px;
+  padding: 5px 10px;
+}
 </style>
