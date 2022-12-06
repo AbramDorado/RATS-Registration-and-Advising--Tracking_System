@@ -144,6 +144,21 @@ const router = express.Router()
       }
     })
     // end delete
+
+    // delete all
+    router.post('/api/course/delete/all', ocsOnly, async (req, res) => {
+      try {
+        const source = './database/db.sqlite'
+        const db = await database.openOrCreateDB(source)
+        await database.run(db, `DELETE FROM course`, [], false)
+        res.json({message: 'Deleted all rows from course successfully'}).send()
+      } catch (error) {
+        console.log('Error on api > course > delete > all', error)
+        res.status(401).json({message: error}).send()
+      }
+    })
+    // end delete all
+
   // end course APIs
 
   // course_edit APIs
@@ -165,7 +180,7 @@ const router = express.Router()
     // end read all
 
     // delete all
-    router.post('/api/course_edit/delete/all', adminOnly, async (req, res) => {
+    router.post('/api/course_edit/delete/all', ocsOnly, async (req, res) => {
       try {
         const source = './database/db.sqlite'
         const db = await database.openOrCreateDB(source)

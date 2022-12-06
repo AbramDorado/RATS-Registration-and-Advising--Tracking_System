@@ -26,7 +26,7 @@ const router = express.Router()
   // end Create
 
   // Read All Rows from Student
-  router.post('/api/ecf/read/all/student', studentOnly, async (req, res) => {
+  router.post('/api/ecf/read/all/student', studentOrOCSOnly, async (req, res) => {
     // req.body = {student_up_mail}
     try {
       const source = './database/db.sqlite'
@@ -75,7 +75,7 @@ const router = express.Router()
   // end Delete One
 
   // Delete All
-  router.post('/api/ecf/delete/all', adminOnly, async (req, res) => {
+  router.post('/api/ecf/delete/all', ocsOnly, async (req, res) => {
     try {
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
@@ -128,7 +128,7 @@ function loggedIn(req, res, next) {
     res.status(401).json({message: error}).send()
   }
 }
-function OcsOnly(req, res, next) {
+function ocsOnly(req, res, next) {
   try {
     if (req.user.role !== 'ocs') {
       throw 'User not OCS'
@@ -149,6 +149,19 @@ function studentOnly(req, res, next) {
     }
   } catch (error) {
     console.log('Error on advising.js > studentOnly()')
+    console.log(error)
+    res.status(401).json({message: error}).send()
+  }
+}
+function studentOrOCSOnly(req, res, next) {
+  try {
+    if (req.user.role === 'student' || req.user.role === 'ocs') {
+      next()
+    } else {
+      throw 'Not student nor OCS'
+    }
+  } catch (error) {
+    console.log('Error on advising.js > studentOrOCSOnly()')
     console.log(error)
     res.status(401).json({message: error}).send()
   }

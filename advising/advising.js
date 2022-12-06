@@ -196,7 +196,7 @@ router.post('/api/advising_status/update', adviserOnly, async (req, res) => {
 // end Update Status
 
 // Delete All Status
-router.post('/api/advising_status/delete/all', adminOnly, async (req, res) => {
+router.post('/api/advising_status/delete/all', ocsOnly, async (req, res) => {
   try {
     const source = './database/db.sqlite'
     const db = await database.openOrCreateDB(source)
@@ -280,6 +280,20 @@ router.post('/api/advising/curri/read/all', adviserOnly, async (req, res) => {
 })
 // end Read All Curri Progress
 
+// Delete All Status
+router.post('/api/advising/curri/delete/all', ocsOnly, async (req, res) => {
+  try {
+    const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB(source)
+    await database.run(db, `DELETE FROM curri_progress`, [], false)
+    res.json({message: 'Deleted all rows from curri_progress successfully'}).send()
+  } catch (error) {
+    console.log('Error on api > advising > curri > delete > all', error)
+    res.status(401).json({message: error}).send()
+  }
+})
+// end Delete All Status
+
 // Middlewares
 function adminOnly(res, req, next){
   try{
@@ -318,7 +332,7 @@ function loggedIn(req, res, next) {
     res.status(401).json({message: error}).send()
   }
 }
-function OcsOnly(req, res, next) {
+function ocsOnly(req, res, next) {
   try {
     if (req.user.role !== 'ocs') {
       throw 'User not OCS'
