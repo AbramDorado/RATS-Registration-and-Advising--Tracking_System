@@ -9,24 +9,15 @@ export default {
   },
   data () {
     return {
-      addAnnouncementDisabled: false, // For spam handling addAnnouncement()
-      add_announcement: { // Used in addAnnouncement()
-        title: '',
-        body: ''
-      },
-      announcements: [], // Main list of rows shown in announcement table
+      // userDashboard-related
       batchUploadProgress: '', // Shows log/history of batch upload
       currentPage: 1, // v-model with input; used in pagination
       currentPage_static: 1, // Corrected value
-      del_announcement: {}, // Used in deleteAnnouncement() and deleteAnnouncementAPI()
       del_user_role: '', // Used in deleteUser() and deleteUserAPI()
       del_user_up_mail: '', // Used in deleteUser() and deleteUserAPI()
       del_user_first_name: '', // Used in deleteUser() and deleteUserAPI()
       del_user_last_name: '', // Used in deleteUser() and deleteUserAPI()
-      deleteAnnouncementDisabled: false, // For spam handling deleteAnnouncementAPI()
       deleteUserDisabled: false, // For spam-handling deleteUserAPI()
-      edit_announcement: {}, // Used in editAnnouncement(), v-model'ed to changes
-      edit_announcement_original: {}, // Used in editAnnouncement(), stores the original content before editing
       edit_role: '', // Used in editUser()
       edit_up_mail: '', // Used in editUser()
       edit_first_name: '', // Used in editUser()
@@ -42,11 +33,14 @@ export default {
       searchString: '', // Passed in getAllUsers API
       sortBy: 'role', // Passed in getAllUsers API
       sortOrder: 'ASC', // Passed in getAllUsers API
-      user: {}, // Stores response of authorizeAPI; passed as prop in Header component
       users: [], // Main list of rows shown in users table
       usersCount: 0, // Stores reponse of countUsers API
-      view_announcement: {}, // Used in viewAnnouncement()
-      view_user: {} // Used in viewUser()
+      view_user: {}, // Used in viewUser()
+      // end userDashboard-related
+
+      // headerComponent-related
+      user: {} // Stores response of authorizeAPI; passed as prop in Header component
+      // end headerComponent-related
     }
   },
   computed: {
@@ -55,29 +49,7 @@ export default {
     }
   },
   methods: {
-    // async addAnnouncement() {
-    //   try {
-    //     if (this.addAnnouncementDisabled) {
-    //       return
-    //     } else if (!this.add_announcement.title || !this.add_announcement.body) {
-    //       alert('Input cannot be blank')
-    //       return
-    //     } else {
-    //       this.addAnnouncementDisabled = true
-    //       const body = {title: this.add_announcement.title, body: this.add_announcement.body}
-    //       const response = await this.axios.post('/api/announcement/create', body)
-    //       await this.getAllAnnouncements()
-    //       this.clearAddAnnouncementInputs();
-    //       this.addAnnouncementDisabled = false
-    //       this.hideDiv('addAnnouncementDiv');
-    //       this.showDiv('announcementDashboard')
-    //     }
-    //   } catch (error) {
-    //     console.log('Error on Admin.vue > addAnnouncement', error) // temp
-    //     alert('Error on posting announcement') // temp
-    //     this.addAnnouncementDisabled = false
-    //   }
-    // },    
+    // header component related   
     async authorize() {
       try {
         const response = await this.axios.post('/api/authorize')
@@ -90,6 +62,9 @@ export default {
         location.href = '/'
       }
     },
+    //end header component related
+
+    //user dashboard related
     batchRegister() {
       try {
         var myReader = new FileReader()
@@ -129,11 +104,7 @@ export default {
         alert('Error on batchRegister()') // temp
         thiss.batchUploadProgress += `Error on batchRegister(): ${error}` // temp
       }
-    },
-    // clearAddAnnouncementInputs() {
-    //   this.add_announcement.title = ''
-    //   this.add_announcement.body = ''
-    // },    
+    }, 
     clearBatchUploadDiv() {
       this.$refs.batchUploadCSV.value = ''
       this.batchUploadProgress = ''
@@ -147,9 +118,6 @@ export default {
     clearSearchField() {
       this.searchString = ''
       this.getAllUsers()
-    },
-    consoleLog(msg) {
-      console.log(msg)
     },
     async correctLimits() {
       this.currentPage_static = this.currentPage
@@ -175,26 +143,6 @@ export default {
         this.resultsLimit = this.usersCount
       }
     },
-    // deleteAnnouncement(announcementToDelete) {
-    //   this.hideDiv('announcementDashboard')
-    //   this.showDiv('deleteAnnouncementDiv') // To do
-    //   this.del_announcement = JSON.parse(JSON.stringify(announcementToDelete))
-    // },
-    // async deleteAnnouncementAPI() {
-    //   if (this.deleteAnnouncementDisabled) {
-    //     return
-    //   }
-    //   try {
-    //     this.deleteAnnouncementDisabled = true
-    //     const response = await this.axios.post('/api/announcement/delete', {body: this.del_announcement.body})
-    //     await this.getAllAnnouncements()
-    //     this.hideDiv('deleteAnnouncementDiv')
-    //     this.showDiv('announcementDashboard')        
-    //     this.deleteAnnouncementDisabled = false
-    //   } catch (error) {
-    //     console.log('Error on Admin.vue > deleteAnnouncement', error) // temp
-    //   }
-    // },
     deleteUser(userToDelete) {
       this.hideDiv('usersDashboard')
       this.showDiv('deleteUserDiv')
@@ -223,28 +171,6 @@ export default {
         console.log('Error on Admin.vue > deleteUser', error) // temp
       }
     },
-    // editAnnouncement(announcement) {
-    //   this.edit_announcement = JSON.parse(JSON.stringify(announcement))
-    //   this.edit_announcement_original = JSON.parse(JSON.stringify(announcement))
-    //   this.hideDiv('announcementDashboard')
-    //   this.showDiv('editAnnouncementDiv')
-    // },
-    // async editAnnouncementAPI() {
-    //   try {
-    //     if (!this.edit_announcement_original.body || !this.edit_announcement.title || !this.edit_announcement.body) {
-    //       alert('Input cannot be blank') // temp
-    //       return
-    //     } else {
-    //       const body = {old_body: this.edit_announcement_original.body, new_title: this.edit_announcement.title, new_body: this.edit_announcement.body}
-    //       const response = await this.axios.post('/api/announcement/edit', body)
-    //       await this.getAllAnnouncements()
-    //       this.hideDiv('editAnnouncementDiv');
-    //       this.showDiv('announcementDashboard')
-    //     }
-    //   } catch(error) {
-    //     console.log('Error on Admin.vue > editAnnouncementAPI', error) // temp
-    //   }
-    // },
     editUser(user) {
       this.edit_role = user.role
       this.edit_up_mail = user.up_mail
@@ -269,20 +195,6 @@ export default {
         console.log('Error on Admin.vue > editUserAPI', error) // temp
       }
     },
-    // formatted_date(miliseconds) {
-    //   var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-    //   var myDate = new Date(parseInt(miliseconds))
-    //   return myDate.toLocaleDateString("en-US", options)
-    // },    
-    // async getAllAnnouncements() {
-    //   try {
-    //     const limit = 10
-    //     const response = await this.axios.post('/api/announcement/all', {limit: limit})
-    //     this.announcements = response.data.rows
-    //   } catch (error) {
-    //     console.log('Error on Admin.vue > getAllAnnouncements', error) // temp
-    //   }
-    // },    
     async getAllUsers() {
       try {
         await this.getUsersCount()
@@ -300,9 +212,6 @@ export default {
       } catch (error) {
         console.log('Error on Admin.vue > getUsersCount', error) // temp
       }
-    },
-    hideDiv(ref) {
-      this.$refs[ref].style.display = 'none'
     },
     async nextPage() {
       if (this.currentPage < this.pages) {
@@ -339,20 +248,23 @@ export default {
         this.registerUserDisabled = false
       }
     },
-    showDiv(ref) {
-      this.$refs[ref].style.display = 'flex'
-    },
     viewUser(user) {
       this.view_user = user
       this.hideDiv('usersDashboard')
       this.showDiv('viewUserDiv')
       // To do: Retrieve other info, needs advising module
     },
-    // viewAnnouncement(announcement) {
-    //   this.view_announcement = announcement
-    //   this.hideDiv('announcementDashboard')
-    //   this.showDiv('viewAnnouncementDiv')
-    // },
+    // end user dashboard related
+
+    // utility functions
+    showDiv(ref) {
+      this.$refs[ref].style.display = 'flex'
+    },
+    hideDiv(ref) {
+      this.$refs[ref].style.display = 'none'
+    },
+    // end utility functions
+    
   },
   async mounted() {
     await this.authorize()
@@ -373,9 +285,6 @@ export default {
       <div class="d-flex hoverTransform">
         <span @click="hideDiv('menuDiv'); showDiv('usersDashboard');" class="myButton2" style="background-color: rgb(117, 21, 24);">Users Dashboard</span>
       </div>
-      <!-- <div class="hoverTransform">
-        <span @click="hideDiv('menuDiv'); showDiv('coursesDashboard');" style="background-color: rgb(117, 21, 24); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Courses Dashboard</span>
-      </div>          -->
     </div>
     <!-- end Menu Div -->
     <!-- Batch Upload Div -->
@@ -701,36 +610,6 @@ export default {
           </div>
         </div>
         <!-- end Search -->
-
-        <!-- <span>Total users: {{this.usersCount}}</span>
-        <p>Showing <input type="number" v-model="this.resultsLimit"> results per page</p>
-        <button @click="getAllUsers()">Go</button>
-        <p>Page <input v-model="this.currentPage" type="number"> of {{this.pages}}</p>
-        <button @click="getAllUsers()">Go</button>
-        <button @click="this.previousPage()" v-if="this.currentPage_static > 1">Previous</button>
-        <button @click="this.nextPage()" v-if="this.currentPage_static < this.pages">Next</button>
-        <span style="font-family: Open_Sans_Bold;">Sort</span>
-        <select v-model="sortBy" @change="getAllUsers()">
-          <option value="role">Role</option>
-          <option value="up_mail">UP Mail</option>
-          <option value="first_name">First Name</option>
-          <option value="last_name">Last Name</option>
-        </select>
-        <select v-model="sortOrder" @change="getAllUsers()">
-          <option value="ASC">Ascending</option>
-          <option value="DESC">Descending</option>
-        </select>
-        <span style="font-family: Open_Sans_Bold;">Search</span>
-        <input v-model="searchString" type="text">
-        <button @click="getAllUsers()">Go</button>
-        <span style="font-family: Open_Sans_Bold">Filter by Role</span>
-        <select v-model="filterByRole" @change="getAllUsers()">
-          <option value="">Any</option>
-          <option value="admin">Admin</option>
-          <option value="adviser">Adviser</option>
-          <option value="student">Student</option>
-        </select> -->
-
       </div>
       <!-- end Pagination Div -->        
       <!-- Users Dashboard Body -->
@@ -781,248 +660,6 @@ export default {
       <!-- end Users Dashboard Body -->
     </div>
     <!-- end Users Dashboard -->
-    <!-- Add Announcement Div -->
-    <div ref="addAnnouncementDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
-      <!-- Add Announcement Header -->
-      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
-        <!-- Add Announcement Header Left Div -->
-        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
-          <!-- Add Announcement Header Left Div Icon -->
-          <i class="align-items-center bi bi-file-earmark-plus-fill d-flex" style="color: white; font-size: 20px;"></i>
-          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">New Announcement</span>
-          <!-- end Add Announcement Header Left Div Icon -->
-        </div>
-        <!-- end Add Announcement Header Left Div -->
-        <!-- Add Announcement Header Right Div -->
-        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
-          <!-- Cancel -->
-          <div class="hoverTransform">
-            <span @click="clearAddAnnouncementInputs(); hideDiv('addAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
-          </div>
-          <!-- end Cancel -->          
-        </div>
-        <!-- end Add Announcement Header Right Div -->
-      </div>
-      <!-- end Add Announcement Header -->      
-      <!-- Add Announcement Body -->
-      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
-        <span style="font-family: Open_Sans_Bold;">Title</span>
-        <input v-model="add_announcement.title" type="text" style="margin-bottom: 10px;">
-        <span style="font-family: Open_Sans_Bold;">Body</span>
-        <input v-model="add_announcement.body" type="text" style="margin-bottom: 10px;">
-        <!-- Add Button -->
-          <div @click="addAnnouncement()" class="align-items-center d-flex justify-content-center hoverTransform">
-            <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Post Announcement</span>
-          </div>
-        <!-- end Add Button -->        
-      </div>
-      <!-- end Add Announcement Body -->
-    </div>    
-    <!-- end Add Announcement Div -->
-    <!-- Delete Announcement Div -->
-    <div ref="deleteAnnouncementDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
-      <!-- Delete Announcement Header -->
-      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
-        <!-- Delete Announcement Header Left Div -->
-        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
-          <!-- Delete Announcement Header Left Div Icon -->
-          <i class="align-items-center bi bi-file-earmark-x-fill d-flex" style="color: white; font-size: 20px;"></i>
-          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Delete Announcement</span>
-          <!-- end Delete Announcement Header Left Div Icon -->
-        </div>
-        <!-- end Delete Announcement Header Left Div -->
-        <!-- Delete Announcement Header Right Div -->
-        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
-          <!-- Cancel -->
-          <div class="hoverTransform">
-            <span @click="hideDiv('deleteAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
-          </div>
-          <!-- end Cancel -->          
-        </div>
-        <!-- end Delete Announcement Header Right Div -->
-      </div>
-      <!-- end Delete Announcement Header -->
-      <!-- Delete Announcement Body -->
-      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
-        <!-- <span>Confirm Deletion</span>
-        <span>Title</span>
-        <span>{{this.del_announcement.title}}</span>
-        <span>Created</span>
-        <span>{{this.del_announcement.created}}</span>
-        <span>Last Modified</span>
-        <span>{{this.del_announcement.modified}}</span>
-        <span>Body</span>
-        <span>{{this.del_announcement.body}}</span> -->
-        <span style="font-family: Open_Sans_Bold;">Title</span>
-        <textarea disabled :value="del_announcement.title" style="overflow: auto; white-space: normal;"></textarea>
-        <span style="font-family: Open_Sans_Bold;">Created</span>
-        <textarea disabled style="overflow: auto;">{{this.del_announcement.created}}</textarea>
-        <span style="font-family: Open_Sans_Bold;">Last Modified</span>
-        <textarea disabled style="overflow: auto;">{{this.del_announcement.modified}}</textarea>
-        <span style="font-family: Open_Sans_Bold;">Body</span>
-        <span v-html="del_announcement.body" style="background-color: rgba(239, 239, 239, 0.3); border: 1px solid gray; cursor: normal; min-height: 300px; overflow: auto; white-space: normal;"></span>        
-        <!-- <button @click="deleteAnnouncementAPI()">Delete</button> -->
-        <!-- Delete Button -->
-        <div @click="deleteAnnouncementAPI()" class="align-items-center d-flex justify-content-center hoverTransform">
-          <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Delete Announcement</span>
-        </div>
-        <!-- end Delete Button -->          
-      </div>
-      <!-- end Delete Announcement Body -->      
-    </div>
-    <!-- end Delete Announcement Div -->
-    <!-- Edit Announcement Div -->
-    <div ref="editAnnouncementDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
-      <!-- Edit Announcement Header -->
-      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
-        <!-- Edit Announcement Header Left Div -->
-        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
-          <!-- Edit Announcement Header Left Div Icon -->
-          <i class="align-items-center bi bi-pencil-square d-flex" style="color: white; font-size: 20px;"></i>
-          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Edit Announcement</span>
-          <!-- end Edit Announcement Header Left Div Icon -->
-        </div>
-        <!-- end Edit Announcement Header Left Div -->
-        <!-- Edit Announcement Header Right Div -->
-        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
-          <!-- Cancel -->
-          <div class="hoverTransform">
-            <span @click="hideDiv('editAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
-          </div>
-          <!-- end Cancel -->          
-        </div>
-        <!-- end Edit Announcement Header Right Div -->
-      </div>
-      <!-- end Edit Announcement Header -->      
-      <!-- Edit Announcement Body -->
-      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
-        <span style="font-family: Open_Sans_Bold;">Title</span>
-        <textarea v-model="edit_announcement.title" type="text" style="margin-bottom: 10px;"></textarea>
-        <span style="font-family: Open_Sans_Bold;">Body</span>
-        <textarea v-model="edit_announcement.body" type="text" style="margin-bottom: 10px; min-height: 300px;"></textarea>
-        <!-- Edit Button -->
-          <div @click="editAnnouncementAPI()" class="align-items-center d-flex justify-content-center hoverTransform">
-            <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Edit Announcement</span>
-          </div>
-        <!-- end Edit Button -->        
-      </div>
-      <!-- end Edit Announcement Body -->
-    </div>    
-    <!-- end Edit Announcement Div -->
-    <!-- View Announcement Div -->
-    <div ref="viewAnnouncementDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
-      <!-- View Announcement Header -->
-      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
-        <!-- View Announcement Header Left Div -->
-        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
-          <!-- View Announcement Header Left Div Icon -->
-          <i class="align-items-center bi bi-file-earmark-post d-flex" style="color: white; font-size: 20px;"></i>
-          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">View Announcement</span>
-          <!-- end View Announcement Header Left Div Icon -->
-        </div>
-        <!-- end View Announcement Header Left Div -->
-        <!-- View Announcement Header Right Div -->
-        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
-          <!-- Close -->
-          <div class="hoverTransform">
-            <span @click="hideDiv('viewAnnouncementDiv'); showDiv('announcementDashboard')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Close</span>
-          </div>
-          <!-- end Close -->          
-        </div>
-        <!-- end View Announcement Header Right Div -->
-      </div>
-      <!-- end View Announcement Header -->
-      <!-- View Announcement Body -->
-      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
-        <span style="font-family: Open_Sans_Bold;">Title</span>
-        <textarea disabled :value="view_announcement.title" style="overflow: auto; white-space: normal;"></textarea>
-        <span style="font-family: Open_Sans_Bold;">Created</span>
-        <textarea disabled style="overflow: auto;">{{this.view_announcement.created}}</textarea>
-        <span style="font-family: Open_Sans_Bold;">Last Modified</span>
-        <textarea disabled style="overflow: auto;">{{this.view_announcement.modified}}</textarea>
-        <span style="font-family: Open_Sans_Bold;">Body</span>
-        <span v-html="view_announcement.body" style="background-color: rgba(239, 239, 239, 0.3); border: 1px solid gray; cursor: normal; min-height: 300px; overflow: auto; white-space: normal;"></span>
-      </div>
-      <!-- end View Announcement Body -->               
-    </div>
-    <!-- end View Announcement Div -->
-    <!-- Announcement Dashboard -->
-    <div ref="announcementDashboard" class="flex-column" style="background-color: #f3f3f3; border: 2px solid black; display: none; min-height: 300px; width: 1200px;">
-      <!-- Announcement Dashboard Header -->
-      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
-        <!-- Announcement Dashboard Header Left Div -->
-        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
-          <!-- Announcement Dashboard Header Left Div Icon -->
-          <i class="align-items-center bi bi-file-earmark-post d-flex" style="color: white; font-size: 20px;"></i>
-          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Announcement Dashboard</span>
-          <!-- end Announcement Dashboard Header Left Div Icon -->
-        </div>
-        <!-- end Announcement Dashboard Header Left Div -->
-        <!-- Announcement Dashboard Header Right Div -->
-        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
-          <!-- Add Announcement -->
-          <div class="hoverTransform">
-            <span @click="hideDiv('announcementDashboard'); showDiv('addAnnouncementDiv')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">New Announcement</span>
-          </div>
-          <!-- end Add Announcement -->            
-          <!-- Back to Menu -->
-          <div class="hoverTransform">
-            <span @click="hideDiv('announcementDashboard'); showDiv('menuDiv');" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Back to Menu</span>
-          </div>
-          <!-- end Back to Menu -->
-        </div>
-        <!-- end Announcement Dashboard Header Right Div -->
-      </div>
-      <!-- end Announcement Dashboard Header -->
-      <!-- Announcement Dashboard Body -->
-      <div style="padding: 15px 20px;">
-        <table class="fixed-table-body table table-responsive">
-          <thead>
-            <tr>
-              <th class="align-middle text-center" scope="col">Title</th>
-              <th class="align-middle text-center" scope="col">Last Modified</th>
-              <th class="align-middle text-center" scope="col">Date Created</th>
-              <th class="align-middle text-center" scope="col">Body</th>
-              <th class="align-middle text-center" scope="col">View</th>
-              <th class="align-middle text-center" scope="col">Edit</th>
-              <th class="align-middle text-center" scope="col">Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(obj, index) in announcements" :key="index">
-              <td class="text-start" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{announcements[index].title}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{this.formatted_date(announcements[index].modified)}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{this.formatted_date(announcements[index].created)}}</td>
-              <!-- <td class="text-start" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis; white-space: pre-line;">{{announcements[index].body}}</td> -->
-              <td v-html="announcements[index].body" class="text-start" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis; white-space: normal;"></td>
-              <td style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis; white-space: nowrap;">
-                <!-- View Button -->
-                <div @click="viewAnnouncement(announcements[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #093405; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
-                  <span style="font-family: Open_Sans_Semi_Bold;">View</span>
-                </div>
-                <!-- end View Button -->
-              </td>
-              <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; position: relative; text-overflow: ellipsis; white-space: nowrap;">
-                <!-- Edit Button -->
-                <div @click="editAnnouncement(announcements[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #7F6000; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
-                  <span style="font-family: Open_Sans_Semi_Bold;">Edit</span>
-                </div>
-                <!-- end Edit Button -->
-              </td>
-              <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                <!-- Delete Button -->
-                <div @click="deleteAnnouncement(announcements[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #751518; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
-                  <span style="font-family: Open_Sans_Semi_Bold;">Delete</span>
-                </div>
-                <!-- end Delete Button -->
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <!-- end Announcement Dashboard Body -->
-    </div>
-    <!-- end Announcement Dashboard -->
   </div>
   <!-- end Admin Div -->
   <Footer />
@@ -1030,18 +667,6 @@ export default {
 </template>
 
 <style scoped>
-.hoverTransform {
-  cursor: pointer;
-  user-select: none;
-  transition: transform 0.1s linear;
-}
-  .hoverTransform:hover {
-    transform: scale(1.05);
-  }
-
-  .hoverTransform:active {
-    transform: scale(0.95);
-  }
 span, td {
   line-height: 1;
 }
@@ -1051,13 +676,5 @@ input[type=number]::-webkit-inner-spin-button {
 }
 td {
   vertical-align: middle;
-}
-.myButton1 {
-  border: 1px solid white;
-  border-radius: 5px; color:
-  white; cursor: pointer;
-  font-family: Open_Sans;
-  font-size: 14px;
-  padding: 5px 10px;
 }
 </style>

@@ -78,6 +78,14 @@ td {
   font-family: Open_Sans_Bold;
   src: url(/Open_Sans/static/OpenSans/OpenSans-Bold.ttf);
 }
+.myButton1 {
+  border: 1px solid white;
+  border-radius: 5px; color:
+  white; cursor: pointer;
+  font-family: Open_Sans;
+  font-size: 14px;
+  padding: 5px 10px;
+}
 .myButton2 {
   border: 1px solid white;
   border-radius: 10px;
@@ -87,4 +95,16 @@ td {
   font-size: 24px;
   padding: 10px 15px;
 }
+.hoverTransform {
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.1s linear;
+}
+  .hoverTransform:hover {
+    transform: scale(1.05);
+  }
+
+  .hoverTransform:active {
+    transform: scale(0.95);
+  }
 </style>

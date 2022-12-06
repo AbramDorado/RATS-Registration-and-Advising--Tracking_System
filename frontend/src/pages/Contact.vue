@@ -1,11 +1,15 @@
 <script>
+import ContactComponent from '../components/ContactComponent.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
+import ScheduleOfClasses from '../components/ScheduleOfClasses.vue'
 export default {
   name: 'Contact',
   components: {
+    ContactComponent,
     Footer,
-    Header
+    Header,
+    ScheduleOfClasses
   },
   data() {
     return {
@@ -30,12 +34,24 @@ export default {
 
 <template>
 <div>
+  <ScheduleOfClasses />
   <Header :user="this.user"/>
-  Contact Page
+  <div id="card">
+    <ContactComponent />
+  </div>
   <Footer />
 </div>
 </template>
 
 <style scoped>
-
+#card{
+  border: 2px solid #5d795b;
+  border-radius: 20px;
+  height: 450px;
+  width: 1300px;
+  margin-left: 70px;
+  margin-right: 70px;
+  background-color: #f3f3f3;
+  max-height: 450px;
+}
 </style>
