@@ -24,6 +24,191 @@ router.post('/api/advising/getStatus', loggedIn, async (req, res) => {
 })
 // end Get Status
 
+// Read All Advising Status All Departments
+router.post('/api/advising/read/all/all', OcsOnly, async (req, res) => {
+  try {
+    // req.body = {offset, limit, column, order, searchString, filterByDepartmentText, filterByDegreeProgramText, filterByStep1StatusText, filterByStep2StatusText, filterByStep3StatusText }
+    
+    var myOffset = 0
+    if (req.body.offset) {
+      myOffset = req.body.offset
+    }
+    var myLimit = 50
+    if (req.body.limit) {
+      myLimit = req.body.limit
+    }
+    var sortColumn = 'department'
+    if (req.body.column) {
+      sortColumn = req.body.column
+    }
+    var sortOrder = 'ASC'
+    if (req.body.order) {
+      sortOrder = req.body.order
+    }
+    var searchString = ''
+    if (req.body.searchString) {
+      searchString = req.body.searchString
+    }
+  
+    var filterByDepartmentText = ''
+    if (req.body.filterByDepartmentText) {
+      filterByDepartmentText = ` AND (department = '${req.body.filterByDepartmentText}')`
+    }
+
+    var filterByDegreeProgramText = ''
+    if (req.body.filterByDegreeProgramText) {
+      filterByDegreeProgramText = ` AND (degree_program) = '${req.body.filterByDegreeProgramText}')`
+    }
+    
+    var filterByStep1StatusText = ''
+    if (req.body.filterByStep1StatusText) {
+      filterByStep1StatusText = ` AND (step1_status = '${req.body.filterByStep1StatusText}')`
+    }
+
+    var filterByStep2StatusText = ''
+    if (req.body.filterByStep2StatusText) {
+      filterByStep2StatusText = ` AND (step2_status = '${req.body.filterByStep2StatusText}')`
+    }
+    
+    var filterByStep3StatusText = ''
+    if (req.body.filterByStep3StatusText) {
+      filterByStep3StatusText = ` AND (step3_status = '${req.body.filterByStep3StatusText}')`
+    }
+
+    const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB(source)
+    const rows = await database.all(db, `
+      SELECT *
+      FROM advising_status 
+      WHERE
+        (
+          student_up_mail LIKE '%${searchString}%'
+          OR adviser_up_mail LIKE '%${searchString}%'
+          OR degree_program LIKE '%${searchString}%'
+          OR department LIKE '%${searchString}%'
+          OR step1_status LIKE '%${searchString}%'
+          OR step2_status LIKE '%${searchString}%'
+          OR step3_status LIKE '%${searchString}%'
+        )
+        ${filterByDepartmentText}
+        ${filterByDegreeProgramText}
+        ${filterByStep1StatusText}
+        ${filterByStep2StatusText}
+        ${filterByStep3StatusText}
+      ORDER BY ${sortColumn} ${sortOrder}
+      LIMIT ${myLimit}
+      OFFSET ${myOffset}`, [], false)
+    res.send(rows)
+  } catch (error) {
+    console.log('error on /api/advising/read/all/all') // temp
+    console.log(error)
+    res.send('Error')
+  }
+})
+// end Read All Advising Status All Departments
+
+// Read All Advising Status by Adviser
+router.post('/api/advising/read/all/adviser', adviserOnly, async (req, res) => {
+  try {
+    // req.body = {adviser_up_mail, offset, limit, column, order, searchString, filterByRole}
+    var myOffset = 0
+    if (req.body.offset) {
+      myOffset = req.body.offset
+    }
+    var myLimit = 50
+    if (req.body.limit) {
+      myLimit = req.body.limit
+    }
+    var sortColumn = 'degree_program'
+    if (req.body.column) {
+      sortColumn = req.body.column
+    }
+    var sortOrder = 'ASC'
+    if (req.body.order) {
+      sortOrder = req.body.order
+    }
+    var searchString = ''
+    if (req.body.searchString) {
+      searchString = req.body.searchString
+    }
+    var filterByDegreeProgramText = ''
+    if (req.body.filterByDegreeProgramText) {
+      filterByDegreeProgramText = ` AND (degree_program) = '${req.body.filterByDegreeProgramText}')`
+    }
+    
+    var filterByStep1StatusText = ''
+    if (req.body.filterByStep1StatusText) {
+      filterByStep1StatusText = ` AND (step1_status = '${req.body.filterByStep1StatusText}')`
+    }
+
+    var filterByStep2StatusText = ''
+    if (req.body.filterByStep2StatusText) {
+      filterByStep2StatusText = ` AND (step2_status = '${req.body.filterByStep2StatusText}')`
+    }
+    
+    var filterByStep3StatusText = ''
+    if (req.body.filterByStep3StatusText) {
+      filterByStep3StatusText = ` AND (step3_status = '${req.body.filterByStep3StatusText}')`
+    }
+    
+    const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB(source)
+    const rows = await database.all(db, `
+      SELECT student_up_mail, degree_program, step1_status, step2_status, step3_status 
+      FROM advising_status 
+      WHERE
+        (student_up_mail LIKE '%${searchString}%'
+        OR degree_program LIKE '%${searchString}%'
+        OR step1_status LIKE '%${searchString}%'
+        OR step2_status LIKE '%${searchString}%'
+        OR step3_status LIKE '%${searchString}%')
+        ${filterByDegreeProgramText}
+        ${filterByStep1StatusText}
+        ${filterByStep2StatusText}
+        ${filterByStep3StatusText}
+      ORDER BY ${sortColumn} ${sortOrder}
+      LIMIT ${myLimit}
+      OFFSET ${myOffset}`, [], false)
+    res.send(rows)
+  } catch (error) {
+    console.log('error on /api/advising/read/all/adviser') // temp
+    console.log(error)
+    res.send('Error')
+  }
+})
+// end Read All Advising Status by Adviser
+
+// Update Status
+router.post('/api/advising_status/update', adviserOnly, async (req, res) => {
+  // req.body = {student_up_mail, step1_status, step2_status, step3_status}
+  try {
+    const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB(source)
+    await database.run(db, `
+      UPDATE advising_status SET step1_status = ?, step2_status = ?, step3_status = ? WHERE student_up_mail = ?
+    `, [req.body.step1_status, req.body.step2_status, req.body.step3_status, req.body.student_up_mail], false)
+    res.json({message: `Update advising_status for ${req.body.student_up_mail} successfully`}).send()
+  } catch (error) {
+    console.log('Error on api > advising_status > update', error)
+    res.json({message: error}).send()
+  }
+})
+// end Update Status
+
+// Delete All Status
+router.post('/api/advising_status/delete/all', adminOnly, async (req, res) => {
+  try {
+    const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB(source)
+    await database.run(db, `DELETE FROM advising_status`, [], false)
+    res.json({message: 'Deleted all rows from advising_status successfully'}).send()
+  } catch (error) {
+    console.log('Error on api > advising_status > delete > all', error)
+    res.status(401).json({message: error}).send()
+  }
+})
+// end Delete All Status
+
 // Create/Update Curri Progress
 // Required Body: curri_progress
 router.post('/api/advising/curri/update', studentOnly, async (req, res) => {
@@ -79,7 +264,47 @@ router.post('/api/advising/curri/read', studentOnly, async (req, res) => {
 })
 // end Read Curri Progress
 
+// Read All Curri Progress
+router.post('/api/advising/curri/read/all', adviserOnly, async (req, res) => {
+  try {
+    const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB(source)
+    const rows = await database.all(db, `
+      SELECT * FROM curri_progress
+    `, [], false)
+    res.json({rows: rows}).send()
+  } catch (error) {
+    console.log('Error on api > advising > curri > read > all', error)
+    res.status(401).json({message: error}).send()
+  }
+})
+// end Read All Curri Progress
+
 // Middlewares
+function adminOnly(res, req, next){
+  try{
+    if (req.user.role !== 'admin') {
+      throw 'User not Admin'
+    } else {
+      next()
+    }
+  } catch(error){
+    console.log('Error on admin.js > adminOnly', error)
+    res.status(401).json({message: error}).send()
+  }
+}
+function adviserOnly(res, req, next){
+  try{
+    if (req.user.role !== 'adviser') {
+      throw 'User not Adviser'
+    } else {
+      next()
+    }
+  } catch(error){
+    console.log('Error on advising.js > adviserOnly', error)
+    res.status(401).json({message: error}).send()
+  }
+}
 function loggedIn(req, res, next) {
   try {
     if (!req.user) {
@@ -90,6 +315,18 @@ function loggedIn(req, res, next) {
   } catch (error) {
     console.log('Error in advising.js > loggedIn middleware')
     console.log(error)
+    res.status(401).json({message: error}).send()
+  }
+}
+function OcsOnly(req, res, next) {
+  try {
+    if (req.user.role !== 'ocs') {
+      throw 'User not OCS'
+    } else {
+      next()
+    }
+  } catch (error) {
+    console.log('Error on advising.js > OcsOnly', error)
     res.status(401).json({message: error}).send()
   }
 }

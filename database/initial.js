@@ -24,6 +24,8 @@ async function createInitialTables(db) {
   await database.createTable(db, 'advising_status', `
     student_up_mail TEXT UNIQUE PRIMARY KEY,
     adviser_up_mail TEXT,
+    degree_program TEXT,
+    department TEXT,
     step1_status TEXT,
     step2_status TEXT,
     step3_status TEXT
@@ -59,6 +61,13 @@ async function createInitialTables(db) {
     modified TEXT
   `)
   // end curri_progress table
+  // ecf table
+  await database.createTable(db, 'ecf', `
+    student_up_mail TEXT UNIQUE PRIMARY KEY,
+    class_number TEXT,
+    adviser_up_mail TEXT
+  `)
+  // end ecf table
 }
 
 async function createInitialRows(db) {
@@ -69,23 +78,61 @@ async function createInitialRows(db) {
       INSERT INTO advising_status (
         student_up_mail,
         adviser_up_mail,
+        department,
+        degree_program,
         step1_status,
         step2_status,
         step3_status
-      ) VALUES (?, ?, ?, ?, ?)
-    `, ['jmlicup@up.edu.ph', 'johnpaolomlicup@gmail.com', 'not started', 'not started', 'no access'], true)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?)
+    `, ['jmlicup@up.edu.ph', 'johnpaolomlicup@gmail.com', 'DPSM', 'BS Computer Science', 'not started', 'not started', 'no access'], true)
     // end student jmlicup@up.edu.ph
   // end Advising Status
 
-  // Announcements
-  //   await database.run(db, `
-  //   INSERT INTO announcement (
-  //     id, title, body, created, modified
-  //   ) VALUES (?, ?, ?, ?, ?)
-  // `, [
-  //   uuidv4(), 'Hello World!', 'Lorem ipsum dolor', Date.now(), Date.now()
-  // ], true)
-  // end Announcements
+  // Course
+  await database.run(db, `
+    INSERT INTO course (
+      class_number,
+      department,
+      course_title,
+      subject,
+      catalog_no,
+      section,
+      schedule,
+      learning_delivery_mode,
+      instructor,
+      class_capacity,
+      restrictions,
+      was_edited
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+  `, [
+    '1000',
+    'DAC',
+    'COMM 10 Title',
+    'COMM',
+    '10',
+    'LEC1',
+    'MTH 7:00am-8:30am',
+    'BLENDED',
+    'Ogatis',
+    '20',
+    'First Year OrCom',
+    'true'
+  ], true)
+  // end Course
+
+  // Course_Edit
+  await database.run(db, `
+      INSERT INTO course_edit (
+        class_number,
+        last_modified
+      ) VALUES (?, ?)
+  `, [
+    '1000',
+    Date.now()
+  ], true)
+  // end Course_Edit
 
   // Users
     // student jmlicup@up.edu.ph

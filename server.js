@@ -3,6 +3,7 @@ const app = express()
 const port = 3000
 
 const advising = require('./advising/advising')
+const course = require('./course/course')
 const database = require('./database/database')
 const initial = require('./database/initial')
 const announcement = require('./announcement/announcement')
@@ -35,6 +36,7 @@ async function main() {
     app.use('/', auth.router)
     app.use('/', announcement.router)
     app.use('/', advising.router)
+    app.use('/', course.router)
 
     // HTML Middleware
     const history = require('connect-history-api-fallback')
