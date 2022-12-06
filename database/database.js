@@ -29,7 +29,7 @@ async function createTable(db, tableName, columns) {
         if (err) {
           throw err
         } else {
-          console.log('Created table', tableName, 'successfully.') // temp
+          // console.log('Created table', tableName, 'successfully.') // temp
           resolve()
         }
       })

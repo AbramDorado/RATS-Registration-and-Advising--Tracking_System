@@ -44,9 +44,9 @@ export default {
 html {
   scroll-behavior: smooth;
 }
-span, td {
+/* span, td {
   line-height: 1;
-}
+} */
 /* always show arrows input type number */
 input[type=number]::-webkit-inner-spin-button {
   opacity: 1
@@ -77,5 +77,14 @@ td {
 @font-face {
   font-family: Open_Sans_Bold;
   src: url(/Open_Sans/static/OpenSans/OpenSans-Bold.ttf);
+}
+.myButton2 {
+  border: 1px solid white;
+  border-radius: 10px;
+  color:white;
+  cursor: pointer;
+  font-family: Open_Sans_Bold;
+  font-size: 24px;
+  padding: 10px 15px;
 }
 </style>

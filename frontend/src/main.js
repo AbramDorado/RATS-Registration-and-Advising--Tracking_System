@@ -12,6 +12,7 @@ import Advising from './pages/Advising.vue'
 import Contact from './pages/Contact.vue'
 import Home from './pages/Home.vue'
 import Login from './pages/Login.vue'
+import Ocs from './pages/OCS.vue'
 
 // set routes
 const routes = [
@@ -19,7 +20,8 @@ const routes = [
   {path: '/admin', component: Admin},
   {path: '/advising', component: Advising},
   {path: '/contact', component: Contact},
-  {path: '/login', component: Login}
+  {path: '/login', component: Login},
+  {path: '/ocs', component: Ocs}
 ]
 
 const router = createRouter({

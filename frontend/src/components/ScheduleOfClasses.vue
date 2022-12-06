@@ -1,11 +1,17 @@
 <script>
 export default {
   name: 'ScheduleOfClasses',
+  data() {
+    return {
+      courses: null
+    }
+  },
   mounted() {
     // Initialize Bootstrap Popper Tooltip
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-    // end Initialize Bootstrap Popper Tooltip    
+    // end Initialize Bootstrap Popper Tooltip
+    this.updateCourses() 
   },
   methods: {
     closeFullscreen() {
@@ -15,13 +21,20 @@ export default {
     showFullscreen() {
       this.$refs['floatingButton'].style.display = 'none'
       this.$refs['fullscreenDiv'].style.display = 'block'      
+    },
+    async updateCourses() {
+      try {
+        
+      } catch (error) {
+        
+      }
     }
   }
 }
 </script>
 
 <template>
-<div @click="showFullscreen()" ref="floatingButton" data-bs-toggle="tooltip" data-bs-title="Schedule of Classes" data-bs-placement="left" class="align-items-center hoverTransform justify-content-center shadow-lg" style="background-color: rgb(70, 12, 15); border: 2px solid black; border-radius: 50%; bottom: 30px; cursor: pointer; display: flex; height: 70px; position: fixed; right: 30px; width: 70px; z-index: 2;">
+<div @click="showFullscreen()" ref="floatingButton" data-bs-toggle="tooltip" data-bs-title="Schedule of Classes" data-bs-placement="left" class="align-items-center hoverTransform justify-content-center shadow-lg" style="background-color: rgb(70, 12, 15); border: 0px solid white; border-radius: 50%; bottom: 30px; cursor: pointer; display: flex; height: 70px; position: fixed; right: 30px; width: 70px; z-index: 2;">
   <!-- Schedule of Classes Icon -->
   <i class="align-items-center bi bi-table d-flex" style="color: white; font-size: 30px;"></i>
   <!-- end Schedule of Classes Icon -->  

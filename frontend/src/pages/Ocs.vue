@@ -3,7 +3,7 @@ import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
 import ScheduleOfClasses from '../components/ScheduleOfClasses.vue'
 export default {
-  name: 'Admin',
+  name: 'OCS',
   components: {
     Header, Footer, ScheduleOfClasses
   },
@@ -55,38 +55,38 @@ export default {
     }
   },
   methods: {
-    // async addAnnouncement() {
-    //   try {
-    //     if (this.addAnnouncementDisabled) {
-    //       return
-    //     } else if (!this.add_announcement.title || !this.add_announcement.body) {
-    //       alert('Input cannot be blank')
-    //       return
-    //     } else {
-    //       this.addAnnouncementDisabled = true
-    //       const body = {title: this.add_announcement.title, body: this.add_announcement.body}
-    //       const response = await this.axios.post('/api/announcement/create', body)
-    //       await this.getAllAnnouncements()
-    //       this.clearAddAnnouncementInputs();
-    //       this.addAnnouncementDisabled = false
-    //       this.hideDiv('addAnnouncementDiv');
-    //       this.showDiv('announcementDashboard')
-    //     }
-    //   } catch (error) {
-    //     console.log('Error on Admin.vue > addAnnouncement', error) // temp
-    //     alert('Error on posting announcement') // temp
-    //     this.addAnnouncementDisabled = false
-    //   }
-    // },    
+    async addAnnouncement() {
+      try {
+        if (this.addAnnouncementDisabled) {
+          return
+        } else if (!this.add_announcement.title || !this.add_announcement.body) {
+          alert('Input cannot be blank')
+          return
+        } else {
+          this.addAnnouncementDisabled = true
+          const body = {title: this.add_announcement.title, body: this.add_announcement.body}
+          const response = await this.axios.post('/api/announcement/create', body)
+          await this.getAllAnnouncements()
+          this.clearAddAnnouncementInputs();
+          this.addAnnouncementDisabled = false
+          this.hideDiv('addAnnouncementDiv');
+          this.showDiv('announcementDashboard')
+        }
+      } catch (error) {
+        console.log('Error on Admin.vue > addAnnouncement', error) // temp
+        alert('Error on posting announcement') // temp
+        this.addAnnouncementDisabled = false
+      }
+    },    
     async authorize() {
       try {
         const response = await this.axios.post('/api/authorize')
-        if (!response.data.role === 'admin') {
-          throw 'Not admin'
+        if (!response.data.role === 'ocs') {
+          throw 'Not OCS'
         }
         this.user = response.data
       } catch (error) {
-        console.log('Error on Admin.vue > authorize()', error) // temp
+        console.log('Error on OCS.vue > authorize()', error) // temp
         location.href = '/'
       }
     },
@@ -130,10 +130,10 @@ export default {
         thiss.batchUploadProgress += `Error on batchRegister(): ${error}` // temp
       }
     },
-    // clearAddAnnouncementInputs() {
-    //   this.add_announcement.title = ''
-    //   this.add_announcement.body = ''
-    // },    
+    clearAddAnnouncementInputs() {
+      this.add_announcement.title = ''
+      this.add_announcement.body = ''
+    },    
     clearBatchUploadDiv() {
       this.$refs.batchUploadCSV.value = ''
       this.batchUploadProgress = ''
@@ -175,26 +175,26 @@ export default {
         this.resultsLimit = this.usersCount
       }
     },
-    // deleteAnnouncement(announcementToDelete) {
-    //   this.hideDiv('announcementDashboard')
-    //   this.showDiv('deleteAnnouncementDiv') // To do
-    //   this.del_announcement = JSON.parse(JSON.stringify(announcementToDelete))
-    // },
-    // async deleteAnnouncementAPI() {
-    //   if (this.deleteAnnouncementDisabled) {
-    //     return
-    //   }
-    //   try {
-    //     this.deleteAnnouncementDisabled = true
-    //     const response = await this.axios.post('/api/announcement/delete', {body: this.del_announcement.body})
-    //     await this.getAllAnnouncements()
-    //     this.hideDiv('deleteAnnouncementDiv')
-    //     this.showDiv('announcementDashboard')        
-    //     this.deleteAnnouncementDisabled = false
-    //   } catch (error) {
-    //     console.log('Error on Admin.vue > deleteAnnouncement', error) // temp
-    //   }
-    // },
+    deleteAnnouncement(announcementToDelete) {
+      this.hideDiv('announcementDashboard')
+      this.showDiv('deleteAnnouncementDiv') // To do
+      this.del_announcement = JSON.parse(JSON.stringify(announcementToDelete))
+    },
+    async deleteAnnouncementAPI() {
+      if (this.deleteAnnouncementDisabled) {
+        return
+      }
+      try {
+        this.deleteAnnouncementDisabled = true
+        const response = await this.axios.post('/api/announcement/delete', {body: this.del_announcement.body})
+        await this.getAllAnnouncements()
+        this.hideDiv('deleteAnnouncementDiv')
+        this.showDiv('announcementDashboard')        
+        this.deleteAnnouncementDisabled = false
+      } catch (error) {
+        console.log('Error on Admin.vue > deleteAnnouncement', error) // temp
+      }
+    },
     deleteUser(userToDelete) {
       this.hideDiv('usersDashboard')
       this.showDiv('deleteUserDiv')
@@ -223,28 +223,28 @@ export default {
         console.log('Error on Admin.vue > deleteUser', error) // temp
       }
     },
-    // editAnnouncement(announcement) {
-    //   this.edit_announcement = JSON.parse(JSON.stringify(announcement))
-    //   this.edit_announcement_original = JSON.parse(JSON.stringify(announcement))
-    //   this.hideDiv('announcementDashboard')
-    //   this.showDiv('editAnnouncementDiv')
-    // },
-    // async editAnnouncementAPI() {
-    //   try {
-    //     if (!this.edit_announcement_original.body || !this.edit_announcement.title || !this.edit_announcement.body) {
-    //       alert('Input cannot be blank') // temp
-    //       return
-    //     } else {
-    //       const body = {old_body: this.edit_announcement_original.body, new_title: this.edit_announcement.title, new_body: this.edit_announcement.body}
-    //       const response = await this.axios.post('/api/announcement/edit', body)
-    //       await this.getAllAnnouncements()
-    //       this.hideDiv('editAnnouncementDiv');
-    //       this.showDiv('announcementDashboard')
-    //     }
-    //   } catch(error) {
-    //     console.log('Error on Admin.vue > editAnnouncementAPI', error) // temp
-    //   }
-    // },
+    editAnnouncement(announcement) {
+      this.edit_announcement = JSON.parse(JSON.stringify(announcement))
+      this.edit_announcement_original = JSON.parse(JSON.stringify(announcement))
+      this.hideDiv('announcementDashboard')
+      this.showDiv('editAnnouncementDiv')
+    },
+    async editAnnouncementAPI() {
+      try {
+        if (!this.edit_announcement_original.body || !this.edit_announcement.title || !this.edit_announcement.body) {
+          alert('Input cannot be blank') // temp
+          return
+        } else {
+          const body = {old_body: this.edit_announcement_original.body, new_title: this.edit_announcement.title, new_body: this.edit_announcement.body}
+          const response = await this.axios.post('/api/announcement/edit', body)
+          await this.getAllAnnouncements()
+          this.hideDiv('editAnnouncementDiv');
+          this.showDiv('announcementDashboard')
+        }
+      } catch(error) {
+        console.log('Error on Admin.vue > editAnnouncementAPI', error) // temp
+      }
+    },
     editUser(user) {
       this.edit_role = user.role
       this.edit_up_mail = user.up_mail
@@ -269,20 +269,20 @@ export default {
         console.log('Error on Admin.vue > editUserAPI', error) // temp
       }
     },
-    // formatted_date(miliseconds) {
-    //   var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
-    //   var myDate = new Date(parseInt(miliseconds))
-    //   return myDate.toLocaleDateString("en-US", options)
-    // },    
-    // async getAllAnnouncements() {
-    //   try {
-    //     const limit = 10
-    //     const response = await this.axios.post('/api/announcement/all', {limit: limit})
-    //     this.announcements = response.data.rows
-    //   } catch (error) {
-    //     console.log('Error on Admin.vue > getAllAnnouncements', error) // temp
-    //   }
-    // },    
+    formatted_date(miliseconds) {
+      var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+      var myDate = new Date(parseInt(miliseconds))
+      return myDate.toLocaleDateString("en-US", options)
+    },    
+    async getAllAnnouncements() {
+      try {
+        const limit = 10
+        const response = await this.axios.post('/api/announcement/all', {limit: limit})
+        this.announcements = response.data.rows
+      } catch (error) {
+        console.log('Error on Admin.vue > getAllAnnouncements', error) // temp
+      }
+    },    
     async getAllUsers() {
       try {
         await this.getUsersCount()
@@ -348,16 +348,16 @@ export default {
       this.showDiv('viewUserDiv')
       // To do: Retrieve other info, needs advising module
     },
-    // viewAnnouncement(announcement) {
-    //   this.view_announcement = announcement
-    //   this.hideDiv('announcementDashboard')
-    //   this.showDiv('viewAnnouncementDiv')
-    // },
+    viewAnnouncement(announcement) {
+      this.view_announcement = announcement
+      this.hideDiv('announcementDashboard')
+      this.showDiv('viewAnnouncementDiv')
+    },
   },
   async mounted() {
     await this.authorize()
-    await this.getAllUsers()
-    // await this.getAllAnnouncements()
+    // await this.getAllUsers()
+    await this.getAllAnnouncements()
   }
 }
 </script>
@@ -366,16 +366,16 @@ export default {
 <ScheduleOfClasses />
 <div class="d-flex flex-column justify-content-between" style="min-height: 100vh;">
   <Header :user="this.user" />
-  <!-- Admin Div -->
+  <!-- OCS Div -->
   <div class="align-items-center d-flex flex-column justify-content-center" style="background-color: white; gap: 20px; padding: 30px;">
     <!-- Menu Div -->
     <div ref="menuDiv" style="align-items: center; display: flex; flex-direction: column; gap: 20px;">
       <div class="d-flex hoverTransform">
-        <span @click="hideDiv('menuDiv'); showDiv('usersDashboard');" class="myButton2" style="background-color: rgb(117, 21, 24);">Users Dashboard</span>
+        <span @click="hideDiv('menuDiv'); showDiv('announcementDashboard');" class="myButton2" style="background-color: rgb(117, 21, 24);">Announcement Dashboard</span>
       </div>
-      <!-- <div class="hoverTransform">
-        <span @click="hideDiv('menuDiv'); showDiv('coursesDashboard');" style="background-color: rgb(117, 21, 24); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Courses Dashboard</span>
-      </div>          -->
+      <div class="d-flex hoverTransform">
+        <span @click="hideDiv('menuDiv'); showDiv('coursesDashboard');" class="myButton2" style="background-color: rgb(117, 21, 24);">Courses Dashboard</span>
+      </div>         
     </div>
     <!-- end Menu Div -->
     <!-- Batch Upload Div -->
@@ -997,21 +997,21 @@ export default {
               <td v-html="announcements[index].body" class="text-start" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis; white-space: normal;"></td>
               <td style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis; white-space: nowrap;">
                 <!-- View Button -->
-                <div @click="viewAnnouncement(announcements[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #093405; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
+                <div @click="viewAnnouncement(announcements[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto myButton1" style="background-color: #093405; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
                   <span style="font-family: Open_Sans_Semi_Bold;">View</span>
                 </div>
                 <!-- end View Button -->
               </td>
               <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; position: relative; text-overflow: ellipsis; white-space: nowrap;">
                 <!-- Edit Button -->
-                <div @click="editAnnouncement(announcements[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #7F6000; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
+                <div @click="editAnnouncement(announcements[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto myButton1" style="background-color: #7F6000; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
                   <span style="font-family: Open_Sans_Semi_Bold;">Edit</span>
                 </div>
                 <!-- end Edit Button -->
               </td>
               <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 <!-- Delete Button -->
-                <div @click="deleteAnnouncement(announcements[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto" style="background-color: #751518; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
+                <div @click="deleteAnnouncement(announcements[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto myButton1" style="background-color: #751518; border-radius: 5px; color: white; cursor: pointer; width: 70px;">
                   <span style="font-family: Open_Sans_Semi_Bold;">Delete</span>
                 </div>
                 <!-- end Delete Button -->

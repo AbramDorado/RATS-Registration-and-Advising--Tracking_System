@@ -10,7 +10,18 @@ export default {
   computed: {
     formatted_name() { // Used in Account Popover
       return this.user.first_name + ' ' + this.user.last_name
-    } 
+    },
+    formatted_role() {
+      if (this.user.role === 'student') {
+        return 'Student'
+      } else if (this.user.role === 'adviser') {
+        return 'Adviser'
+      } else if (this.user.role === 'ocs') {
+        return 'OCS'
+      } else {
+        return 'Admin'
+      }
+    }
   },
   mounted() {
     // Initialize Bootstrap Popper Tooltip
@@ -147,7 +158,7 @@ export default {
           </div>
           <div class="d-flex flex-column text-end">
             <p style="font-family: Open_Sans_Bold; margin-bottom: 0; text-transform: capitalize;">{{this.formatted_name}}</p>
-            <p style="font-family: Open_Sans_Bold; margin-bottom: 0; text-transform: capitalize;">{{this.user.role}}</p>
+            <p style="font-family: Open_Sans_Bold; margin-bottom: 0; text-transform: capitalize;">{{this.formatted_role}}</p>
             <p style="font-family: Open_Sans_Bold; margin-bottom: 0;">{{this.user.up_mail}}</p>
           </div>
         </div>

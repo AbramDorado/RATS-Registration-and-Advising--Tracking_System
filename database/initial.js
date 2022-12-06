@@ -29,6 +29,28 @@ async function createInitialTables(db) {
     step3_status TEXT
   `)
   // end advising_status table
+  // course table
+  await database.createTable(db, 'course', `
+    class_number TEXT UNIQUE PRIMARY KEY,
+    department TEXT,
+    course_title TEXT,
+    subject TEXT,
+    catalog_no TEXT,
+    section TEXT,
+    schedule TEXT,
+    learning_delivery_mode TEXT,
+    instructor TEXT,
+    class_capacity TEXT,
+    restrictions TEXT,
+    was_edited TEXT
+  `)
+  // end course table
+  // course_edit table
+  await database.createTable(db, 'course_edit', `
+    class_number TEXT UNIQUE PRIMARY KEY,
+    last_modified TEXT
+  `)
+  // end course_edit table
   // curri_progress table
   await database.createTable(db, 'curri_progress', `
     student_up_mail TEXT UNIQUE PRIMARY KEY,
