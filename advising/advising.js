@@ -25,7 +25,7 @@ router.post('/api/advising/getStatus', loggedIn, async (req, res) => {
 // end Get Status
 
 // Read All Advising Status All Departments
-router.post('/api/advising/read/all/all', OcsOnly, async (req, res) => {
+router.post('/api/advising/read/all/all', ocsOnly, async (req, res) => {
   try {
     // req.body = {offset, limit, column, order, searchString, filterByDepartmentText, filterByDegreeProgramText, filterByStep1StatusText, filterByStep2StatusText, filterByStep3StatusText }
     
@@ -340,7 +340,7 @@ function ocsOnly(req, res, next) {
       next()
     }
   } catch (error) {
-    console.log('Error on advising.js > OcsOnly', error)
+    console.log('Error on advising.js > ocsOnly', error)
     res.status(401).json({message: error}).send()
   }
 }
