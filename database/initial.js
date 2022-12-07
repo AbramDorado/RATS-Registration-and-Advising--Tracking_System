@@ -50,6 +50,10 @@ async function createInitialTables(db) {
   // course_edit table
   await database.createTable(db, 'course_edit', `
     class_number TEXT UNIQUE PRIMARY KEY,
+    subject TEXT,
+    catalog_no TEXT,
+    section TEXT,
+    modification TEXT,
     last_modified TEXT
   `)
   // end course_edit table

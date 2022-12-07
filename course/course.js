@@ -7,15 +7,22 @@ const router = express.Router()
   // course APIs
     // create
     router.post('/api/course/create', ocsOnly, async (req, res) => {
-      // req.body: {class_number, department, course_title, subject, catalog_no, section, schedule, learning_delivery_mode, instructor, class_capacity, restrictions, was_edited}
+      // req.body: {register_type, class_number, department, course_title, subject, catalog_no, section, schedule, learning_delivery_mode, instructor, class_capacity, restrictions}
       try {
         const source = './database/db.sqlite'
         const db = await database.openOrCreateDB(source)
         await database.run(db, `
           INSERT INTO course (
-            class_number, department, course_title, subject, catalog_no, section, schedule, learning_delivery_mode, instructor, class_capacity, restrictions, was_edited
+            class_number, department, course_title, subject, catalog_no, section, schedule, learning_delivery_mode, instructor, class_capacity, restrictions
           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `, [req.body.class_number, req.body.department, req.body.course_title, req.body.subject, req.body.catalog_no, req.body.section, req.body.schedule, req.body.learning_delivery_mode, req.body.instructor, req.body.class_capacity, req.body.restrictions, 'false'], false)
+        `, [req.body.class_number, req.body.department, req.body.course_title, req.body.subject, req.body.catalog_no, req.body.section, req.body.schedule, req.body.learning_delivery_mode, req.body.instructor, req.body.class_capacity, req.body.restrictions], false)
+        // insert addition in course_edit
+        await database.run(db, `
+            INSERT INTO course_edit (
+              class_number, subject, catalog_no, section, modification, last_modified
+            ) VALUES (?, ?, ?, ?, ?, ?)
+        `, [req.body.class_number, req.body.subject, req.body.catalog_no, req.body.section, 'Addition', Date.now()], false)
+        // end insert addition in course_edit
         res.json({message: `Insert success for course ${req.body.class_number}`}).send()
       } catch (error) {
         console.log('Error on api > course > create', error)
@@ -24,70 +31,22 @@ const router = express.Router()
     })
     // end create
 
-    // read all
+    // read all by dept
     router.post('/api/course/read/all', async (req, res) => {
+      // req.body = {dept}
       try {
-        // will store courses for each dept
-        var DAC
-        var DB
-        var DBS
-        var DPE
-        var DPSM
-        var DSS
-        var MM
-        // query each dept
         const source = './database/db.sqlite'
         const myDB = await database.openOrCreateDB(source)
-        // DAC
-        var rows = await database.all(myDB, `
+        const rows = await database.all(myDB, `
           SELECT * FROM course WHERE department = ? ORDER BY subject, catalog_no 
-        `, ['DAC'], false)       
-        DAC = rows
-        // end DAC
-        // DB
-        rows = await database.all(myDB, `
-          SELECT * FROM course WHERE department = ? ORDER BY subject, catalog_no
-        `, ['DB'], false)
-        DB = rows
-        // end DB
-        // DBS
-        rows = await database.all(myDB, `
-          SELECT * FROM course WHERE department = ? ORDER BY subject, catalog_no
-        `, ['DBS'], false)
-        DBS = rows
-        // end DBS
-        // DPE
-        rows = await database.all(myDB, `
-          SELECT * FROM course WHERE department = ? ORDER BY subject, catalog_no
-        `, ['DPE'], false)
-        DPE = rows
-        // end DPE
-        // DPSM
-        rows = await database.all(myDB, `
-          SELECT * FROM course WHERE department = ? ORDER BY subject, catalog_no
-        `, ['DPSM'], false)
-        DPSM = rows
-        // end DPSM
-        // DSS
-        rows = await database.all(myDB, `
-          SELECT * FROM course WHERE department = ? ORDER BY subject, catalog_no
-        `, ['DSS'], false)
-        DSS = rows
-        // end DSS
-        // MM
-        rows = await database.all(myDB, `
-          SELECT * FROM course WHERE department = ? ORDER BY subject, catalog_no
-        `, ['MM'], false)
-        MM = rows
-        // end MM
-        // end query each dept
-        res.json({DAC: DAC, DB: DB, DBS: DBS, DPE: DPE, DPSM: DPSM, DSS: DSS, MM: MM}).send()
+        `, [req.body.dept], false)
+        res.json({rows: rows}).send()
       } catch (error) {
         console.log('Error on api > course > read > all', error)
         res.status(401).json({message: error}).send()
       }
     })
-    // end read all
+    // end read all by dept
 
     // read one
     router.post('/api/course/read/one', async (req, res) => {
@@ -106,22 +65,22 @@ const router = express.Router()
 
     // update
     router.post('/api/course/update', ocsOnly, async (req, res) => {
-      // req.body: {old_class_number, new_class_number department, course_title, subject, catalog_no, section, schedule, learning_delivery_mode, instructor, class_capacity, restrictions, was_edited}    
+      // req.body: {old_class_number, new_class_number, department, course_title, subject, catalog_no, section, schedule, learning_delivery_mode, instructor, class_capacity, restrictions}    
       try {
         const source = './database/db.sqlite'
         const db = await database.openOrCreateDB(source)
         await database.run(db, `
-          UPDATE course SET class_number = ?, department = ?, course_title = ?, subject = ?, catalog_no = ?, section = ?, schedule = ?, learning_delivery_mode = ?, instructor = ?, class_capacity = ?, restrictions = ?, was_edited = ? WHERE class_number = ?
+          UPDATE course SET class_number = ?, department = ?, course_title = ?, subject = ?, catalog_no = ?, section = ?, schedule = ?, learning_delivery_mode = ?, instructor = ?, class_capacity = ?, restrictions = ?, WHERE class_number = ?
         `, [
-          req.body.new_class_number, req.body.department, req.body.course_title, req.body.subject, req.body.catalog_no, req.body.section, req.body.schedule, req.body.learning_delivery_mode, req.body.instructor, req.body.class_capacity, req.body.restrictions, 'true', req.body.old_class_number
+          req.body.new_class_number, req.body.department, req.body.course_title, req.body.subject, req.body.catalog_no, req.body.section, req.body.schedule, req.body.learning_delivery_mode, req.body.instructor, req.body.class_capacity, req.body.restrictions, req.body.old_class_number
         ], false)
         // update course_edit table
           // delete row
           await database.run(db, `DELETE FROM course_edit WHERE class_number = ?`, [req.body.class_number], true)
           // end delete row
-          // insert row
-          await database.run(db, `INSERT INTO course_edit (class_number, last_modified) VALUES (?, ?)`, [req.body.class_number, Date.now()], false)
-          // end insert row
+          // insert row with 'updated' modification type
+          await database.run(db, `INSERT INTO course_edit (class_number, subject, catalog_no, section, modification, last_modified) VALUES (?, ?, ?, ?, ?, ?)`, [req.body.class_number, req.body.subject, req.body.catalog_no, req.body.section, 'Updated', Date.now()], false)
+          // end insert row with 'updated' modification type
         // end update course_edit table
         res.json({message: `Update success for ${req.body.subject} ${req.body.catalog_no} ${req.body.section}`})
       } catch (error) {
@@ -137,7 +96,20 @@ const router = express.Router()
       try {
         const source = './database/db.sqlite'
         const db = await database.openOrCreateDB(source)
-        await database.run(db, `DELETE FROM course WHERE `, [], false)
+        await database.run(db, `DELETE FROM course WHERE class_number = ?`, [req.body.class_number], false)
+        // insert into course_edit
+          // get original course row
+          const row = await database.get(db, `
+            SELECT subject, catalog_no, section FROM course WHERE class_number = ?
+          `, [req.body.class_number], false)
+          // end get original course row
+          await database.run(db, `
+            INSERT INTO course_edit (
+              class_number, subject, catalog_no, section, modification, last_modified
+            ) VALUES (?, ?, ?, ?, ?, ?)
+          `, [req.body.class_number, row.subject, row.catalog_no, row.section, 'Dissolved', Date.now()], false)
+        // end insert into course_edit
+        res.json({message: `Delete success for class_number ${req.body.class_number}`}).send()
       } catch (error) {
         console.log('Error on api > course > delete', error)
         res.status(401).json({message: error}).send()

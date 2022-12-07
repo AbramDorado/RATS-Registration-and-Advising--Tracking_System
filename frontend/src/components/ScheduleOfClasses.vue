@@ -3,13 +3,8 @@ export default {
   name: 'ScheduleOfClasses',
   data() {
     return {
-      courses_DAC: null, // aray that will store updateCourses() from DAC
-      courses_DB: null, // aray that will store updateCourses() from DB
-      courses_DBS: null, // aray that will store updateCourses() from DBS
-      courses_DPE: null, // aray that will store updateCourses() from DPE
-      courses_DPSM: null, // aray that will store updateCourses() from DPSM
-      courses_DSS: null, // aray that will store updateCourses() from DSS
-      courses_MM: null, // aray that will store updateCourses() from DAC
+      courses: null, // will store response of updateCourses()
+      dept: 'DAC', // used in main table dropdown
       edited_courses: null // array that will store updateEditedCourses()
     }
   },
@@ -32,14 +27,8 @@ export default {
     },
     async updateCourses() {
       try {
-        const response = await this.axios.post('/api/course/read/all')
-        this.courses_DAC = response.data.DAC
-        this.courses_DB = response.data.DB
-        this.courses_DBS = response.data.DBS
-        this.courses_DPE = response.data.DPE
-        this.courses_DPSM = response.data.DPSM
-        this.courses_DSS = response.data.DSS
-        this.courses_MM = response.data.MM
+        const response = await this.axios.post('/api/course/read/all', {dept: this.dept})
+        this.courses = response.data.rows
       } catch (error) {
         console.log('Error on ScheduleOfClasses.vue > updateCourses()', error)
       }
@@ -66,23 +55,118 @@ export default {
 <!-- end Button -->
 <!-- Popover -->
 <div ref="fullscreenDiv" style="background-color: rgba(0, 0, 0, 0.5); display: none; height: 100%; padding: 30px; position: fixed; width: 100%; z-index: 2;">
-  <div style="background-color: white; border: 2px solid green; height: 100%;">
-    Schedule of Classes
+  <div class="d-flex flex-column" style="background-color: white; height: 100%; overflow-y: scroll; padding: 15px;">
+    <!-- Close Button -->
+    <div class="align-items-end align-self-end d-flex justify-content-end" style="margin-bottom: 10px;">
+      <div @click="closeFullscreen()" class="hoverTransform myButton1" style="background-color: #751518;">Close</div>
+    </div>
+    <!-- end Close Button -->
     <!-- Modified Courses -->
-    <div>
-      {{edited_courses}}
+    <div class="align-items-center d-flex flex-column myMainDiv1" style="margin-bottom: 20px;">
+      <!-- Modified Courses Header Div -->
+      <div class="d-flex flex-row justify-content-between" style="width: 100%;">
+        <!-- <div style="flex-basis: 0; flex-grow: 1;"></div> -->
+        <div class="align-items-center d-flex justify-content-center" style="flex-basis: 0; flex-grow: 1;">
+          <span class="myHeading1">Recently Modified Courses</span>
+        </div>
+      </div>
+      <!-- end Modified Courses Header Div -->
+      <!-- Modified Courses Body -->
+      <table class="fixed-table-body table table-bordered table-responsive">
+        <thead>
+          <tr>
+            <th class="align-middle text-center" scope="col">Class Number</th>
+            <th class="align-middle text-center" scope="col">Subject</th>
+            <th class="align-middle text-center" scope="col">Catalog Number</th>
+            <th class="align-middle text-center" scope="col">Section</th>
+            <th class="align-middle text-center" scope="col">Modification</th>
+            <th class="align-middle text-center" scope="col">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(obj, index) in edited_courses" :key="index">
+            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].class_number}}</td>
+            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].subject}}</td>
+            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].catalog_no}}</td>
+            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].section}}</td>
+            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].modification}}</td>
+            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].last_modified}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- end Modified Courses Body -->
     </div>
     <!-- end Modified Courses -->
     <!-- Main Table -->
-    <div>
-      {{courses_DAC}}
-    </div>
+      <div class="align-items-center d-flex flex-column myMainDiv1">
+        <!-- Main Table Header Div -->
+        <span class="myHeading1">Schedule of Classes</span>
+        <!-- end Main Table Header Div -->
+        <!-- Main Table Body -->
+          <!-- Dept Dropdown -->
+          <div>
+            <span style="font-family: Open_Sans_Bold; margin-right: 5px;">Department: </span>
+            <select @change="updateCourses()" v-model="dept" style="margin-bottom: 10px;">
+              <option value="DAC">DAC</option>
+              <option value="DB">DB</option>
+              <option value="DBS">DBS</option>
+              <option value="DPE">DPE</option>
+              <option value="DPSM">DPSM</option>
+              <option value="DSS">DSS</option>
+              <option value="MM">MM</option>
+            </select>     
+          </div>
+          <!-- end Dept Dropdown -->
+          <table class="fixed-table-body table table-bordered table-responsive">
+            <thead>
+              <tr>
+                <th class="align-middle text-center" scope="col">Class Number</th>
+                <th class="align-middle text-center" scope="col">Department</th>
+                <th class="align-middle text-center" scope="col">Course Title</th>
+                <th class="align-middle text-center" scope="col">Subject</th>
+                <th class="align-middle text-center" scope="col">Catalog Number</th>
+                <th class="align-middle text-center" scope="col">Section</th>
+                <th class="align-middle text-center" scope="col">Schedule</th>
+                <th class="align-middle text-center" scope="col">Learning Delivery Mode</th>
+                <th class="align-middle text-center" scope="col">Instructor</th>
+                <th class="align-middle text-center" scope="col">Class Capacity</th>
+                <th class="align-middle text-center" scope="col">Restrictions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(obj, index) in courses" :key="index">
+                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{courses[index].class_number}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{courses[index].department}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{courses[index].course_title}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{courses[index].subject}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{courses[index].catalog_no}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{courses[index].section}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{courses[index].schedule}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{courses[index].learning_delivery_mode}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{courses[index].instructor}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{courses[index].class_capacity}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{courses[index].restrictions}}</td>
+              </tr>
+            </tbody>
+          </table>
+        <!-- end Main Table Body -->
+      </div>
     <!-- end Main Table -->
-    <span @click="closeFullscreen()">Close</span>
   </div>
 </div>
 <!-- end Popover -->
 </template>
 
 <style scoped>
+.myHeading1 {
+  font-family: Open_Sans_Bold;
+  font-size: 24px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.myMainDiv1 {
+  border: 2px solid black;
+  border-radius: 5px;
+  padding: 20px;
+}
 </style>

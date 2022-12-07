@@ -4,7 +4,7 @@ export default {
   props: ['user'], // Stores the user passed from parent's Authorize API call
   data() {
     return {
-      popOversArr: ['notifsPopover', 'accPopover'] // Used in hideAllPopovers()
+      popOversArr: ['accPopover'] // Used in hideAllPopovers()
     }
   },
   computed: {
@@ -45,14 +45,14 @@ export default {
       }
     },
     hidePopover(ref) {
-      // refs: notifsPopover, accPopover
+      // refs: accPopover
       this.$refs[ref].style.display = 'none'
     },
     redirect(to) {
       location.href = to
     },
     showPopover(ref) {
-      // refs: notifsPopover, accPopover
+      // refs: accPopover
       this.$refs[ref].style.display = 'flex'
     },
     toAdvising() {
@@ -69,7 +69,7 @@ export default {
       }
     },
     togglePopover(ref) {
-      // refs: notifsPopover, accPopover
+      // refs: accPopover
       if (this.$refs[ref].style.display === 'none') {
         this.hideAllPopovers()
         // show this popover
@@ -125,20 +125,6 @@ export default {
 
   <!-- Header Right Div -->
   <div class="headerRight align-items-center d-flex flex-row justify-content-end" style="gap: 20px;">
-    <!-- Notifications Icon -->
-    <div id="notifsIconDiv" style="position: relative;">
-      <div @click="togglePopover('notifsPopover')" data-bs-toggle="tooltip" data-bs-title="Notifications" data-bs-placement="left" class="notifsIcon hoverTransform">
-        <!-- Notifications Icon -->
-        <i class="align-items-center bi bi-bell-fill d-flex" style="color: white; font-size: 30px;"></i>
-        <!-- end Notifications Icon -->
-      </div>
-      <!-- Notifications Popover -->
-      <div ref="notifsPopover" class="myPopover rounded shadow-sm" style="background-color: rgba(255, 255, 255, 1); border: 1px solid black; bottom: 0px; color: #290506; display: none; height: 200px; position: absolute; right: 0px; transform: translate(-3%, 105%); width: 200px; z-index: 100;">
-        Notifications Popover
-      </div>
-      <!-- end Notifications Popover -->
-    </div>
-    <!-- end Notifications Icon -->
     <!-- Account Icon -->
     <div id="accIconDiv" style="position: relative">
       <div @click="togglePopover('accPopover')" data-bs-toggle="tooltip" data-bs-title="Account" data-bs-placement="left" class="accIcon hoverTransform">

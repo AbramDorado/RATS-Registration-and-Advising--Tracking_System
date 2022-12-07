@@ -9,15 +9,15 @@ export default {
     },
     rvClicked(event) {
       if (event.target.classList.contains('myPopover')) {
-        console.log('popover clicked') // temp
+        // console.log('popover clicked') // temp
         return
       }
-      if (document.getElementById('notifsIconDiv').contains(event.target)) {
-        console.log('#notifsIconDiv clicked') // temp
-        return
-      }
+      // if (document.getElementById('notifsIconDiv').contains(event.target)) {
+      //   // console.log('#notifsIconDiv clicked') // temp
+      //   return
+      // }
       if (document.getElementById('accIconDiv').contains(event.target)) {
-        console.log('#accIconDiv clicked') // temp
+        // console.log('#accIconDiv clicked') // temp
         return
       }
       // console.log('not popover nor icon clicked') // temp
