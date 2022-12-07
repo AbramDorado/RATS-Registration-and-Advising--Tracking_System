@@ -184,10 +184,16 @@ router.post('/api/advising_status/update', adviserOnly, async (req, res) => {
   try {
     const source = './database/db.sqlite'
     const db = await database.openOrCreateDB(source)
+    var studentToChange
+    if (req.user.role === 'student') {
+      studentToChange = req.user.up_mail
+    } else {
+      studentToChange = req.body.student_up_mail
+    }
     await database.run(db, `
       UPDATE advising_status SET step1_status = ?, step2_status = ?, step3_status = ? WHERE student_up_mail = ?
-    `, [req.body.step1_status, req.body.step2_status, req.body.step3_status, req.body.student_up_mail], false)
-    res.json({message: `Update advising_status for ${req.body.student_up_mail} successfully`}).send()
+    `, [req.body.step1_status, req.body.step2_status, req.body.step3_status, studentToChange], false)
+    res.json({message: `Update advising_status for ${studentToChange} successfully`}).send()
   } catch (error) {
     console.log('Error on api > advising_status > update', error)
     res.json({message: error}).send()
@@ -220,6 +226,8 @@ router.post('/api/advising/curri/update', studentOnly, async (req, res) => {
     if (row) {
       // update record
       await database.run(db, `UPDATE curri_progress SET curri_progress = ?, modified = ? WHERE student_up_mail = ?`, [JSON.stringify(req.body.curri_progress), Date.now(), req.user.up_mail], false)
+      // update advising_status
+      await database.run(db, `UPDATE advising_status SET step1_status = ? WHERE student_up_mail = ?`, ['done', req.user.up_mail], false)
       res.json({message: 'Updated'}).send()
     } else {
       // no existing record, create one
@@ -313,6 +321,18 @@ function adviserOnly(res, req, next){
       throw 'User not Adviser'
     } else {
       next()
+    }
+  } catch(error){
+    console.log('Error on advising.js > adviserOnly', error)
+    res.status(401).json({message: error}).send()
+  }
+}
+function adviserOrStudentOnly(res, req, next){
+  try{
+    if (req.user.role === 'adviser' || req.user.role === 'student') {
+      next()
+    } else {
+      throw 'User not Adviser nor Student'
     }
   } catch(error){
     console.log('Error on advising.js > adviserOnly', error)

@@ -55,7 +55,7 @@ export default {
 <!-- end Button -->
 <!-- Popover -->
 <div ref="fullscreenDiv" style="background-color: rgba(0, 0, 0, 0.5); display: none; height: 100%; padding: 30px; position: fixed; width: 100%; z-index: 2;">
-  <div class="d-flex flex-column" style="background-color: white; height: 100%; overflow-y: scroll; padding: 15px;">
+  <div class="d-flex flex-column" style="background-color: rgb(248, 246, 240); height: 100%; overflow-y: scroll; padding: 15px;">
     <!-- Close Button -->
     <div class="align-items-end align-self-end d-flex justify-content-end" style="margin-bottom: 10px;">
       <div @click="closeFullscreen()" class="hoverTransform myButton1" style="background-color: #751518;">Close</div>
@@ -165,6 +165,7 @@ export default {
   margin-bottom: 10px;
 }
 .myMainDiv1 {
+  background-color: white;
   border: 2px solid black;
   border-radius: 5px;
   padding: 20px;

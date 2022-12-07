@@ -50,7 +50,7 @@ export default {
       try {
         const response = await this.axios.post('/api/advising/curri/update', {curri_progress: this.curri_progress})
       } catch (error) {
-        console.log('Error on Advising.vue > finishEditingCurri', error)
+        console.log('Error on Advising.vue > deleteRow', error)
         alert('Error')
       }
     },
