@@ -1,11 +1,12 @@
 <script>
+import Ecf from '../components/Ecf.vue'
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
 import ScheduleOfClasses from '../components/ScheduleOfClasses.vue'
 export default {
   name: 'Advising',
   components: {
-    Header, Footer, ScheduleOfClasses
+    Ecf, Header, Footer, ScheduleOfClasses
   },
   data() {
     return {
@@ -155,8 +156,8 @@ export default {
       </div>
       <!-- end ECF Header -->
       <!-- ECF Body -->
-      <div ref="ECF_body">
-
+      <div ref="ECF_body" class="d-flex justify-content-center">
+        <Ecf />
       </div>
       <!-- end ECF Body -->
     </div>
