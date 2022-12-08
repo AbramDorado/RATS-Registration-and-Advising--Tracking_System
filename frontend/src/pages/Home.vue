@@ -114,7 +114,7 @@ export default {
               <span @click="redirect('/advising')" v-if="this.step1_status === 'not started'" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
                 Start
               </span>
-              <span @click="redirect('/advising')" v-else style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
+              <span @click="redirect('/advising')" v-else style="background-color: #7F6000; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
                 Edit
               </span>              
             </div>

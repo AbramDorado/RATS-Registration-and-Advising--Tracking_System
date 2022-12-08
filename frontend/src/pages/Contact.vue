@@ -31,19 +31,19 @@ export default {
 </script>
 
 <template>
-<div>
+<div style="display: flex; flex-direction: column; flex-grow: 1;">
   <ScheduleOfClasses />
   <Header :user="this.user"/>
   <!-- Contact Page -->
-  <div class="d-flex flex-column" style="height: 100%;">
+  <div class="d-flex flex-column" style="flex-grow: 1;">
     <!-- Header -->
-    <div class="align-items-center d-flex justify-content-start" style="background-color: #093405; padding: 10px 15px;">
+    <!-- <div class="align-items-center d-flex justify-content-start" style="background-color: #093405; padding: 10px 15px;">
       <span style="color: white; font-family: Open_Sans_Bold; font-size: 24px; line-height: 1;">Contact Us</span>
-    </div>
+    </div> -->
     <!-- end Header -->
     <!-- Body -->
     <div class="align-items-center d-flex flex-column justify-content-center" style="padding: 30px;">
-      <div class="d-flex flex-column justify-content-center" style="gap: 5px; margin-bottom: 20px;">
+      <div class="d-flex flex-column justify-content-center" style="gap: 5px; margin-bottom: 20px; margin-top: 20px;">
         <span class="text-center" style="color: #370404; font-family: Open_Sans_Bold; font-size: 24px; line-height: 1;">College of Arts and Sciences</span>
         <span class="text-center" style="color: #370404; font-family: Open_Sans_Bold; font-size: 24px; line-height: 1;">Office of the College Secretary</span>
       </div>
@@ -82,6 +82,6 @@ export default {
   display: flex;
   flex-direction: row;
   margin-bottom: 10px;
-  width: 500px;
+  width: 450px;
 }
 </style>

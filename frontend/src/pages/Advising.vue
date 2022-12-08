@@ -84,11 +84,11 @@ export default {
 <template>
 <ScheduleOfClasses />
 <!-- Advising Div -->
-<div class="d-flex flex-column" style="min-height: 100vh;">
+<div class="d-flex flex-column" style="background-color: lightgray; min-height: 100vh;">
   <Header :user="this.user"/>
 
   <!-- Student View: Advising Page Body -->
-  <div v-if="this.user.role === 'student'" class="align-items-start d-flex flex-column justify-content-center" style="flex-grow: 1; gap: 20px; margin: 2%;">
+  <div v-if="this.user.role === 'student'" class="align-items-start d-flex flex-column" style="flex-grow: 1; gap: 20px; margin: 2%;">
     <!-- Curriculum Progress -->
     <div class="div2">
       <!-- Curriculum Progress Header -->
