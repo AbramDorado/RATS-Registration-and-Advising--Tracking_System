@@ -24,6 +24,11 @@ export default {
       view_announcement: {}, // Used in viewAnnouncement()      
       // end announcementDashboard-related
 
+      // coursesDashboard-related
+      courses: [],
+      dept: 'DAC',
+      // end coursesDashboard-related
+
       // headerComponent-related
       user: {}, // Stores response of authorizeAPI; passed as prop in Header component
       // end headerComponent-related
@@ -125,6 +130,20 @@ export default {
     },    
     // end announcementDashboard-related
 
+    // coursesDashboard-related
+    clearBatchUploadDiv_courses() {
+
+    },
+    async updateCourses() {
+      try {
+        const response = await this.axios.post('/api/course/read/all', {dept: this.dept})
+        this.courses = response.data.rows
+      } catch (error) {
+        console.log('Error on Ocs.vue > updateCourses()', error)
+      }
+    },
+    // end coursesDashboard-related
+
     // headerComponent-related
     async authorize() {
       try {
@@ -152,6 +171,7 @@ export default {
   async mounted() {
     await this.authorize()
     await this.getAllAnnouncements()
+    await this.updateCourses()
   }
 }
 </script>
@@ -161,7 +181,7 @@ export default {
 <div class="d-flex flex-column justify-content-between" style="min-height: 100vh;">
   <Header :user="this.user" />
   <!-- OCS Div -->
-  <div class="align-items-center d-flex flex-column justify-content-center" style="background-color: white; gap: 20px; padding: 30px;">
+  <div class="align-items-center d-flex flex-column justify-content-center" style="background-color: lightgray; flex-grow: 1; gap: 20px; padding: 30px;">
     <!-- Menu Div -->
     <div ref="menuDiv" style="align-items: center; display: flex; flex-direction: column; gap: 20px;">
       <div class="d-flex hoverTransform">
@@ -414,6 +434,97 @@ export default {
       <!-- end Announcement Dashboard Body -->
     </div>
     <!-- end Announcement Dashboard -->
+
+    <!-- Courses Dashboard -->
+    <div ref="coursesDashboard" class="flex-column" style="background-color: #f3f3f3; border: 2px solid black; display: none; min-height: 300px; width: 1200px;">
+      <!-- Courses Dashboard Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- Courses Dashboard Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <!-- Courses Dashboard Header Left Div Icon -->
+          <i class="align-items-center bi bi-mortarboard-fill d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Courses Dashboard</span>
+          <!-- end Courses Dashboard Header Left Div Icon -->
+        </div>
+        <!-- end Courses Dashboard Header Left Div -->
+        <!-- Courses Dashboard Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Batch Upload Button -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('coursesDashboard'); clearBatchUploadDiv_courses(); showDiv('batchUploadDiv_courses')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Batch Upload</span>
+          </div>
+          <!-- end Batch Upload Button -->
+          <!-- Add Course Button -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('coursesDashboard'); showDiv('addCourseDiv')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Add Course</span>
+          </div>
+          <!-- end Add Course Button -->  
+          <div class="hoverTransform">
+            <span @click="hideDiv('coursesDashboard'); showDiv('menuDiv');" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Back to Menu</span>
+          </div>                  
+        </div>
+        <!-- end Courses Dashboard Header Right Div -->
+      </div>
+      <!-- end Courses Dashboard Header -->
+      <!-- Courses Dashboard Body -->
+      <div class="align-items-center d-flex flex-column myMainDiv1" style="padding: 20px; ">
+        <!-- Courses Dashboard Header Div -->
+        <span class="myHeading1">Schedule of Classes</span>
+        <!-- end Courses Dashboard Header Div -->        
+        <!-- Dept Dropdown -->
+        <div>
+          <span style="font-family: Open_Sans_Bold; margin-right: 5px;">Department: </span>
+          <select @change="updateCourses()" v-model="dept" style="margin-bottom: 10px;">
+            <option value="DAC">DAC</option>
+            <option value="DB">DB</option>
+            <option value="DBS">DBS</option>
+            <option value="DPE">DPE</option>
+            <option value="DPSM">DPSM</option>
+            <option value="DSS">DSS</option>
+            <option value="MM">MM</option>
+          </select>     
+        </div>      
+        <!-- end Dept Dropdown -->        
+        <!-- CoursesDashboard Table -->
+          <table class="fixed-table-body table table-bordered table-responsive" style="margin-bottom: 0;">
+            <thead>
+              <tr>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Class Number</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Department</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Course Title</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Subject</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Catalog Number</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Section</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Schedule</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Learning Delivery Mode</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Instructor</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Class Capacity</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Restrictions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(obj, index) in courses" :key="index">
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].class_number}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].department}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].course_title}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].subject}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].catalog_no}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].section}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].schedule}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].learning_delivery_mode}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].instructor}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].class_capacity}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].restrictions}}</td>
+              </tr>
+            </tbody>
+          </table>
+        <!-- end CoursesDashboard Table -->
+      </div>
+      <!-- end Courses Dashboard Body -->
+    </div>
+    <!-- end Users Dashboard -->
+
+
   </div>
   <!-- end Admin Div -->
   <Footer />
@@ -430,5 +541,16 @@ input[type=number]::-webkit-inner-spin-button {
 }
 td {
   vertical-align: middle;
+}
+.myHeading1 {
+  font-family: Open_Sans_Bold;
+  font-size: 24px;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.myMainDiv1 {
+  background-color: white;
+  border-radius: 5px;
+  padding: 20px;
 }
 </style>

@@ -147,11 +147,11 @@ export default {
               <span style="font-family: Open_Sans; font-size: 20px; text-transform: capitalize;">{{this.step3_status}}</span>
             </span>
             <!-- Start Button -->
-            <div class="d-flex hoverTransform justify-content-center" style="align-self: center; width: 100px;">
+            <!-- <div class="d-flex hoverTransform justify-content-center" style="align-self: center; width: 100px;">
               <span @click="redirect('/advising')" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
                 Start
               </span>
-            </div>
+            </div> -->
             <!-- end Start Button -->               
           </div>
           <!-- end SAIS -->          

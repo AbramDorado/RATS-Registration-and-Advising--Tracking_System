@@ -279,7 +279,7 @@ export default {
 <div class="d-flex flex-column justify-content-between" style="min-height: 100vh;">
   <Header :user="this.user" />
   <!-- Admin Div -->
-  <div class="align-items-center d-flex flex-column justify-content-center" style="background-color: lightgray; gap: 20px; padding: 30px;">
+  <div class="align-items-center d-flex flex-column justify-content-center" style="background-color: lightgray; flex-basis: 0; flex-grow: 1; gap: 20px; padding: 30px;">
     <!-- Menu Div -->
     <div ref="menuDiv" style="align-items: center; display: flex; flex-direction: column; gap: 20px;">
       <div class="d-flex hoverTransform">

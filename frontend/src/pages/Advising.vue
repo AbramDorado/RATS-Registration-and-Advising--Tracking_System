@@ -97,7 +97,7 @@ export default {
         <!-- Left -->
         <div class="d-flex">
           <i class="align-items-center bi bi-mortarboard-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
-          <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Curriculum Progress</span>
+          <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Step 1: Curriculum Progress</span>
         </div>
         <!-- end Left -->
         <!-- Right -->
@@ -152,7 +152,7 @@ export default {
       <!-- ECF Header -->
       <div ref="ecfHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
         <i class="align-items-center bi bi-list-check d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
-        <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">ECF</span>
+        <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Step 2: Enrollment Checklist Form</span>
       </div>
       <!-- end ECF Header -->
       <!-- ECF Body -->

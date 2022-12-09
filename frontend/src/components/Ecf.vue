@@ -29,7 +29,8 @@ export default {
       <div class="fg-1 fw-bold text-center" style="border-right: 1px solid lightgray;">Class Number</div>
       <div class="fg-1 fw-bold text-center" style="border-right: 1px solid lightgray;">Course Code</div>
       <div class="fg-1 fw-bold text-center" style="border-right: 1px solid lightgray;">Section</div>
-      <div class="fg-1 fw-bold text-center">Units</div>
+      <div class="fg-1 fw-bold text-center" style="border-right: 1px solid lightgray;">Units</div>
+      <div class="fg-1 fw-bold text-center">Action</div>
     </div>
     <!-- end Table Head -->
     <!-- Table Body -->
@@ -37,7 +38,8 @@ export default {
       <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">Class Number</div>
       <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">Course Code</div>
       <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">Section</div>
-      <div class="fg-1 text-center">Units</div>
+      <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">Units</div>
+      <div class="fg-1 text-center">Delete Button</div>
     </div>
     <!-- end Table Body -->
   </div>
