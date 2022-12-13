@@ -25,6 +25,7 @@ export default {
       // end announcementDashboard-related
 
       // coursesDashboard-related
+      batchUploadCoursesProgress: '',
       courses: [],
       dept: 'DAC',
       // end coursesDashboard-related
@@ -131,8 +132,59 @@ export default {
     // end announcementDashboard-related
 
     // coursesDashboard-related
-    clearBatchUploadDiv_courses() {
+    batchUploadCourses() {
 
+    try {
+      var myReader = new FileReader()
+      if (this.$refs.batchUploadCSV_courses) {
+        myReader.readAsText(this.$refs.batchUploadCSV_courses.files[0])
+      }
+      var thiss = this
+      myReader.onload = async function(e) {
+        var content = myReader.result;
+        var lines = content.split("\r");
+        thiss.batchUploadCoursesProgress += `\nRegistering ${lines.length-1} courses...`
+        for (let count = 1; count < lines.length; count++) {
+          // split each row content
+          var rowContent = lines[count].split(",");
+          var courseObj = {}
+          if (count === 0) {
+            // if header row
+            courseObj.class_number = rowContent[0]
+          } else {
+            courseObj.class_number = rowContent[0].slice(1)
+          }          
+          courseObj.department = rowContent[1]
+          courseObj.course_title = rowContent[2]
+          courseObj.subject = rowContent[3]
+          courseObj.catalog_no = rowContent[4]
+          courseObj.section = rowContent[5]
+          courseObj.schedule = rowContent[6]
+          courseObj.learning_delivery_mode = rowContent[7]
+          courseObj.instructor = rowContent[8]
+          courseObj.class_capacity = rowContent[9]
+          courseObj.restrictions = rowContent[10]
+          thiss.batchUploadCoursesProgress += `\nRegistering ${courseObj.class_number}`
+          try {
+            const response = await thiss.axios.post('/api/course/create', courseObj)
+            thiss.batchUploadCoursesProgress += `\nSuccessfully registered ${courseObj.class_number}...`
+          } catch (error) {
+            console.log('Error on Ocs.vue > batchUploadCourses()', error)
+            thiss.batchUploadCoursesProgress += `\nError on registering ${courseObj.class_number}: ${error.response.data}`
+          }
+        }
+      }
+    } catch (error) {
+      console.log('Error on Admin.vue > batchRegister') // temp
+      console.log(error) // temp
+      alert('Error on batchRegister()') // temp
+      thiss.batchUploadProgress += `Error on batchRegister(): ${error}` // temp
+    }
+
+    },
+    clearBatchUploadDiv_courses() {
+      this.$refs.batchUploadCSV_courses.value = ''
+      this.batchUploadCoursesProgress = ''
     },
     async updateCourses() {
       try {
@@ -451,7 +503,7 @@ export default {
         <div class="align-items-center d-flex flex-row" style="gap: 10px;">
           <!-- Batch Upload Button -->
           <div class="hoverTransform">
-            <span @click="hideDiv('coursesDashboard'); clearBatchUploadDiv_courses(); showDiv('batchUploadDiv_courses')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Batch Upload</span>
+            <span @click="hideDiv('coursesDashboard'); clearBatchUploadDiv_courses(); showDiv('batchUploadCoursesDiv')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Batch Upload</span>
           </div>
           <!-- end Batch Upload Button -->
           <!-- Add Course Button -->
@@ -500,6 +552,7 @@ export default {
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Instructor</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Class Capacity</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Restrictions</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -515,6 +568,10 @@ export default {
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].instructor}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].class_capacity}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].restrictions}}</td>
+                <td class="text-center" style="overflow: auto; text-overflow: ellipsis;">
+                  <div class="hoverTransform myButton1" style="background-color: #7F6000; font-family: Open_Sans; font-size: 12px;">Edit</div>
+                  <div class="hoverTransform myButton1" style="background-color: #751518; font-family: Open_Sans; font-size: 12px;">Delete</div>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -522,8 +579,43 @@ export default {
       </div>
       <!-- end Courses Dashboard Body -->
     </div>
-    <!-- end Users Dashboard -->
+    <!-- end Courses Dashboard -->
 
+    <!-- Batch Upload Courses Div -->
+    <div ref="batchUploadCoursesDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
+      <!-- Batch Upload Courses Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- Batch Upload Courses Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <!-- Batch Upload Courses Header Left Div Icon -->
+          <i class="align-items-center bi bi-person-plus-fill d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Batch Upload Courses</span>
+          <!-- end Batch Upload Courses Header Left Div Icon -->
+        </div>
+        <!-- end Batch Upload Courses Header Left Div -->
+        <!-- Batch Upload Courses Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Close -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('batchUploadCoursesDiv'); updateCourses(); showDiv('coursesDashboard')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Close</span>
+          </div>
+          <!-- end Close -->          
+        </div>
+        <!-- end Batch Upload Courses Header Right Div -->
+      </div>
+      <!-- end Batch Upload Courses Header -->
+      <!-- Batch Upload Courses Body -->
+      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
+        <span style="font-family: Open_Sans_Bold;">Upload CSV containing courses</span>
+        <input ref="batchUploadCSV_courses" type="file">
+        <div @click="batchUploadCourses()" class="hoverTransform" style="align-self: center;">
+          <span style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Batch Upload Courses</span>
+        </div>
+        <span>Current Progress: <span style="white-space: pre-line">{{batchUploadCoursesProgress}}</span></span>
+      </div>
+      <!-- end Batch Upload Courses Body -->
+    </div>
+    <!-- end Batch Upload Courses Div -->    
 
   </div>
   <!-- end Admin Div -->
