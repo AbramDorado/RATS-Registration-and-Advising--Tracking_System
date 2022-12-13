@@ -27,6 +27,8 @@ export default {
       return myDate.toLocaleDateString("en-US", options)
     },    
     showFullscreen() {
+      this.updateEditedCourses()
+      this.updateCourses()
       this.$refs['floatingButton'].style.display = 'none'
       this.$refs['fullscreenDiv'].style.display = 'block'      
     },

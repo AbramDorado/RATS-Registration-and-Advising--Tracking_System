@@ -29,6 +29,7 @@ export default {
       batchUploadCoursesProgress: '',
       courses: [],
       dept: 'DAC',
+      edit_course: {},
       // end coursesDashboard-related
 
       // headerComponent-related
@@ -137,6 +138,9 @@ export default {
       try {
         const response = await this.axios.post('/api/course/create', this.add_course)
         alert(response.data.message)
+        this.updateCourses()
+        this.hideDiv('addCourseDiv')
+        this.showDiv('coursesDashboard')
       } catch (error) {
         console.log('Error on Ocs.vue > addCourse()', error)
         alert('Error')
@@ -197,6 +201,33 @@ export default {
     clearBatchUploadDiv_courses() {
       this.$refs.batchUploadCSV_courses.value = ''
       this.batchUploadCoursesProgress = ''
+    },
+    clearEditCourseInputs() {
+      this.edit_course = {}
+    },
+    deleteCourse(course) {
+      // to do
+      // this.hideDiv('coursesDashboard')
+      // this.showDiv('deleteCourseDiv')
+      // this.delete_course = course
+    },
+    editCourse(course) {
+      this.hideDiv('coursesDashboard')
+      this.showDiv('editCourseDiv')
+      this.edit_course = course    
+    },
+    async editCourseAPI() {
+      try {
+        const response = await this.axios.post('/api/course/update', this.edit_course)
+        alert(response.data.message)
+        this.edit_course = {}
+        this.updateCourses()
+        this.hideDiv('editCourseDiv')
+        this.showDiv('coursesDashboard')
+      } catch (error) {
+        console.log('Error on Ocs.vue > editCourseAPI', error)
+        alert('Error')
+      }
     },
     async updateCourses() {
       try {
@@ -581,8 +612,8 @@ export default {
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].class_capacity}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].restrictions}}</td>
                 <td class="text-center" style="overflow: auto; text-overflow: ellipsis;">
-                  <div class="hoverTransform myButton1" style="background-color: #7F6000; font-family: Open_Sans; font-size: 12px;">Edit</div>
-                  <div class="hoverTransform myButton1" style="background-color: #751518; font-family: Open_Sans; font-size: 12px;">Delete</div>
+                  <div @click="editCourse(courses[index])" class="hoverTransform myButton1" style="background-color: #7F6000; font-family: Open_Sans; font-size: 12px;">Edit</div>
+                  <div @click="deleteCourse(courses[index])" class="hoverTransform myButton1" style="background-color: #751518; font-family: Open_Sans; font-size: 12px;">Delete</div>
                 </td>
               </tr>
             </tbody>
@@ -600,7 +631,7 @@ export default {
         <!-- Batch Upload Courses Header Left Div -->
         <div class="align-items-center d-flex flex-row" style="gap: 5px;">
           <!-- Batch Upload Courses Header Left Div Icon -->
-          <i class="align-items-center bi bi-person-plus-fill d-flex" style="color: white; font-size: 20px;"></i>
+          <i class="align-items-center bi bi-file-earmark-plus-fill d-flex" style="color: white; font-size: 20px;"></i>
           <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Batch Upload Courses</span>
           <!-- end Batch Upload Courses Header Left Div Icon -->
         </div>
@@ -682,9 +713,66 @@ export default {
           </div>
         <!-- end Add Button -->        
       </div>
-      <!-- end Add Announcement Body -->
+      <!-- end Add Course Body -->
     </div>    
-    <!-- end Add Announcement Div -->
+    <!-- end Add Course Div -->
+
+    <!-- Edit Course Div -->
+    <div ref="editCourseDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
+      <!-- Edit Course Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- Edit Course Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <!-- Edit Course Header Left Div Icon -->
+          <i class="align-items-center bi bi-pencil-square d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Edit Course</span>
+          <!-- end Edit Course Header Left Div Icon -->
+        </div>
+        <!-- end Edit Course Header Left Div -->
+        <!-- Edit Course Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Cancel -->
+          <div class="hoverTransform">
+            <span @click="clearEditCourseInputs(); hideDiv('editCourseDiv'); showDiv('coursesDashboard')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
+          </div>
+          <!-- end Cancel -->          
+        </div>
+        <!-- end Edit Course Header Right Div -->
+      </div>
+      <!-- end Edit Course Header -->      
+      <!-- Edit Course Body -->
+      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
+        <span style="font-family: Open_Sans_Bold;">Class Number</span>
+        <input disabled v-model="this.edit_course.class_number" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Department</span>
+        <input disabled v-model="this.edit_course.department" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Course Title</span>
+        <input disabled v-model="this.edit_course.course_title" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Subject</span>
+        <input disabled v-model="this.edit_course.subject" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Catalog Number</span>
+        <input disabled v-model="this.edit_course.catalog_no" type="text" style="margin-bottom: 10px;"> 
+        <span style="font-family: Open_Sans_Bold;">Section</span>
+        <input v-model="this.edit_course.section" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Schedule</span>
+        <input v-model="this.edit_course.schedule" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Learning Delivery Mode</span>
+        <input v-model="this.edit_course.learning_delivery_mode" type="text" style="margin-bottom: 10px;"> 
+        <span style="font-family: Open_Sans_Bold;">Instructor</span>
+        <input v-model="this.edit_course.instructor" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Class Capacity</span>
+        <input v-model="this.edit_course.class_capacity" type="text" style="margin-bottom: 10px;"> 
+        <span style="font-family: Open_Sans_Bold;">Restrictions</span>
+        <input v-model="this.edit_course.restrictions" type="text" style="margin-bottom: 10px;">                     
+        <!-- Edit Button -->
+          <div @click="editCourseAPI()" class="align-items-center d-flex justify-content-center hoverTransform">
+            <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Edit Course</span>
+          </div>
+        <!-- end Edit Button -->        
+      </div>
+      <!-- end Edit Course Body -->
+    </div>    
+    <!-- end Edit Course Div -->    
 
   </div>
   <!-- end Admin Div -->

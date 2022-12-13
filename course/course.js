@@ -70,16 +70,13 @@ const router = express.Router()
         const source = './database/db.sqlite'
         const db = await database.openOrCreateDB(source)
         await database.run(db, `
-          UPDATE course SET class_number = ?, department = ?, course_title = ?, subject = ?, catalog_no = ?, section = ?, schedule = ?, learning_delivery_mode = ?, instructor = ?, class_capacity = ?, restrictions = ?, WHERE class_number = ?
+          UPDATE course SET class_number = ?, department = ?, course_title = ?, subject = ?, catalog_no = ?, section = ?, schedule = ?, learning_delivery_mode = ?, instructor = ?, class_capacity = ?, restrictions = ? WHERE class_number = ?
         `, [
-          req.body.new_class_number, req.body.department, req.body.course_title, req.body.subject, req.body.catalog_no, req.body.section, req.body.schedule, req.body.learning_delivery_mode, req.body.instructor, req.body.class_capacity, req.body.restrictions, req.body.old_class_number
+          req.body.class_number, req.body.department, req.body.course_title, req.body.subject, req.body.catalog_no, req.body.section, req.body.schedule, req.body.learning_delivery_mode, req.body.instructor, req.body.class_capacity, req.body.restrictions, req.body.class_number
         ], false)
         // update course_edit table
-          // delete row
-          await database.run(db, `DELETE FROM course_edit WHERE class_number = ?`, [req.body.class_number], true)
-          // end delete row
           // insert row with 'updated' modification type
-          await database.run(db, `INSERT INTO course_edit (class_number, subject, catalog_no, section, modification, last_modified) VALUES (?, ?, ?, ?, ?, ?)`, [req.body.class_number, req.body.subject, req.body.catalog_no, req.body.section, 'Updated', Date.now()], false)
+          await database.run(db, `INSERT OR REPLACE INTO course_edit (class_number, subject, catalog_no, section, modification, last_modified) VALUES (?, ?, ?, ?, ?, ?)`, [req.body.class_number, req.body.subject, req.body.catalog_no, req.body.section, 'Updated', Date.now()], false)
           // end insert row with 'updated' modification type
         // end update course_edit table
         res.json({message: `Update success for ${req.body.subject} ${req.body.catalog_no} ${req.body.section}`})
