@@ -32,7 +32,7 @@ export default {
 
 <template>
 <div style="display: flex; flex-direction: column; flex-grow: 1;">
-  <ScheduleOfClasses />
+  <ScheduleOfClasses :user="this.user" />
   <Header :user="this.user"/>
   <!-- Contact Page -->
   <div class="d-flex flex-column" style="flex-grow: 1;">

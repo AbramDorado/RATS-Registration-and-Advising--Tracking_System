@@ -275,7 +275,7 @@ export default {
 </script>
 
 <template>
-<ScheduleOfClasses />
+<ScheduleOfClasses :user="this.user" />
 <div class="d-flex flex-column justify-content-between" style="min-height: 100vh;">
   <Header :user="this.user" />
   <!-- Admin Div -->

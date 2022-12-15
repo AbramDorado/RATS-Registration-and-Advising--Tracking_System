@@ -83,7 +83,7 @@ export default {
 </script>
 
 <template>
-<ScheduleOfClasses />
+<ScheduleOfClasses :user="this.user" />
 <!-- Advising Div -->
 <div class="d-flex flex-column" style="background-color: lightgray; min-height: 100vh;">
   <Header :user="this.user"/>

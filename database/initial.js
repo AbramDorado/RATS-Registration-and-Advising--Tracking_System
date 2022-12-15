@@ -39,8 +39,10 @@ async function createInitialTables(db) {
     subject TEXT,
     catalog_no TEXT,
     section TEXT,
+    component TEXT,
     schedule TEXT,
     learning_delivery_mode TEXT,
+    room_assigned TEXT,
     instructor TEXT,
     class_capacity TEXT,
     restrictions TEXT
@@ -92,37 +94,37 @@ async function createInitialRows(db) {
   // end Advising Status
 
   // Course
-  await database.run(db, `
-    INSERT INTO course (
-      class_number,
-      department,
-      course_title,
-      subject,
-      catalog_no,
-      section,
-      schedule,
-      learning_delivery_mode,
-      instructor,
-      class_capacity,
-      restrictions,
-      was_edited
-    ) VALUES (
-      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-    )
-  `, [
-    '1000',
-    'DAC',
-    'COMM 10 Title',
-    'COMM',
-    '10',
-    'LEC1',
-    'MTH 7:00am-8:30am',
-    'BLENDED',
-    'Ogatis',
-    '20',
-    'First Year OrCom',
-    'true'
-  ], true)
+  // await database.run(db, `
+  //   INSERT INTO course (
+  //     class_number,
+  //     department,
+  //     course_title,
+  //     subject,
+  //     catalog_no,
+  //     section,
+  //     schedule,
+  //     learning_delivery_mode,
+  //     instructor,
+  //     class_capacity,
+  //     restrictions,
+  //     was_edited
+  //   ) VALUES (
+  //     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+  //   )
+  // `, [
+  //   '1000',
+  //   'DAC',
+  //   'COMM 10 Title',
+  //   'COMM',
+  //   '10',
+  //   'LEC1',
+  //   'MTH 7:00am-8:30am',
+  //   'BLENDED',
+  //   'Ogatis',
+  //   '20',
+  //   'First Year OrCom',
+  //   'true'
+  // ], true)
   // end Course
 
   // Course_Edit

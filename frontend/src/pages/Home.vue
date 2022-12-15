@@ -79,7 +79,7 @@ export default {
 </script>
 
 <template>
-<ScheduleOfClasses />
+<ScheduleOfClasses :user="this.user" />
 <div ref="home" class="flex-column" style="display: none;">
   <Header :user="this.user" />
   <div id="homeMainDiv" class="d-flex flex-column justify-content-center" style="background-color: lightgray;">

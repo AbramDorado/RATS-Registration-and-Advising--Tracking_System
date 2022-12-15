@@ -173,20 +173,24 @@ export default {
           courseObj.subject = rowContent[3]
           courseObj.catalog_no = rowContent[4]
           courseObj.section = rowContent[5]
-          courseObj.schedule = rowContent[6]
-          courseObj.learning_delivery_mode = rowContent[7]
-          courseObj.instructor = rowContent[8]
-          courseObj.class_capacity = rowContent[9]
-          courseObj.restrictions = rowContent[10]
+          courseObj.component = rowContent[6]
+          courseObj.schedule = rowContent[7]
+          courseObj.learning_delivery_mode = rowContent[8]
+          courseObj.room_assigned = rowContent[9]
+          courseObj.instructor = rowContent[10]
+          courseObj.class_capacity = rowContent[11]
+          courseObj.restrictions = rowContent[13]
           courseObj.registration_type = 'batch'
-          thiss.batchUploadCoursesProgress += `\nRegistering ${courseObj.class_number}`
-          try {
-            const response = await thiss.axios.post('/api/course/create', courseObj)
-            thiss.batchUploadCoursesProgress += `\nSuccessfully registered ${courseObj.class_number}...`
-          } catch (error) {
-            thiss.batchUploadCoursesProgress += `\nError on registering ${courseObj.class_number}: ${JSON.stringify(error.response.data.message)}`
-            console.log('Error on Ocs.vue > batchUploadCourses()s inner try catch', error)
-            console.log('this is reached') // temp
+          if (courseObj.class_number) {
+            thiss.batchUploadCoursesProgress += `\nRegistering ${courseObj.class_number}`
+            try {
+              const response = await thiss.axios.post('/api/course/create', courseObj)
+              thiss.batchUploadCoursesProgress += `\nSuccessfully registered ${courseObj.class_number}...`
+            } catch (error) {
+              thiss.batchUploadCoursesProgress += `\nError on registering ${courseObj.class_number}: ${JSON.stringify(error.response.data.message)}`
+              console.log('Error on Ocs.vue > batchUploadCourses()s inner try catch', error)
+              console.log('this is reached') // temp
+            }
           }
         }
       }
@@ -287,7 +291,7 @@ export default {
 </script>
 
 <template>
-<ScheduleOfClasses />
+<ScheduleOfClasses :user="this.user" />
 <div class="d-flex flex-column justify-content-between" style="min-height: 100vh;">
   <Header :user="this.user" />
   <!-- OCS Div -->
@@ -605,8 +609,10 @@ export default {
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Subject</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Catalog Number</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Section</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Component</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Schedule</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Learning Delivery Mode</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Room Assigned</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Instructor</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Class Capacity</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Restrictions</th>
@@ -621,8 +627,10 @@ export default {
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].subject}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].catalog_no}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].section}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].component}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].schedule}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].learning_delivery_mode}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].room_assigned}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].instructor}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].class_capacity}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].restrictions}}</td>
@@ -712,10 +720,14 @@ export default {
         <input v-model="add_course.catalog_no" type="text" style="margin-bottom: 10px;"> 
         <span style="font-family: Open_Sans_Bold;">Section</span>
         <input v-model="add_course.section" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Component</span>
+        <input v-model="add_course.component" type="text" style="margin-bottom: 10px;">        
         <span style="font-family: Open_Sans_Bold;">Schedule</span>
         <input v-model="add_course.schedule" type="text" style="margin-bottom: 10px;">
         <span style="font-family: Open_Sans_Bold;">Learning Delivery Mode</span>
-        <input v-model="add_course.learning_delivery_mode" type="text" style="margin-bottom: 10px;"> 
+        <input v-model="add_course.learning_delivery_mode" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Room Assigned</span>
+        <input v-model="add_course.room_assigned" type="text" style="margin-bottom: 10px;">        
         <span style="font-family: Open_Sans_Bold;">Instructor</span>
         <input v-model="add_course.instructor" type="text" style="margin-bottom: 10px;">
         <span style="font-family: Open_Sans_Bold;">Class Capacity</span>
@@ -826,10 +838,14 @@ export default {
         <input disabled v-model="this.delete_course.catalog_no" type="text" style="margin-bottom: 10px;"> 
         <span style="font-family: Open_Sans_Bold;">Section</span>
         <input disabled v-model="this.delete_course.section" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Component</span>
+        <input disabled v-model="this.delete_course.component" type="text" style="margin-bottom: 10px;">        
         <span style="font-family: Open_Sans_Bold;">Schedule</span>
         <input disabled v-model="this.delete_course.schedule" type="text" style="margin-bottom: 10px;">
         <span style="font-family: Open_Sans_Bold;">Learning Delivery Mode</span>
-        <input disabled v-model="this.delete_course.learning_delivery_mode" type="text" style="margin-bottom: 10px;"> 
+        <input disabled v-model="this.delete_course.learning_delivery_mode" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Room Assigned</span>
+        <input disabled v-model="this.delete_course.room_assigned" type="text" style="margin-bottom: 10px;">        
         <span style="font-family: Open_Sans_Bold;">Instructor</span>
         <input disabled v-model="this.delete_course.instructor" type="text" style="margin-bottom: 10px;">
         <span style="font-family: Open_Sans_Bold;">Class Capacity</span>
