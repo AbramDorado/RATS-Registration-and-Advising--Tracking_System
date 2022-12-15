@@ -46,8 +46,8 @@ async function run(db, sql, params, ignoreErrs) {
   return new Promise(async (resolve, reject) => {
     db.run(sql, params, (err) => {
       if (err) {
-        console.log('Error in database.js > run')
-        console.log(err)
+        // console.log('Error in database.js > run')
+        // console.log(err)
         if (ignoreErrs) {
           resolve()
         } else {
@@ -85,48 +85,36 @@ async function run(db, sql, params, ignoreErrs) {
 // Get SQL Query
 async function get(db, sql, params, ignoreErrs) {
   return new Promise(async (resolve, reject) => {
-    try {
-      db.get(sql, params, (err, row) => {
-        if (err) {
-          if (ignoreErrs) {
-            resolve()
-          } else {
-            throw err
-          }
+    db.get(sql, params, (err, row) => {
+      if (err) {
+        if (ignoreErrs) {
+          resolve()
         } else {
-          // console.log('database.js > get success.') // temp
-          resolve(row)
+          reject(err)
         }
-      })
-    } catch (error) {
-      console.log('Error on database.js > get') // temp
-      console.log(error) // temp
-      reject()
-    }
+      } else {
+        // console.log('database.js > get success.') // temp
+        resolve(row)
+      }
+    })
   })
 }
 
 // All SQL Query
 async function all(db, sql, params, ignoreErrs) {
   return new Promise(async (resolve, reject) => {
-    try {
-      db.all(sql, params, (err, rows) => {
-        if (err) {
-          if (ignoreErrs) {
-            resolve()
-          } else {
-            throw err
-          }
+    db.all(sql, params, (err, rows) => {
+      if (err) {
+        if (ignoreErrs) {
+          resolve()
         } else {
-          // console.log('database.js > all success.') // temp
-          resolve(rows)
+          reject(err)
         }
-      })
-    } catch (error) {
-      console.log('Error on database.js > all') // temp
-      console.log(error) // temp
-      reject()
-    }
+      } else {
+        // console.log('database.js > all success.') // temp
+        resolve(rows)
+      }
+    })
   })
 }
 
