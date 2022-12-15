@@ -69,7 +69,7 @@ export default {
     </div>
     <!-- end Close Button -->
     <!-- Modified Courses -->
-    <div class="align-items-center d-flex flex-column myMainDiv1" style="margin-bottom: 20px;">
+    <div class="align-items-center d-flex flex-column myMainDiv1" style="margin-bottom: 20px; max-height: 300px;">
       <!-- Modified Courses Header Div -->
       <div class="d-flex flex-row justify-content-between" style="width: 100%;">
         <!-- <div style="flex-basis: 0; flex-grow: 1;"></div> -->
@@ -79,28 +79,30 @@ export default {
       </div>
       <!-- end Modified Courses Header Div -->
       <!-- Modified Courses Body -->
-      <table class="fixed-table-body table table-bordered table-responsive" style="margin-bottom: 0;">
-        <thead>
-          <tr>
-            <th class="align-middle text-center" scope="col">Class Number</th>
-            <th class="align-middle text-center" scope="col">Subject</th>
-            <th class="align-middle text-center" scope="col">Catalog Number</th>
-            <th class="align-middle text-center" scope="col">Section</th>
-            <th class="align-middle text-center" scope="col">Modification</th>
-            <th class="align-middle text-center" scope="col">Date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(obj, index) in edited_courses" :key="index">
-            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].class_number}}</td>
-            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].subject}}</td>
-            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].catalog_no}}</td>
-            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].section}}</td>
-            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].modification}}</td>
-            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{formatted_date(edited_courses[index].last_modified)}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div style="overflow-y: scroll; width: 100%;">
+        <table class="fixed-table-body table table-bordered table-responsive" style="margin-bottom: 0;">
+          <thead>
+            <tr>
+              <th class="align-middle text-center" scope="col">Class Number</th>
+              <th class="align-middle text-center" scope="col">Subject</th>
+              <th class="align-middle text-center" scope="col">Catalog Number</th>
+              <th class="align-middle text-center" scope="col">Section</th>
+              <th class="align-middle text-center" scope="col">Modification</th>
+              <th class="align-middle text-center" scope="col">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(obj, index) in edited_courses" :key="index">
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].class_number}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].subject}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].catalog_no}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].section}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{edited_courses[index].modification}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: auto; text-overflow: ellipsis;">{{formatted_date(edited_courses[index].last_modified)}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
       <!-- end Modified Courses Body -->
     </div>
     <!-- end Modified Courses -->
