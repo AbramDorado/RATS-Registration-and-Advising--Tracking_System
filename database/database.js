@@ -59,7 +59,7 @@ async function run(db, sql, params, ignoreErrs) {
         }
       })
     } catch (error) {
-      console.log('Error catched', error) // temp
+      console.log('Error catched') // temp
       console.log('Error on database.js > run') // temp
       console.log(error) // temp
       reject()

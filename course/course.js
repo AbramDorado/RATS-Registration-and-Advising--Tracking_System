@@ -11,12 +11,11 @@ const router = express.Router()
       try {
         const source = './database/db.sqlite'
         const db = await database.openOrCreateDB(source)
-        const response = await database.run(db, `
+        await database.run(db, `
           INSERT INTO course (
             class_number, department, course_title, subject, catalog_no, section, schedule, learning_delivery_mode, instructor, class_capacity, restrictions
           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `, [req.body.class_number, req.body.department, req.body.course_title, req.body.subject, req.body.catalog_no, req.body.section, req.body.schedule, req.body.learning_delivery_mode, req.body.instructor, req.body.class_capacity, req.body.restrictions], false)
-        console.log('response is', response) // temp
         // if single register
         if (req.body.registration_type !== 'batch') {
           // insert addition in course_edit
@@ -30,6 +29,7 @@ const router = express.Router()
         // end if single register
         res.json({message: `Insert success for course ${req.body.class_number}`}).send()
       } catch (error) {
+        console.log('Errrorr') // temp
         console.log('Error on api > course > create', error)
         res.status(401).json({message: error}).send()
       }

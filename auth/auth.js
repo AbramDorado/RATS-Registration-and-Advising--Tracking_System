@@ -14,7 +14,7 @@ async function main(app) {
         secret: 'zrfvnzr',
         resave: false,
         saveUninitialized: false,
-        store: new SQLiteStore({ db: 'session.db', dir: './database' })
+        // store: new SQLiteStore({ db: 'session.db', dir: './database' })
       }))
       app.use(passport.initialize())
       app.use(passport.session())
@@ -199,7 +199,7 @@ async function configureGoogleStrategy(db) {
         req.session.cookie.maxAge = 604800000 // 7 days
       }
     } catch (error) {
-      
+      console.log(error) // temp
     }
     // if you want to redirect different roles to different urls, do it here
     res.redirect('/')

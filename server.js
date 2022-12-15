@@ -32,6 +32,10 @@ async function main() {
     const bodyParser = require('body-parser')
     app.use(bodyParser.json())
 
+    // Cookie Parser
+    const cookieParser = require('cookie-parser')
+    app.use(cookieParser())
+
     // Routers
     app.use('/', auth.router)
     app.use('/', announcement.router)
