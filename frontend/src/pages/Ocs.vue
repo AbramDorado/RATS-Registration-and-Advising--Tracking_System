@@ -29,6 +29,7 @@ export default {
       batchUploadCoursesProgress: '',
       courses: [],
       dept: 'DAC',
+      delete_course: {},
       edit_course: {},
       // end coursesDashboard-related
 
@@ -206,11 +207,23 @@ export default {
       this.edit_course = {}
     },
     deleteCourse(course) {
-      // to do
-      // this.hideDiv('coursesDashboard')
-      // this.showDiv('deleteCourseDiv')
-      // this.delete_course = course
+      this.hideDiv('coursesDashboard')
+      this.showDiv('deleteCourseDiv')
+      this.delete_course = course
     },
+    async deleteCourseAPI() {
+      try {
+        const response = await this.axios.post('/api/course/delete', this.delete_course)
+        alert(response.data.message)
+        this.delete_course = {}
+        this.updateCourses()
+        this.hideDiv('deleteCourseDiv')
+        this.showDiv('coursesDashboard')
+      } catch (error) {
+        console.log('Error on Ocs.vue > deleteCourseAPI', error)
+        alert('Error')
+      }
+    },    
     editCourse(course) {
       this.hideDiv('coursesDashboard')
       this.showDiv('editCourseDiv')
@@ -773,6 +786,63 @@ export default {
       <!-- end Edit Course Body -->
     </div>    
     <!-- end Edit Course Div -->    
+
+    <!-- Delete Course Div -->
+    <div ref="deleteCourseDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
+      <!-- Delete Course Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- Delete Course Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <!-- Dekete Course Header Left Div Icon -->
+          <i class="align-items-center bi bi-file-x-fill d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Delete Course</span>
+          <!-- end Delete Course Header Left Div Icon -->
+        </div>
+        <!-- end Delete Course Header Left Div -->
+        <!-- Delete Course Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Cancel -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('deleteCourseDiv'); showDiv('coursesDashboard')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
+          </div>
+          <!-- end Cancel -->          
+        </div>
+        <!-- end Delete Course Header Right Div -->
+      </div>
+      <!-- end Delete Course Header -->      
+      <!-- Delete Course Body -->
+      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
+        <span style="font-family: Open_Sans_Bold;">Class Number</span>
+        <input disabled v-model="this.delete_course.class_number" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Department</span>
+        <input disabled v-model="this.delete_course.department" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Course Title</span>
+        <input disabled v-model="this.delete_course.course_title" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Subject</span>
+        <input disabled v-model="this.delete_course.subject" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Catalog Number</span>
+        <input disabled v-model="this.delete_course.catalog_no" type="text" style="margin-bottom: 10px;"> 
+        <span style="font-family: Open_Sans_Bold;">Section</span>
+        <input disabled v-model="this.delete_course.section" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Schedule</span>
+        <input disabled v-model="this.delete_course.schedule" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Learning Delivery Mode</span>
+        <input disabled v-model="this.delete_course.learning_delivery_mode" type="text" style="margin-bottom: 10px;"> 
+        <span style="font-family: Open_Sans_Bold;">Instructor</span>
+        <input disabled v-model="this.delete_course.instructor" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Class Capacity</span>
+        <input disabled v-model="this.delete_course.class_capacity" type="text" style="margin-bottom: 10px;"> 
+        <span style="font-family: Open_Sans_Bold;">Restrictions</span>
+        <input disabled v-model="this.delete_course.restrictions" type="text" style="margin-bottom: 10px;">                     
+        <!-- Delete Button -->
+          <div @click="deleteCourseAPI()" class="align-items-center d-flex justify-content-center hoverTransform">
+            <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Delete Course</span>
+          </div>
+        <!-- end Delete Button -->        
+      </div>
+      <!-- end Dekete Course Body -->
+    </div>    
+    <!-- end Delete Course Div -->  
 
   </div>
   <!-- end Admin Div -->

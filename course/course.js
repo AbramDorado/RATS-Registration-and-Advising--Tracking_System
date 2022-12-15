@@ -93,13 +93,13 @@ const router = express.Router()
       try {
         const source = './database/db.sqlite'
         const db = await database.openOrCreateDB(source)
+        // get original course row
+        const row = await database.get(db, `
+          SELECT subject, catalog_no, section FROM course WHERE class_number = ?
+        `, [req.body.class_number], false)
+        // end get original course row        
         await database.run(db, `DELETE FROM course WHERE class_number = ?`, [req.body.class_number], false)
         // insert into course_edit
-          // get original course row
-          const row = await database.get(db, `
-            SELECT subject, catalog_no, section FROM course WHERE class_number = ?
-          `, [req.body.class_number], false)
-          // end get original course row
           await database.run(db, `
             INSERT INTO course_edit (
               class_number, subject, catalog_no, section, modification, last_modified
