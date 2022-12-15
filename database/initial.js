@@ -43,8 +43,7 @@ async function createInitialTables(db) {
     learning_delivery_mode TEXT,
     instructor TEXT,
     class_capacity TEXT,
-    restrictions TEXT,
-    was_edited TEXT
+    restrictions TEXT
   `)
   // end course table
   // course_edit table

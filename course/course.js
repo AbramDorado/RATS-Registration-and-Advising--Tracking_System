@@ -11,18 +11,23 @@ const router = express.Router()
       try {
         const source = './database/db.sqlite'
         const db = await database.openOrCreateDB(source)
-        await database.run(db, `
+        const response = await database.run(db, `
           INSERT INTO course (
             class_number, department, course_title, subject, catalog_no, section, schedule, learning_delivery_mode, instructor, class_capacity, restrictions
           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `, [req.body.class_number, req.body.department, req.body.course_title, req.body.subject, req.body.catalog_no, req.body.section, req.body.schedule, req.body.learning_delivery_mode, req.body.instructor, req.body.class_capacity, req.body.restrictions], false)
-        // insert addition in course_edit
-        await database.run(db, `
-            INSERT INTO course_edit (
-              class_number, subject, catalog_no, section, modification, last_modified
-            ) VALUES (?, ?, ?, ?, ?, ?)
-        `, [req.body.class_number, req.body.subject, req.body.catalog_no, req.body.section, 'Addition', Date.now()], false)
-        // end insert addition in course_edit
+        console.log('response is', response) // temp
+        // if single register
+        if (req.body.registration_type !== 'batch') {
+          // insert addition in course_edit
+          await database.run(db, `
+              INSERT INTO course_edit (
+                class_number, subject, catalog_no, section, modification, last_modified
+              ) VALUES (?, ?, ?, ?, ?, ?)
+          `, [req.body.class_number, req.body.subject, req.body.catalog_no, req.body.section, 'Addition', Date.now()], false)
+          // end insert addition in course_edit
+        }
+        // end if single register
         res.json({message: `Insert success for course ${req.body.class_number}`}).send()
       } catch (error) {
         console.log('Error on api > course > create', error)
@@ -97,14 +102,18 @@ const router = express.Router()
         const row = await database.get(db, `
           SELECT subject, catalog_no, section FROM course WHERE class_number = ?
         `, [req.body.class_number], false)
+        console.log('get original row success') // temp
+        console.log('row is', row) // temp
         // end get original course row        
         await database.run(db, `DELETE FROM course WHERE class_number = ?`, [req.body.class_number], false)
+        console.log('delete success') // temp
         // insert into course_edit
-          await database.run(db, `
-            INSERT INTO course_edit (
-              class_number, subject, catalog_no, section, modification, last_modified
-            ) VALUES (?, ?, ?, ?, ?, ?)
-          `, [req.body.class_number, row.subject, row.catalog_no, row.section, 'Dissolved', Date.now()], false)
+        await database.run(db, `
+          INSERT OR REPLACE INTO course_edit (
+            class_number, subject, catalog_no, section, modification, last_modified
+          ) VALUES (?, ?, ?, ?, ?, ?)
+        `, [req.body.class_number, row.subject, row.catalog_no, row.section, 'Dissolved', Date.now()], false)
+        console.log('insert into course_edit success') // temp
         // end insert into course_edit
         res.json({message: `Delete success for class_number ${req.body.class_number}`}).send()
       } catch (error) {

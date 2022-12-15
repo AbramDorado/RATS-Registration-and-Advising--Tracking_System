@@ -178,13 +178,15 @@ export default {
           courseObj.instructor = rowContent[8]
           courseObj.class_capacity = rowContent[9]
           courseObj.restrictions = rowContent[10]
+          courseObj.registration_type = 'batch'
           thiss.batchUploadCoursesProgress += `\nRegistering ${courseObj.class_number}`
           try {
             const response = await thiss.axios.post('/api/course/create', courseObj)
             thiss.batchUploadCoursesProgress += `\nSuccessfully registered ${courseObj.class_number}...`
           } catch (error) {
-            console.log('Error on Ocs.vue > batchUploadCourses()', error)
             thiss.batchUploadCoursesProgress += `\nError on registering ${courseObj.class_number}: ${error.response.data}`
+            console.log('Error on Ocs.vue > batchUploadCourses()s inner try catch', error)
+            console.log('this is reached') // temp
           }
         }
       }
