@@ -184,7 +184,7 @@ export default {
             const response = await thiss.axios.post('/api/course/create', courseObj)
             thiss.batchUploadCoursesProgress += `\nSuccessfully registered ${courseObj.class_number}...`
           } catch (error) {
-            thiss.batchUploadCoursesProgress += `\nError on registering ${courseObj.class_number}: ${error.response.data}`
+            thiss.batchUploadCoursesProgress += `\nError on registering ${courseObj.class_number}: ${JSON.stringify(error.response.data.message)}`
             console.log('Error on Ocs.vue > batchUploadCourses()s inner try catch', error)
             console.log('this is reached') // temp
           }

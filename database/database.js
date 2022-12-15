@@ -44,26 +44,41 @@ async function createTable(db, tableName, columns) {
 // Run SQL Command
 async function run(db, sql, params, ignoreErrs) {
   return new Promise(async (resolve, reject) => {
-    try {
-      db.run(sql, params, (err) => {
-        if (err) {
-          if (ignoreErrs) {
-            resolve()
-          } else {
-            console.log('throwing err', err) // temp
-            throw err
-          }
-        } else {
-          // console.log('database.js > run success.') // temp
+    db.run(sql, params, (err) => {
+      if (err) {
+        console.log('Error in database.js > run')
+        console.log(err)
+        if (ignoreErrs) {
           resolve()
+        } else {
+          reject(err)
         }
-      })
-    } catch (error) {
-      console.log('Error catched') // temp
-      console.log('Error on database.js > run') // temp
-      console.log(error) // temp
-      reject()
-    }
+      } else {
+        resolve()
+      }
+    })
+    // ORIGINAL
+    // try {
+    //   db.run(sql, params, (err) => {
+    //     if (err) {
+    //       if (ignoreErrs) {
+    //         resolve()
+    //       } else {
+    //         console.log('throwing err', err) // temp
+    //         throw err
+    //       }
+    //     } else {
+    //       // console.log('database.js > run success.') // temp
+    //       resolve()
+    //     }
+    //   })
+    // } catch (error) {
+    //   console.log('Error catched') // temp
+    //   console.log('Error on database.js > run') // temp
+    //   console.log(error) // temp
+    //   reject()
+    // }
+    // END ORIGINAL
   })
 }
 

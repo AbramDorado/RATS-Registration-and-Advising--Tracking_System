@@ -11,7 +11,7 @@ const router = express.Router()
       try {
         const source = './database/db.sqlite'
         const db = await database.openOrCreateDB(source)
-        await database.run(db, `
+        const ress = await database.run(db, `
           INSERT INTO course (
             class_number, department, course_title, subject, catalog_no, section, schedule, learning_delivery_mode, instructor, class_capacity, restrictions
           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -29,7 +29,6 @@ const router = express.Router()
         // end if single register
         res.json({message: `Insert success for course ${req.body.class_number}`}).send()
       } catch (error) {
-        console.log('Errrorr') // temp
         console.log('Error on api > course > create', error)
         res.status(401).json({message: error}).send()
       }
