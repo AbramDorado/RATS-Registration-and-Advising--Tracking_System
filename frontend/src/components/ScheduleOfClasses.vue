@@ -138,8 +138,10 @@ export default {
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Subject</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Catalog Number</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Section</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Component</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Schedule</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Learning Delivery Mode</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Room Assigned</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Instructor</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Class Capacity</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Restrictions</th>
@@ -154,8 +156,10 @@ export default {
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].subject}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].catalog_no}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].section}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].component}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].schedule}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 10px; overflow: auto; text-overflow: ellipsis;">{{courses[index].learning_delivery_mode}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].room_assigned}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].instructor}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].class_capacity}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].restrictions}}</td>
