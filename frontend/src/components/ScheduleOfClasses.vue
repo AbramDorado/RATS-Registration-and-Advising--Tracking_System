@@ -152,18 +152,22 @@ export default {
               <tr v-for="(obj, index) in courses" :key="index">
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].class_number}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].department}}</td>
-                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].course_title}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 10px; overflow: auto; text-overflow: ellipsis;">{{courses[index].course_title}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].subject}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].catalog_no}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].section}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].component}}</td>
-                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].schedule}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 10px; overflow: auto; text-overflow: ellipsis;">{{courses[index].schedule}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 10px; overflow: auto; text-overflow: ellipsis;">{{courses[index].learning_delivery_mode}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].room_assigned}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].instructor}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].class_capacity}}</td>
-                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].restrictions}}</td>
-                <td v-if="user.role === 'student'" class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">Add Button</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 10px; overflow: auto; text-overflow: ellipsis;">{{courses[index].restrictions}}</td>
+                <td v-if="user.role === 'student'">
+                  <div class="hoverTransform myButton1 text-center" style="background-color: #093405; font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">
+                    Add
+                  </div>
+                </td>
               </tr>
             </tbody>
           </table>
