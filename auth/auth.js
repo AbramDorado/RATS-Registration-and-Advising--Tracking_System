@@ -14,7 +14,7 @@ async function main(app) {
         secret: 'zrfvnzr',
         resave: false,
         saveUninitialized: false,
-        // store: new SQLiteStore({ db: 'session.db', dir: './database' })
+        store: new SQLiteStore({ db: 'session.db', dir: './database' })
       }))
       app.use(passport.initialize())
       app.use(passport.session())
