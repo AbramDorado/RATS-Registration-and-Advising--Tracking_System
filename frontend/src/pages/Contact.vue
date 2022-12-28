@@ -53,7 +53,7 @@ export default {
       </div>
       <div class="iconText">
         <i class="align-items-center bi bi-telephone-fill d-flex" style="color: #370404; font-size: 50px;"></i>
-        <span class="text-center" style="color: #370404; flex-grow: 1; font-family: Open_Sans; font-size: 20px; line-height: 1;">to be added</span>
+        <span class="text-center" style="color: #370404; flex-grow: 1; font-family: Open_Sans; font-size: 20px; line-height: 1;">(02) 8524-6798</span>
       </div>
       <div class="iconText">
         <i class="align-items-center bi bi-facebook d-flex" style="color: #370404; font-size: 50px;"></i>
