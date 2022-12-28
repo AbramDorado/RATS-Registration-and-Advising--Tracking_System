@@ -8,7 +8,9 @@ async function createInitialTables(db) {
     role TEXT,
     up_mail TEXT UNIQUE,
     first_name TEXT,
-    last_name TEXT
+    last_name TEXT,
+    degree_program TEXT,
+    sais_id TEXT
   `)
   // end user table
   // announcement table
@@ -93,89 +95,31 @@ async function createInitialRows(db) {
     // end student jmlicup@up.edu.ph
   // end Advising Status
 
-  // Course
-  // await database.run(db, `
-  //   INSERT INTO course (
-  //     class_number,
-  //     department,
-  //     course_title,
-  //     subject,
-  //     catalog_no,
-  //     section,
-  //     schedule,
-  //     learning_delivery_mode,
-  //     instructor,
-  //     class_capacity,
-  //     restrictions,
-  //     was_edited
-  //   ) VALUES (
-  //     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-  //   )
-  // `, [
-  //   '1000',
-  //   'DAC',
-  //   'COMM 10 Title',
-  //   'COMM',
-  //   '10',
-  //   'LEC1',
-  //   'MTH 7:00am-8:30am',
-  //   'BLENDED',
-  //   'Ogatis',
-  //   '20',
-  //   'First Year OrCom',
-  //   'true'
-  // ], true)
-  // end Course
-
-  // Course_Edit
-  // await database.run(db, `
-  //     INSERT INTO course_edit (
-  //       class_number,
-  //       last_modified
-  //     ) VALUES (?, ?)
-  // `, [
-  //   '1000',
-  //   Date.now()
-  // ], true)
-  // end Course_Edit
-
   // Users
     // student jmlicup@up.edu.ph
     await database.run(db, `
       INSERT INTO user (
-        id, role, up_mail, first_name, last_name
+        id, role, up_mail, first_name, last_name, degree_program, sais_id
       ) VALUES (
-        ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?
       )
     `, [
       uuidv4(),
-      'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup'
+      'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'BS Computer Science', '10008'
     ], true)
     // end student jmlicup@up.edu.ph
     // admin jpmlicup@gmail.com
     await database.run(db, `
       INSERT INTO user (
-        id, role, up_mail, first_name, last_name
+        id, role, up_mail, first_name, last_name, degree_program, sais_id
       ) VALUES (
-        ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?
       )
     `, [
       uuidv4(),
-      'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup'
+      'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', '', ''
     ], true)
     // end admin jpmlicup@gmail.com
-    // adviser johnpaolomlicup@gmail.com
-    await database.run(db, `
-      INSERT INTO user (
-        id, role, up_mail, first_name, last_name
-      ) VALUES (
-        ?, ?, ?, ?, ?
-      )
-    `, [
-      uuidv4(),
-      'adviser', 'johnpaolomlicup@gmail.com', 'John Paolo', 'Licup'
-    ], true)
-    // end adviser johnpaolomlicup@gmail.com
   // end Users
 
 
