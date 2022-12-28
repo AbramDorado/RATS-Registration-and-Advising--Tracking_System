@@ -128,15 +128,15 @@ async function createInitialRows(db) {
   // end Course
 
   // Course_Edit
-  await database.run(db, `
-      INSERT INTO course_edit (
-        class_number,
-        last_modified
-      ) VALUES (?, ?)
-  `, [
-    '1000',
-    Date.now()
-  ], true)
+  // await database.run(db, `
+  //     INSERT INTO course_edit (
+  //       class_number,
+  //       last_modified
+  //     ) VALUES (?, ?)
+  // `, [
+  //   '1000',
+  //   Date.now()
+  // ], true)
   // end Course_Edit
 
   // Users

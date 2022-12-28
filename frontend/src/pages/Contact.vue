@@ -49,7 +49,7 @@ export default {
       </div>
       <div class="iconText">
         <i class="align-items-center bi bi-envelope-fill d-flex" style="color: #370404; font-size: 50px;"></i>
-        <span class="text-center" style="color: #370404; flex-grow: 1; font-family: Open_Sans; font-size: 20px; line-height: 1;">upm-cas-ocs@up.edu.ph</span>
+        <span class="text-center" style="color: #370404; flex-grow: 1; font-family: Open_Sans; font-size: 20px; line-height: 1; text-decoration: underline;">upm-cas-ocs@up.edu.ph</span>
       </div>
       <div class="iconText">
         <i class="align-items-center bi bi-telephone-fill d-flex" style="color: #370404; font-size: 50px;"></i>
@@ -57,7 +57,7 @@ export default {
       </div>
       <div class="iconText">
         <i class="align-items-center bi bi-facebook d-flex" style="color: #370404; font-size: 50px;"></i>
-        <span class="text-center" style="color: #370404; flex-grow: 1; font-family: Open_Sans; font-size: 20px; line-height: 1;">https://facebook.com/casupm/</span>
+        <a href="https://facebook.com/casupm/" class="text-center" style="color: #370404; flex-grow: 1; font-family: Open_Sans; font-size: 20px; line-height: 1;">https://facebook.com/casupm/</a>
       </div>
       <div class="iconText">
         <i class="align-items-center bi bi-geo-alt-fill d-flex" style="color: #370404; font-size: 50px;"></i>
@@ -66,12 +66,17 @@ export default {
           <span class="text-center" style="color: #370404; font-family: Open_Sans; font-size: 20px; line-height: 1;">College of Arts and Sciences</span>
           <span class="text-center" style="color: #370404; font-family: Open_Sans; font-size: 20px; line-height: 1;">Padre Faura St., Ermita, Manila</span>
         </div>
-        
       </div>
+      <!-- Dev Mark -->
+      <div class="alert alert-dark" style="margin-top: 20px;">
+        <p style="margin: 0; padding: 0;">Made with ❤ by UP Manila BS Computer Science Students</p>
+      </div>
+      <!-- end Dev Mark -->
     </div>
     <!-- end Body -->
   </div>
   <!-- end Contact Page -->
+
   <Footer />
 </div>
 </template>
