@@ -10,7 +10,8 @@ async function createInitialTables(db) {
     first_name TEXT,
     last_name TEXT,
     degree_program TEXT,
-    sais_id TEXT
+    sais_id TEXT,
+    student_number TEXT
   `)
   // end user table
   // announcement table
@@ -99,25 +100,25 @@ async function createInitialRows(db) {
     // student jmlicup@up.edu.ph
     await database.run(db, `
       INSERT INTO user (
-        id, role, up_mail, first_name, last_name, degree_program, sais_id
+        id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number
       ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?
       )
     `, [
       uuidv4(),
-      'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'BS Computer Science', '10008'
+      'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'BS Computer Science', '10008', '2019-46188'
     ], true)
     // end student jmlicup@up.edu.ph
     // admin jpmlicup@gmail.com
     await database.run(db, `
       INSERT INTO user (
-        id, role, up_mail, first_name, last_name, degree_program, sais_id
+        id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number
       ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?
       )
     `, [
       uuidv4(),
-      'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', '', ''
+      'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', '', '', ''
     ], true)
     // end admin jpmlicup@gmail.com
   // end Users

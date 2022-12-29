@@ -63,7 +63,7 @@ async function configureGoogleStrategy(db) {
       passport.deserializeUser(function(user, cb) {
         process.nextTick(function() {
           // console.log('deserializeUser > user is', user) // temp
-          const userWithoutId = {role: user.role, up_mail: user.up_mail, first_name: user.first_name, last_name: user.last_name}
+          const userWithoutId = {role: user.role, up_mail: user.up_mail, first_name: user.first_name, last_name: user.last_name, degree_program: user.degree_program, sais_id: user.sais_id, student_number: user.student_number}
           return cb(null, userWithoutId);
         })
       })
@@ -130,7 +130,7 @@ async function configureGoogleStrategy(db) {
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       const rows = await database.all(db, `
-        SELECT role, up_mail, first_name, last_name 
+        SELECT role, up_mail, first_name, last_name, degree_program, sais_id, student_number
         FROM user 
         WHERE
           (up_mail LIKE '%${searchString}%'
@@ -177,8 +177,8 @@ async function configureGoogleStrategy(db) {
         } else {
           // insert the new user
           await database.run(db, `
-            INSERT INTO user (id, role, up_mail, first_name, last_name) VALUES (?, ?, ?, ?, ?)
-          `, [uuidv4(), req.body.role.toLowerCase(), req.body.up_mail.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase()], false)
+            INSERT INTO user (id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+          `, [uuidv4(), req.body.role.toLowerCase(), req.body.up_mail.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.sais_id.toLowerCase(), req.body.student_number.toLowerCase()], false)
           res.send('Register success.')
         }
       }
@@ -232,8 +232,8 @@ async function configureGoogleStrategy(db) {
           // user with up_mail exists
           // update user
           await database.run(db, `
-            UPDATE user SET role = ?, first_name = ?, last_name = ? WHERE up_mail = ? 
-          `, [req.body.role.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.up_mail.toLowerCase()], false)
+            UPDATE user SET role = ?, first_name = ?, last_name = ?, degree_program = ?, sais_id = ?, student_number = ? WHERE up_mail = ? 
+          `, [req.body.role.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.sais_id.toLowerCase(), req.body.student_number.toLowerCase(), req.body.up_mail.toLowerCase()], false)
           res.send('Edit success.')
         } else {
           throw 'No user with that upmail'
