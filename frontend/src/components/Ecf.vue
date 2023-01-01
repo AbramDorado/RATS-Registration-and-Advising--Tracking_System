@@ -1,12 +1,14 @@
 <script>
 export default {
   name: 'Ecf',
+  computed: {
+    formatted_name() {
+      return this.user.first_name + ' ' + this.user.last_name
+    }    
+  },
   props: ['semester',
     'acad_year',
-    'student_name',
-    'student_number',
-    'deg_prog',
-    'sais_id'
+    'user'
   ]
 }
 </script>
@@ -18,10 +20,10 @@ export default {
     <span class="os text-center"><span class="osb" style="text-decoration: underline;">{{semester}}</span> Semester, Academic Year <span class="osb" style="text-decoration: underline;">{{acad_year}}</span></span>
   </div>
   <div class="d-flex flex-column" style="margin-bottom: 10px;">
-    <span>STUDENT NAME: {{student_name}}</span>
-    <span>STUDENT NUMBER: {{student_number}}</span>
-    <span>DEGREE PROGRAM: {{deg_prog}}</span>
-    <span>SAIS ID NUMBER: {{sais_id}}</span>
+    <span>STUDENT NAME: <b>{{formatted_name}}</b></span>
+    <span>STUDENT NUMBER: <b>{{user.student_number}}</b></span>
+    <span>DEGREE PROGRAM: <b>{{user.degree_program}}</b></span>
+    <span>SAIS ID NUMBER: <b>{{user.sais_id}}</b></span>
   </div>
   <div style="border: 2px solid lightgray;">
     <!-- Table Head -->

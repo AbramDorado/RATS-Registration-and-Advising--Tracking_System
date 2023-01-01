@@ -161,7 +161,7 @@ export default {
       <!-- end ECF Header -->
       <!-- ECF Body -->
       <div ref="ECF_body" class="d-flex justify-content-center">
-        <Ecf />
+        <Ecf :user="this.user" />
       </div>
       <!-- end ECF Body -->
     </div>

@@ -11,7 +11,7 @@ const router = express.Router()
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       await database.run(db, `
-        INSERT INTO ecf (
+        INSERT OR REPLACE INTO ecf (
           student_up_mail,
           class_number,
           adviser_up_mail
