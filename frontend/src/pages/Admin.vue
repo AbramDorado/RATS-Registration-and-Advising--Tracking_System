@@ -504,7 +504,7 @@ export default {
         <span>SAIS ID</span>
         <span>{{this.view_user.sais_id}}</span>
         <span>Student Number</span>
-        <span>{{this.view_user.student_number}}</span>               
+        <span>{{this.view_user.student_number}}</span>
       </div>
       <!-- end View User Body -->      
     </div>
