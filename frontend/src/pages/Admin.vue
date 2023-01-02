@@ -83,6 +83,7 @@ export default {
             userObj.degree_program = rowContent[4]
             userObj.sais_id = rowContent[5]
             userObj.student_number = rowContent[6]
+            userObj.adviser_up_mail = rowContent[7]
             thiss.batchUploadProgress += `\nRegistering ${userObj.up_mail}...`
             try {
               const response = await thiss.axios.post('/api/register', userObj)
@@ -333,6 +334,7 @@ export default {
         <span v-if="this.delete_user.role == 'student'">Degree Program: <span style="text-transform: capitalize;">{{this.delete_user.degree_program}}</span></span>
         <span v-if="this.delete_user.role == 'student'">SAIS ID: <span style="text-transform: capitalize;">{{this.delete_user.sais_id}}</span></span>
         <span v-if="this.delete_user.role == 'student'">Student Number: <span style="text-transform: capitalize;">{{this.delete_user.student_number}}</span></span>
+        <span v-if="this.delete_user.role == 'student'">Adviser UP Mail: <span>{{this.delete_user.adviser_up_mail}}</span></span>        
         <button @click="deleteUserAPI()">Delete</button>
       </div>
       <!-- end Delete User Body -->      
@@ -388,7 +390,9 @@ export default {
             <span style="font-family: Open_Sans_Bold;">Last Name</span>
             <input v-model="edit_user.last_name" type="text" style="margin-bottom: 10px;">
             <span v-if="this.edit_user.role == 'student'" style="font-family: Open_Sans_Bold;">SAIS ID</span>
-            <input v-if="this.edit_user.role == 'student'" v-model="edit_user.sais_id" type="text" style="margin-bottom: 10px;">            
+            <input v-if="this.edit_user.role == 'student'" v-model="edit_user.sais_id" type="text" style="margin-bottom: 10px;">
+            <span v-if="this.edit_user.role == 'student'" style="font-family: Open_Sans_Bold;">Adviser UP Mail</span>
+            <input v-if="this.edit_user.role == 'student'" v-model="edit_user.adviser_up_mail" type="text" style="margin-bottom: 10px;">            
           </div>
           <!-- end Column -->
         </div>
@@ -452,7 +456,9 @@ export default {
             <span style="font-family: Open_Sans_Bold;">Last Name</span>
             <input v-model="register_user.up_mail" type="text" style="margin-bottom: 10px;">
             <span v-if="this.register_user.role == 'student'" style="font-family: Open_Sans_Bold;">SAIS ID</span>
-            <input v-if="this.register_user.role == 'student'" v-model="register_user.sais_id" type="text" style="margin-bottom: 10px;">            
+            <input v-if="this.register_user.role == 'student'" v-model="register_user.sais_id" type="text" style="margin-bottom: 10px;">
+            <span v-if="this.register_user.role == 'student'" style="font-family: Open_Sans_Bold;">Adviser UP Mail</span>
+            <input v-if="this.register_user.role == 'student'" v-model="register_user.adviser_up_mail" type="text" style="margin-bottom: 10px;">                      
           </div>
           <!-- end Column -->                 
         </div>
@@ -499,12 +505,14 @@ export default {
         <span>{{this.view_user.first_name}}</span>
         <span>Last Name</span>
         <span>{{this.view_user.last_name}}</span>
-        <span>Degree Program</span>
-        <span>{{this.view_user.degree_program}}</span>
-        <span>SAIS ID</span>
-        <span>{{this.view_user.sais_id}}</span>
-        <span>Student Number</span>
-        <span>{{this.view_user.student_number}}</span>
+        <span v-if="user.role == 'student'">Degree Program</span>
+        <span v-if="user.role == 'student'">{{this.view_user.degree_program}}</span>
+        <span v-if="user.role == 'student'">SAIS ID</span>
+        <span v-if="user.role == 'student'">{{this.view_user.sais_id}}</span>
+        <span v-if="user.role == 'student'">Student Number</span>
+        <span v-if="user.role == 'student'">{{this.view_user.student_number}}</span>
+        <span v-if="user.role == 'student'">Adviser UP Mail</span>
+        <span v-if="user.role == 'student'">{{this.view_user.adviser_up_mail}}</span>        
       </div>
       <!-- end View User Body -->      
     </div>
@@ -621,6 +629,7 @@ export default {
               <th class="align-middle text-center" scope="col">Degree Program</th>
               <th class="align-middle text-center" scope="col">SAIS ID</th>
               <th class="align-middle text-center" scope="col">Student Number</th>
+              <th class="align-middle text-center" scope="col">Adviser UP Mail</th>
               <th class="align-middle text-center" scope="col">View</th>
               <th class="align-middle text-center" scope="col">Edit</th>
               <th class="align-middle text-center" scope="col">Delete</th>
@@ -635,6 +644,7 @@ export default {
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].degree_program}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].sais_id}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].student_number}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].adviser_up_mail}}</td>              
               <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 <!-- View Button -->
                 <div @click="viewUser(users[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto">
