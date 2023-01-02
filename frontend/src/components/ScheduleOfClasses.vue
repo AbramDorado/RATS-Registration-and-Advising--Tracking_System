@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     async addCourse(course) {
-      console.log('course is', course) // temp
+      // console.log('course is', course) // temp
       const response = await this.axios.post('/api/ecf/create', {
         student_up_mail: this.user.up_mail,
         class_number: course.class_number,
@@ -154,6 +154,7 @@ export default {
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Instructor</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Class Capacity</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Restrictions</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Units</th>
                 <th v-if="user.role === 'student'" class="align-middle text-center" scope="col" style="font-size: 12px;">Actions</th>
               </tr>
             </thead>
@@ -172,6 +173,7 @@ export default {
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].instructor}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].class_capacity}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 10px; overflow: auto; text-overflow: ellipsis;">{{courses[index].restrictions}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 10px; overflow: auto; text-overflow: ellipsis;">{{courses[index].units}}</td>
                 <td v-if="user.role === 'student'">
                   <div @click="addCourse(courses[index])" class="hoverTransform myButton1 text-center" style="background-color: #093405; font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">
                     Add

@@ -180,6 +180,7 @@ export default {
           courseObj.instructor = rowContent[10]
           courseObj.class_capacity = rowContent[11]
           courseObj.restrictions = rowContent[13]
+          courseObj.units = rowContent[14]
           courseObj.registration_type = 'batch'
           if (courseObj.class_number) {
             thiss.batchUploadCoursesProgress += `\nRegistering ${courseObj.class_number}`
@@ -616,6 +617,7 @@ export default {
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Instructor</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Class Capacity</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Restrictions</th>
+                <th class="align-middle text-center" scope="col" style="font-size: 12px;">Units</th>
                 <th class="align-middle text-center" scope="col" style="font-size: 12px;">Actions</th>
               </tr>
             </thead>
@@ -634,6 +636,7 @@ export default {
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].instructor}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].class_capacity}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].restrictions}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 12px; overflow: auto; text-overflow: ellipsis;">{{courses[index].units}}</td>
                 <td class="text-center" style="overflow: auto; text-overflow: ellipsis;">
                   <div @click="editCourse(courses[index])" class="hoverTransform myButton1" style="background-color: #7F6000; font-family: Open_Sans; font-size: 12px;">Edit</div>
                   <div @click="deleteCourse(courses[index])" class="hoverTransform myButton1" style="background-color: #751518; font-family: Open_Sans; font-size: 12px;">Delete</div>
@@ -733,7 +736,9 @@ export default {
         <span style="font-family: Open_Sans_Bold;">Class Capacity</span>
         <input v-model="add_course.class_capacity" type="text" style="margin-bottom: 10px;"> 
         <span style="font-family: Open_Sans_Bold;">Restrictions</span>
-        <input v-model="add_course.restrictions" type="text" style="margin-bottom: 10px;">                     
+        <input v-model="add_course.restrictions" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Units</span>
+        <input v-model="add_course.units" type="text" style="margin-bottom: 10px;">                             
         <!-- Add Button -->
           <div @click="addCourse()" class="align-items-center d-flex justify-content-center hoverTransform">
             <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Add Course</span>
@@ -790,7 +795,9 @@ export default {
         <span style="font-family: Open_Sans_Bold;">Class Capacity</span>
         <input v-model="this.edit_course.class_capacity" type="text" style="margin-bottom: 10px;"> 
         <span style="font-family: Open_Sans_Bold;">Restrictions</span>
-        <input v-model="this.edit_course.restrictions" type="text" style="margin-bottom: 10px;">                     
+        <input v-model="this.edit_course.restrictions" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Units</span>
+        <input v-model="this.edit_course.units" type="text" style="margin-bottom: 10px;">                     
         <!-- Edit Button -->
           <div @click="editCourseAPI()" class="align-items-center d-flex justify-content-center hoverTransform">
             <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Edit Course</span>
@@ -851,7 +858,9 @@ export default {
         <span style="font-family: Open_Sans_Bold;">Class Capacity</span>
         <input disabled v-model="this.delete_course.class_capacity" type="text" style="margin-bottom: 10px;"> 
         <span style="font-family: Open_Sans_Bold;">Restrictions</span>
-        <input disabled v-model="this.delete_course.restrictions" type="text" style="margin-bottom: 10px;">                     
+        <input disabled v-model="this.delete_course.restrictions" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Units</span>
+        <input disabled v-model="this.delete_course.units" type="text" style="margin-bottom: 10px;">                             
         <!-- Delete Button -->
           <div @click="deleteCourseAPI()" class="align-items-center d-flex justify-content-center hoverTransform">
             <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Delete Course</span>
