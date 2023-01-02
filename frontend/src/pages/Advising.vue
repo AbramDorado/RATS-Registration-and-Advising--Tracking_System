@@ -126,12 +126,12 @@ export default {
           </thead>
           <tbody>
             <tr v-for="(obj, index) in curri_progress" :key="index">
-              <td><input v-model="curri_progress[index].course" :disabled="!this.editMode" type="text" :value="curri_progress[index].course" class="text-center" style="width: 100%;"></td>
-              <td><input v-model="curri_progress[index].section" :disabled="!this.editMode" type="text" :value="curri_progress[index].section" class="text-center" style="width: 100%;"></td>
-              <td><input v-model="curri_progress[index].academic_year_taken" :disabled="!this.editMode" type="text" :value="curri_progress[index].academic_year_taken" class="text-center" style="width: 100%;"></td>
-              <td><input v-model="curri_progress[index].semester_taken" :disabled="!this.editMode" type="text" :value="curri_progress[index].semester_taken" class="text-center" style="width: 100%;"></td>
-              <td><input v-model="curri_progress[index].grade" :disabled="!this.editMode" type="text" :value="curri_progress[index].grade" class="text-center" style="width: 100%;"></td>
-              <td><input v-model="curri_progress[index].notes" :disabled="!this.editMode" type="text" :value="curri_progress[index].notes" class="text-center" style="width: 100%;"></td>
+              <td><input v-model="curri_progress[index].course" :disabled="!this.editMode" type="text" class="text-center" style="width: 100%;"></td>
+              <td><input v-model="curri_progress[index].section" :disabled="!this.editMode" type="text" class="text-center" style="width: 100%;"></td>
+              <td><input v-model="curri_progress[index].academic_year_taken" :disabled="!this.editMode" type="text" class="text-center" style="width: 100%;"></td>
+              <td><input v-model="curri_progress[index].semester_taken" :disabled="!this.editMode" type="text" class="text-center" style="width: 100%;"></td>
+              <td><input v-model="curri_progress[index].grade" :disabled="!this.editMode" type="text" class="text-center" style="width: 100%;"></td>
+              <td><input v-model="curri_progress[index].notes" :disabled="!this.editMode" type="text" class="text-center" style="width: 100%;"></td>
               <td v-if="this.editMode" class="d-flex justify-content-center"><span @click="deleteRow(index)" class="hoverTransform" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Delete Row</span></td>
             </tr>          
           </tbody>           
