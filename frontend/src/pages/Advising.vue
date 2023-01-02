@@ -25,8 +25,8 @@ export default {
     }
   },
   async mounted() {
-    await this.authorize()
-    await this.update_curri_progress()
+    // await this.authorize()
+    // await this.update_curri_progress()
   },
   methods: {
     addCurriProgressRow() {
@@ -36,7 +36,7 @@ export default {
         academic_year_taken: '',
         semester_taken: '',
         grade: '',
-        notes: ''     
+        notes: ''
       })
     },
     async authorize() {
@@ -50,21 +50,21 @@ export default {
     async deleteRow(index) {
       this.curri_progress.splice(index, 1)
       // update to backend
-      try {
-        const response = await this.axios.post('/api/advising/curri/update', {curri_progress: this.curri_progress})
-      } catch (error) {
-        console.log('Error on Advising.vue > deleteRow', error)
-        alert('Error')
-      }
+      // try {
+      //   const response = await this.axios.post('/api/advising/curri/update', {curri_progress: this.curri_progress})
+      // } catch (error) {
+      //   console.log('Error on Advising.vue > deleteRow', error)
+      //   alert('Error')
+      // }
     },
     async finishEditingCurri() {
       // update to backend
-      try {
-        const response = await this.axios.post('/api/advising/curri/update', {curri_progress: this.curri_progress})
-      } catch (error) {
-        console.log('Error on Advising.vue > finishEditingCurri', error)
-        alert('Error')
-      }
+      // try {
+      //   const response = await this.axios.post('/api/advising/curri/update', {curri_progress: this.curri_progress})
+      // } catch (error) {
+      //   console.log('Error on Advising.vue > finishEditingCurri', error)
+      //   alert('Error')
+      // }
       this.toggleEditMode(false)
     },
     async update_curri_progress() {
@@ -91,7 +91,7 @@ export default {
   <Header :user="this.user"/>
 
   <!-- Student View: Advising Page Body -->
-  <div v-if="this.user.role === 'student'" class="align-items-start d-flex flex-column" style="flex-grow: 1; gap: 20px; margin: 2%;">
+  <div class="align-items-start d-flex flex-column" style="flex-grow: 1; gap: 20px; margin: 2%;">
     <!-- Curriculum Progress -->
     <div class="div2">
       <!-- Curriculum Progress Header -->

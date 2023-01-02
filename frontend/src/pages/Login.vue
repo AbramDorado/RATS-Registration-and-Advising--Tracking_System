@@ -11,32 +11,24 @@ export default {
   },
   methods: {
     async doLogin() {
-      if (this.loading) {
-        return
-      }
-      this.loading = true
-      if (this.remember) {
-        document.cookie = 'remember=true'
-      } else {
-        document.cookie = 'remember=false'
-      }
-      location.href = '/api/login/federated/google'
+      alert('Since this is a demo version, we automatically logged you in.')
+      location.href = '/'
     }
   },
   async mounted() {
-    const thiss = this
-    try {
-      const response = await this.axios.post('/api/authorize')
-      location.href = '/'
-    } catch(error) {
-      console.log('Error on Login Page > api/authorize', error) // temp
-    }
-    if (location.search === '?error=1') {
-      this.error1 = true
-    }
-    if (location.search === '?loggedOut=true') {
-      this.loggedOut = true
-    }
+    // const thiss = this
+    // try {
+    //   const response = await this.axios.post('/api/authorize')
+    //   location.href = '/'
+    // } catch(error) {
+    //   console.log('Error on Login Page > api/authorize', error) // temp
+    // }
+    // if (location.search === '?error=1') {
+    //   this.error1 = true
+    // }
+    // if (location.search === '?loggedOut=true') {
+    //   this.loggedOut = true
+    // }
     this.$refs['login'].style.display = 'flex'
   }
 }

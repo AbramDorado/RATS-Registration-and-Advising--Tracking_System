@@ -31,13 +31,14 @@ export default {
   },
   methods: {
     async doLogout() {
-      try {
-        const response = await this.axios.post('/api/logout')
-        console.log(response.data.message) // temp
-        location.href = response.data.redirect
-      } catch (error) {
-        console.log(error) // temp
-      }
+      // try {
+      //   const response = await this.axios.post('/api/logout')
+      //   console.log(response.data.message) // temp
+      //   location.href = response.data.redirect
+      // } catch (error) {
+      //   console.log(error) // temp
+      // }
+      location.href = '/login'
     },
     hideAllPopovers() {
       for (let i=0; i<this.popOversArr.length; i++) {
@@ -56,17 +57,18 @@ export default {
       this.$refs[ref].style.display = 'flex'
     },
     toAdvising() {
-      if (this.user.role === 'student') {
-        location.href = '/advising'
-      } else if (this.user.role === 'adviser') {
-        location.href = 'adviser'
-      } else if (this.user.role === 'ocs') {
-        location.href = '/ocs'
-      } else if (this.user.role === 'admin') {
-        location.href = '/admin'
-      } else {
-        location.href = '/login'
-      }
+      // if (this.user.role === 'student') {
+      //   location.href = '/advising'
+      // } else if (this.user.role === 'adviser') {
+      //   location.href = 'adviser'
+      // } else if (this.user.role === 'ocs') {
+      //   location.href = '/ocs'
+      // } else if (this.user.role === 'admin') {
+      //   location.href = '/admin'
+      // } else {
+      //   location.href = '/login'
+      // }
+      location.href = '/advising'
     },
     togglePopover(ref) {
       // refs: accPopover
@@ -143,9 +145,9 @@ export default {
             <p style="font-family: Open_Sans; margin-bottom: 0;">UP Mail:</p>
           </div>
           <div class="d-flex flex-column text-end">
-            <p style="font-family: Open_Sans_Bold; margin-bottom: 0; text-transform: capitalize;">{{this.formatted_name}}</p>
-            <p style="font-family: Open_Sans_Bold; margin-bottom: 0; text-transform: capitalize;">{{this.formatted_role}}</p>
-            <p style="font-family: Open_Sans_Bold; margin-bottom: 0;">{{this.user.up_mail}}</p>
+            <p style="font-family: Open_Sans_Bold; margin-bottom: 0; text-transform: capitalize;">Juan D. Cruz</p>
+            <p style="font-family: Open_Sans_Bold; margin-bottom: 0; text-transform: capitalize;">Student</p>
+            <p style="font-family: Open_Sans_Bold; margin-bottom: 0;">jdcruz@up.edu.ph</p>
           </div>
         </div>
         <div @click="doLogout()" class="hoverTransform px-3 py-1 rounded" style="background-color: #751518; color: white; cursor: pointer; font-family: Open_Sans_Semi_Bold; font-weight: bolder;">Logout</div>

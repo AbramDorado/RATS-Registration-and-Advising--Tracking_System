@@ -15,7 +15,7 @@ export default {
     }
   },
   async mounted() {
-    await this.authorize()
+    // await this.authorize()
   },
   methods: {
     async authorize() {
