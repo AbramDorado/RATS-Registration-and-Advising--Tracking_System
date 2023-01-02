@@ -31,10 +31,15 @@ const router = express.Router()
     try {
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
-      const rows = await database.all(db, `
+      const ecf_rows = await database.all(db, `
         SELECT * FROM ecf WHERE student_up_mail = ?
       `, [req.body.student_up_mail], false)
-      res.json({rows: rows}).send()
+      var ecf_complete_rows = []
+      for (let i=0; i<ecf_rows.length; i++) {
+        const row = await database.get(db, `SELECT * FROM course WHERE class_number = ?`, [ecf_rows[i].class_number], false)
+        ecf_complete_rows.push(row)
+      }
+      res.json({rows: ecf_complete_rows}).send()
     } catch (error) {
       console.log('Error on api > ecf > read > all > student', error)
       res.status(401).json({message: error}).send()

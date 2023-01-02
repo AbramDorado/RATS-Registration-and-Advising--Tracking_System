@@ -6,10 +6,32 @@ export default {
       return this.user.first_name + ' ' + this.user.last_name
     }    
   },
+  data() {
+    return {
+      ecf: []
+    }
+  },
   props: ['semester',
     'acad_year',
     'user'
-  ]
+  ],
+  methods: {
+    async updateECF() {
+      try {
+        const response = await this.axios.post('/api/ecf/read/all/student', {student_up_mail: this.user.up_mail})
+        this.ecf = response.data.rows
+      } catch (error) {
+        console.log('Error on Ecf.vue > updateECF()', error)
+        alert(error.data.message)
+      }
+    },
+    formatted_course_code(course) {
+      return `${course.subject} ${course.catalog_no}`
+    }
+  },
+  mounted() {
+    this.updateECF()
+  }
 }
 </script>
 
@@ -36,11 +58,11 @@ export default {
     </div>
     <!-- end Table Head -->
     <!-- Table Body -->
-    <div class="d-flex flex-row">
-      <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">Class Number</div>
-      <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">Course Code</div>
-      <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">Section</div>
-      <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">Units</div>
+    <div v-for="(obj, index) in this.ecf" :key="index" class="d-flex flex-row">
+      <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">{{ecf[index].class_number}}</div>
+      <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">{{formatted_course_code(ecf[index])}}</div>
+      <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">{{ecf[index].section}}</div>
+      <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">{{ecf[index].units}}</div>
       <div class="fg-1 text-center">Delete Button</div>
     </div>
     <!-- end Table Body -->
