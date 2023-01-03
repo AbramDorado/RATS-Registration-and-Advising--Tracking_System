@@ -1,6 +1,7 @@
 const database = require('../database/database')
 const express = require('express')
 const router = express.Router()
+const { v4: uuidv4 } = require('uuid')
 
 // Routes
 
@@ -12,11 +13,12 @@ const router = express.Router()
       const db = await database.openOrCreateDB(source)
       await database.run(db, `
         INSERT OR REPLACE INTO ecf (
+          id,
           student_up_mail,
           class_number,
           adviser_up_mail
-        ) VALUES (?, ?, ?)
-      `, [req.body.student_up_mail, req.body.class_number, req.body.adviser_up_mail], false)
+        ) VALUES (?, ?, ?, ?)
+      `, [uuidv4(), req.body.student_up_mail, req.body.class_number, req.body.adviser_up_mail], false)
       res.json({message: `Create ecf row for ${req.body.student_up_mail} ${req.body.class_number} for adviser ${req.body.adviser_up_mail}`}).send()
     } catch (error) {
       console.log('Error on api > ecf > create', error)

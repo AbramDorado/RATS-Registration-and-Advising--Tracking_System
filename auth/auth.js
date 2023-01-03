@@ -5,7 +5,7 @@ const passport = require('passport')
 const router = express.Router();
 const session = require('express-session')
 const SQLiteStore = require('connect-sqlite3')(session)
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid')
 
 async function main(app) {
   return new Promise(async (resolve, reject) => {

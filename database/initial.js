@@ -73,7 +73,8 @@ async function createInitialTables(db) {
   // end curri_progress table
   // ecf table
   await database.createTable(db, 'ecf', `
-    student_up_mail TEXT UNIQUE PRIMARY KEY,
+    id TEXT UNIQUE PRIMARY KEY,
+    student_up_mail TEXT,
     class_number TEXT,
     adviser_up_mail TEXT
   `)
