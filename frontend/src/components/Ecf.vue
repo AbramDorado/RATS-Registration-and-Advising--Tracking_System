@@ -55,23 +55,27 @@ export default {
     <span>ADVISER: <b>{{user.adviser_up_mail}}</b></span>
     <span>SAIS ID NUMBER: <b>{{user.sais_id}}</b></span>
   </div>
-  <div style="border-top: 2px solid lightgray;">
+  <div style="border: 2px solid lightgray;">
     <!-- Table Head -->
     <div class="d-flex flex-row" style="border-bottom: 2px solid lightgray;">
-      <div class="fg-1 fw-bold text-center" style="border-right: 1px solid lightgray;">Class Number</div>
-      <div class="fg-1 fw-bold text-center" style="border-right: 1px solid lightgray;">Course Code</div>
-      <div class="fg-1 fw-bold text-center" style="border-right: 1px solid lightgray;">Section</div>
-      <div class="fg-1 fw-bold text-center" style="border-right: 1px solid lightgray;">Units</div>
+      <div class="fg-1 fw-bold text-center" style="border-right: 1px solid lightgray; max-width: 140px;">Class Number</div>
+      <div class="fg-1 fw-bold text-center" style="border-right: 1px solid lightgray; max-width: 140px;">Course Code</div>
+      <div class="fg-1 fw-bold text-center" style="border-right: 1px solid lightgray; max-width: 140px;">Section</div>
+      <div class="fg-1 fw-bold text-center" style="border-right: 1px solid lightgray; max-width: 140px;">Units</div>
       <div class="fg-1 fw-bold text-center">Action</div>
     </div>
     <!-- end Table Head -->
     <!-- Table Body -->
-    <div v-for="(obj, index) in this.ecf" :key="index" class="d-flex flex-row" style="border-bottom: 2px solid lightgray;">
-      <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">{{ecf[index].class_number}}</div>
-      <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">{{formatted_course_code(ecf[index])}}</div>
-      <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">{{ecf[index].section}}</div>
-      <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">{{ecf[index].units}}</div>
-      <div class="fg-1 text-center">Delete Button</div>
+    <div v-for="(obj, index) in this.ecf" :key="index" class="d-flex flex-row" style="border-bottom: 2px solid lightgray; height: 30px;">
+      <div class="fg-1 text-center" style="border-right: 1px solid lightgray; max-width: 140px;">{{ecf[index].class_number}}</div>
+      <div class="fg-1 text-center" style="border-right: 1px solid lightgray; max-width: 140px;">{{formatted_course_code(ecf[index])}}</div>
+      <div class="fg-1 text-center" style="border-right: 1px solid lightgray; max-width: 140px;">{{ecf[index].section}}</div>
+      <div class="fg-1 text-center" style="border-right: 1px solid lightgray; max-width: 140px;">{{ecf[index].units}}</div>
+      <div class="fg-1 d-flex align-items-center justify-content-center">
+        <div @click="deleteCourse(this.ecf[index])" class="hoverTransform" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 12px; padding: 5px 10px;">
+          Delete
+        </div>
+      </div>
     </div>
     <!-- end Table Body -->
   </div>
