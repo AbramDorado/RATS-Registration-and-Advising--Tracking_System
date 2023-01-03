@@ -177,8 +177,15 @@ async function configureGoogleStrategy(db) {
         } else {
           // insert the new user
           await database.run(db, `
-            INSERT INTO user (id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT OR REPLACE INTO user (id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
           `, [uuidv4(), req.body.role.toLowerCase(), req.body.up_mail.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.sais_id.toLowerCase(), req.body.student_number.toLowerCase(), req.body.adviser_up_mail.toLowerCase()], false)
+          // Create row in advising_status table if student
+          if (req.body.role == 'student') {
+            await database.run(db, `
+            INSERT OR REPLACE INTO advising_status (student_up_mail, adviser_up_mail, degree_program, department, step1_status, step2_status, step3_status) VALUES (
+              ?, ?, ?, ?, ?, ?, ?
+            )`, [req.body.up_mail.toLowerCase(), req.body.adviser_up_mail.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.department.toLowerCase(), 'not started', 'not started', 'no access'], false)            
+          }
           res.send('Register success.')
         }
       }
