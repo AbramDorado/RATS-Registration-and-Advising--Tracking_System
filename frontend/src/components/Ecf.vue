@@ -27,6 +27,13 @@ export default {
     },
     formatted_course_code(course) {
       return `${course.subject} ${course.catalog_no}`
+    },
+    totalUnits() {
+      var sum = 0
+      for (let i=0; i<this.ecf.length; i++) {
+        sum += parseInt(this.ecf[i].units)
+      }
+      return sum
     }
   },
   mounted() {
@@ -45,9 +52,10 @@ export default {
     <span>STUDENT NAME: <b>{{formatted_name}}</b></span>
     <span>STUDENT NUMBER: <b>{{user.student_number}}</b></span>
     <span>DEGREE PROGRAM: <b>{{user.degree_program}}</b></span>
+    <span>ADVISER: <b>{{user.adviser_up_mail}}</b></span>
     <span>SAIS ID NUMBER: <b>{{user.sais_id}}</b></span>
   </div>
-  <div style="border: 2px solid lightgray;">
+  <div style="border-top: 2px solid lightgray;">
     <!-- Table Head -->
     <div class="d-flex flex-row" style="border-bottom: 2px solid lightgray;">
       <div class="fg-1 fw-bold text-center" style="border-right: 1px solid lightgray;">Class Number</div>
@@ -58,7 +66,7 @@ export default {
     </div>
     <!-- end Table Head -->
     <!-- Table Body -->
-    <div v-for="(obj, index) in this.ecf" :key="index" class="d-flex flex-row">
+    <div v-for="(obj, index) in this.ecf" :key="index" class="d-flex flex-row" style="border-bottom: 2px solid lightgray;">
       <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">{{ecf[index].class_number}}</div>
       <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">{{formatted_course_code(ecf[index])}}</div>
       <div class="fg-1 text-center" style="border-right: 1px solid lightgray;">{{ecf[index].section}}</div>
@@ -66,6 +74,9 @@ export default {
       <div class="fg-1 text-center">Delete Button</div>
     </div>
     <!-- end Table Body -->
+  </div>
+  <div class="d-flex flex-column" style="margin-top: 10px;">
+    <span>TOTAL NUMBER OF UNITS ENROLLED: <b>{{totalUnits()}}</b></span>
   </div>
 </div>
 </template>
