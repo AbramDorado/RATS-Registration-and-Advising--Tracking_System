@@ -1,7 +1,6 @@
 const database = require('../database/database')
 const express = require('express')
 const router = express.Router()
-const { v4: uuidv4 } = require('uuid')
 
 // Routes
 
@@ -18,7 +17,7 @@ const { v4: uuidv4 } = require('uuid')
           class_number,
           adviser_up_mail
         ) VALUES (?, ?, ?, ?)
-      `, [uuidv4(), req.body.student_up_mail, req.body.class_number, req.body.adviser_up_mail], false)
+      `, [req.body.student_up_mail+req.body.class_number, req.body.student_up_mail, req.body.class_number, req.body.adviser_up_mail], false)
       res.json({message: `Added ${req.body.class_number} to student ${req.body.student_up_mail}'s ECF with adviser ${req.body.adviser_up_mail}`}).send()
     } catch (error) {
       console.log('Error on api > ecf > create', error)

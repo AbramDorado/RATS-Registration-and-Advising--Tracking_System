@@ -25,6 +25,16 @@ export default {
         alert(error.data.message)
       }
     },
+    async deleteCourse(course) {
+      try {
+        const response = await this.axios.post('/api/ecf/delete', {class_number: course.class_number})
+        this.updateECF()
+        alert(`Deleted ${course.class_number} from ECF`)
+      } catch (error) {
+      console.log('Error on Ecf.vue > deleteCourse()', error)
+      alert(error.data.message)        
+      }
+    },
     formatted_course_code(course) {
       return `${course.subject} ${course.catalog_no}`
     },
