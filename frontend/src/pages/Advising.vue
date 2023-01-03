@@ -67,6 +67,9 @@ export default {
       }
       this.toggleEditMode(false)
     },
+    refreshECF() {
+      this.$refs['ecf'].updateECF()
+    },
     async update_curri_progress() {
       // to do
       try {
@@ -85,7 +88,7 @@ export default {
 </script>
 
 <template>
-<ScheduleOfClasses :user="this.user" />
+<ScheduleOfClasses :user="this.user" @refreshECF="refreshECF()" />
 <!-- Advising Div -->
 <div class="d-flex flex-column" style="background-color: lightgray; min-height: 100vh;">
   <Header :user="this.user"/>
@@ -161,7 +164,7 @@ export default {
       <!-- end ECF Header -->
       <!-- ECF Body -->
       <div ref="ECF_body" class="d-flex justify-content-center">
-        <Ecf :user="this.user" />
+        <Ecf ref="ecf" :user="this.user" />
       </div>
       <!-- end ECF Body -->
     </div>

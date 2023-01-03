@@ -19,7 +19,7 @@ const { v4: uuidv4 } = require('uuid')
           adviser_up_mail
         ) VALUES (?, ?, ?, ?)
       `, [uuidv4(), req.body.student_up_mail, req.body.class_number, req.body.adviser_up_mail], false)
-      res.json({message: `Create ecf row for ${req.body.student_up_mail} ${req.body.class_number} for adviser ${req.body.adviser_up_mail}`}).send()
+      res.json({message: `Added ${req.body.class_number} to student ${req.body.student_up_mail}'s ECF with adviser ${req.body.adviser_up_mail}`}).send()
     } catch (error) {
       console.log('Error on api > ecf > create', error)
       res.status(401).json({message: error}).send()

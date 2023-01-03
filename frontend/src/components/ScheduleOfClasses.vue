@@ -28,6 +28,7 @@ export default {
         adviser_up_mail: this.user.adviser_up_mail
       })
       alert(response.data.message)
+      this.$emit('refreshECF')
     },
     closeFullscreen() {
       this.$refs['fullscreenDiv'].style.display = 'none'
