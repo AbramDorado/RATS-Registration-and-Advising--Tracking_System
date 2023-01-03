@@ -12,7 +12,8 @@ async function createInitialTables(db) {
     degree_program TEXT,
     sais_id TEXT,
     student_number TEXT,
-    adviser_up_mail TEXT
+    adviser_up_mail TEXT,
+    department TEXT
   `)
   // end user table
   // announcement table
@@ -86,7 +87,7 @@ async function createInitialRows(db) {
   // Advising Status
     // student jmlicup@up.edu.ph
     await database.run(db, `
-      INSERT INTO advising_status (
+      INSERT OR REPLACE INTO advising_status (
         student_up_mail,
         adviser_up_mail,
         department,
@@ -95,33 +96,33 @@ async function createInitialRows(db) {
         step2_status,
         step3_status
       ) VALUES (?, ?, ?, ?, ?, ?, ?)
-    `, ['jmlicup@up.edu.ph', 'johnpaolomlicup@gmail.com', 'DPSM', 'BS Computer Science', 'not started', 'not started', 'no access'], true)
+    `, ['jmlicup@up.edu.ph', 'johnpaolomlicup@gmail.com', 'dpsm', 'BS Computer Science', 'not started', 'not started', 'no access'], true)
     // end student jmlicup@up.edu.ph
   // end Advising Status
 
   // Users
     // student jmlicup@up.edu.ph
     await database.run(db, `
-      INSERT INTO user (
-        id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail
+      INSERT OR REPLACE INTO user (
+        id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail, department
       ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     `, [
       uuidv4(),
-      'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'BS Computer Science', '10008', '2019-46188', 'vcmagboo@up.edu.ph'
+      'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'BS Computer Science', '10008', '2019-46188', 'vcmagboo@up.edu.ph', 'dpsm'
     ], true)
     // end student jmlicup@up.edu.ph
     // admin jpmlicup@gmail.com
     await database.run(db, `
-      INSERT INTO user (
-        id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail
+      INSERT OR REPLACE INTO user (
+        id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail, department
       ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     `, [
       uuidv4(),
-      'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', '', '', '', ''
+      'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', '', '', '', '', ''
     ], true)
     // end admin jpmlicup@gmail.com
   // end Users

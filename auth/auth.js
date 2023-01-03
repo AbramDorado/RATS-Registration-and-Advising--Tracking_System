@@ -177,8 +177,8 @@ async function configureGoogleStrategy(db) {
         } else {
           // insert the new user
           await database.run(db, `
-            INSERT OR REPLACE INTO user (id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-          `, [uuidv4(), req.body.role.toLowerCase(), req.body.up_mail.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.sais_id.toLowerCase(), req.body.student_number.toLowerCase(), req.body.adviser_up_mail.toLowerCase()], false)
+            INSERT OR REPLACE INTO user (id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail, department) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `, [uuidv4(), req.body.role.toLowerCase(), req.body.up_mail.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.sais_id.toLowerCase(), req.body.student_number.toLowerCase(), req.body.adviser_up_mail.toLowerCase(), req.body.deparment.toLowerCase()], false)
           // Create row in advising_status table if student
           if (req.body.role == 'student') {
             await database.run(db, `
@@ -239,8 +239,8 @@ async function configureGoogleStrategy(db) {
           // user with up_mail exists
           // update user
           await database.run(db, `
-            UPDATE user SET role = ?, first_name = ?, last_name = ?, degree_program = ?, sais_id = ?, student_number = ?, adviser_up_mail = ? WHERE up_mail = ? 
-          `, [req.body.role.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.sais_id.toLowerCase(), req.body.student_number.toLowerCase(), req.body.adviser_up_mail.toLowerCase(), req.body.up_mail.toLowerCase()], false)
+            UPDATE user SET role = ?, first_name = ?, last_name = ?, degree_program = ?, sais_id = ?, student_number = ?, adviser_up_mail = ?, department = ? WHERE up_mail = ? 
+          `, [req.body.role.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.sais_id.toLowerCase(), req.body.student_number.toLowerCase(), req.body.adviser_up_mail.toLowerCase(), req.body.department.toLowerCase(), req.body.up_mail.toLowerCase()], false)
           res.send('Edit success.')
         } else {
           throw 'No user with that upmail'
