@@ -8,11 +8,12 @@ export default {
   },
   data() {
     return {
-      ecf: []
+      acad_year: '',
+      ecf: [],
+      semester: ''
     }
   },
-  props: ['semester',
-    'acad_year',
+  props: [
     'user'
   ],
   methods: {
@@ -20,6 +21,11 @@ export default {
       try {
         const response = await this.axios.post('/api/ecf/read/all/student', {student_up_mail: this.user.up_mail})
         this.ecf = response.data.rows
+        // Update Enrollment Details
+        const response2 = await this.axios.post('/api/global_variables/enrollment')
+        this.acad_year = response2.data.acad_year
+        this.semester = response2.data.semester
+        // end Update Enrollment Details
       } catch (error) {
         console.log('Error on Ecf.vue > updateECF()', error)
         alert(error.data.message)

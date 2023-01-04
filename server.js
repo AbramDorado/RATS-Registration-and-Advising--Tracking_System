@@ -6,6 +6,7 @@ const advising = require('./advising/advising')
 const course = require('./course/course')
 const database = require('./database/database')
 const ecf = require('./advising/ecf')
+const global_variables = require('./global_variables/global_variables')
 const initial = require('./database/initial')
 const announcement = require('./announcement/announcement')
 const auth = require('./auth/auth')
@@ -43,6 +44,7 @@ async function main() {
     app.use('/', advising.router)
     app.use('/', course.router)
     app.use('/', ecf.router)
+    app.use('/', global_variables.router)
 
     // HTML Middleware
     const history = require('connect-history-api-fallback')
