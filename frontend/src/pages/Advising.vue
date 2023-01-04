@@ -28,7 +28,7 @@ export default {
       editMode: false,
       user: {},
       ECF_shown: false,
-      
+
       // OCS view : pagination related
       currentPage: 1, // v-model with input; used in pagination
       currentPage_static: 1, // Corrected value

@@ -29,6 +29,9 @@ export default {
         this.acad_year = response2.data.acad_year
         this.semester = response2.data.semester
         // end Update Enrollment Details
+        // Update Status
+        this.getAdvisingStatus()
+        // end Update Status
       } catch (error) {
         console.log('Error on Ecf.vue > updateECF()', error)
         alert(error.data.message)
@@ -60,7 +63,7 @@ export default {
         this.step2_status = response.data.step2_status
         this.step3_status = response.data.step3_status
       } catch (error) {
-        console.log('Error on Home.vue > getAdvisingStatus', error)
+        console.log('Error on Ecf.vue > getAdvisingStatus', error)
       }
     },     
     totalUnits() {
