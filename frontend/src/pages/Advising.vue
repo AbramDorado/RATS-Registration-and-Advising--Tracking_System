@@ -187,10 +187,10 @@ export default {
         </div>
         <!-- end Left -->
         <!-- Right -->
-        <div class="d-flex">
+        <!-- <div class="d-flex">
           <span v-if="!this.editMode" @click="toggleEditMode(true)" class="hoverTransform" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Edit</span>  
           <span v-else @click="finishEditingCurri()" class="hoverTransform" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Finish Editing</span>      
-        </div>
+        </div> -->
         <!-- end Right -->
       </div>
       <!-- end Curriculum Progress Header -->
