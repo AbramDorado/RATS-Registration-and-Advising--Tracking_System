@@ -10,7 +10,10 @@ export default {
     return {
       acad_year: '',
       ecf: [],
-      semester: ''
+      semester: '',
+      step1_status: '',
+      step2_status: '',
+      step3_status: '',      
     }
   },
   props: [
@@ -33,6 +36,12 @@ export default {
     },
     async deleteCourse(course) {
       try {
+        if (this.step2_status.toLowerCase() == 'approved') {
+          var confirmation = confirm('This will change your ADVISING STATUS from APPROVED to WAITING FOR APPROVAL. Proceed?')
+          if (!confirmation) {
+            throw 'Cancelled'
+          }
+        }
         const response = await this.axios.post('/api/ecf/delete', {class_number: course.class_number})
         this.updateECF()
         alert(`Deleted ${course.class_number} from ECF`)
@@ -44,6 +53,16 @@ export default {
     formatted_course_code(course) {
       return `${course.subject} ${course.catalog_no}`
     },
+    async getAdvisingStatus() {
+      try {
+        const response = await this.axios.post('/api/advising/getStatus', {student_up_mail: this.user.up_mail})
+        this.step1_status = response.data.step1_status
+        this.step2_status = response.data.step2_status
+        this.step3_status = response.data.step3_status
+      } catch (error) {
+        console.log('Error on Home.vue > getAdvisingStatus', error)
+      }
+    },     
     totalUnits() {
       var sum = 0
       for (let i=0; i<this.ecf.length; i++) {
@@ -54,6 +73,7 @@ export default {
   },
   mounted() {
     this.updateECF()
+    this.getAdvisingStatus()
   }
 }
 </script>
@@ -97,6 +117,9 @@ export default {
   </div>
   <div class="d-flex flex-column" style="margin-top: 10px;">
     <span>TOTAL NUMBER OF UNITS ENROLLED: <b>{{totalUnits()}}</b></span>
+  </div>
+  <div class="align-items-center d-flex justify-content-center" style="margin-top: 10px; padding: 0px;">
+    <span class="alert alert-primary" style="margin: 0px;">ADVISING STATUS: <span style="font-weight: bold; text-transform: uppercase;">{{this.step2_status}}</span></span>
   </div>
 </div>
 </template>

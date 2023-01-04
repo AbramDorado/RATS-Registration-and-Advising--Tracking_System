@@ -28,8 +28,8 @@ export default {
       editMode: false,
       user: {},
       ECF_shown: false,
-
-      //OCS view : pagination related
+      
+      // OCS view : pagination related
       currentPage: 1, // v-model with input; used in pagination
       currentPage_static: 1, // Corrected value
       filterByRole: '', // Passed in getAllUsers API
@@ -85,7 +85,7 @@ export default {
         alert('Error')
       }
       this.toggleEditMode(false)
-    },
+    },   
     refreshECF() {
       this.$refs['ecf'].updateECF()
     },
@@ -172,7 +172,7 @@ export default {
 <ScheduleOfClasses :user="this.user" @refreshECF="refreshECF()" />
 <!-- Advising Div -->
 <div class="d-flex flex-column" style="background-color: lightgray; min-height: 100vh;">
-  <Header :user="this.user"/>
+  <Header :user="this.user" />
 
   <!-- Student View: Advising Page Body -->
   <div v-if="this.user.role === 'student'" class="align-items-start d-flex flex-column" style="flex-grow: 1; gap: 20px; margin: 2%;">
