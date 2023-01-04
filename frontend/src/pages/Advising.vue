@@ -8,6 +8,12 @@ export default {
   components: {
     Ecf, Header, Footer, ScheduleOfClasses
   },
+  computed: {
+    //OCS view : pagination related
+    pages() { // Returns number of pages needed to store all rows in groups 
+      return Math.ceil(this.usersCount / this.resultsLimit_static)
+    }
+  },
   data() {
     return {
       curri_progress: [{
@@ -21,7 +27,20 @@ export default {
       curri_shown: false,
       editMode: false,
       user: {},
-      ECF_shown: false
+      ECF_shown: false,
+
+      //OCS view : pagination related
+      currentPage: 1, // v-model with input; used in pagination
+      currentPage_static: 1, // Corrected value
+      filterByRole: '', // Passed in getAllUsers API
+      resultsLimit: 50, // v-model with input; used in pagination
+      resultsLimit_static: 50, // Correct value
+      searchString: '', // Passed in getAllUsers API
+      sortBy: 'role', // Passed in getAllUsers API
+      sortOrder: 'ASC', // Passed in getAllUsers API
+      users: [], // Main list of rows shown in users table
+      usersCount: 0, // Stores reponse of countUsers API
+
     }
   },
   async mounted() {
@@ -82,7 +101,69 @@ export default {
     },
     toggleEditMode(bool) {
       this.editMode = bool
+    },
+
+    //start OCS view : Pagination Related
+    clearSearchField() {
+      this.searchString = ''
+      this.getAllUsers()
+    },
+    async correctLimits() {
+      this.currentPage_static = this.currentPage
+      this.resultsLimit_static = this.resultsLimit
+      if (this.currentPage_static < 1) {
+        this.currentPage_static = 1
+        this.currentPage = 1
+      }
+      if (this.currentPage_static > this.pages) {
+        this.currentPage_static = this.pages
+        this.currentPage = this.pages
+      }
+      if (this.resultsLimit_static < 1) {
+        this.resultsLimit_static = 1
+        this.resultsLimit = 1
+      }
+      if (this.resultsLimit_static > 200) {
+        this.resultsLimit_static = 200
+        this.resultsLimit = 200
+      }
+      if (this.resultsLimit_static > this.usersCount) {
+        this.resultsLimit_static = this.usersCount
+        this.resultsLimit = this.usersCount
+      }
+    },
+    async getAllUsers() {
+      try {
+        await this.getUsersCount()
+        await this.correctLimits()
+        const response = await this.axios.post('/api/getUsers', {column: this.sortBy, order: this.sortOrder, offset: (this.currentPage_static-1) * this.resultsLimit_static, limit: this.resultsLimit_static, searchString: this.searchString, filterByRole: this.filterByRole})
+        this.users = response.data
+      } catch (error) {
+        console.log('Error on Advising.vue > getAllUsers', error) // temp
+      }
+    },
+    async getUsersCount() {
+      try {
+        const response = await this.axios.post('/api/countUsers', {filterByRole: this.filterByRole})
+        this.usersCount = response.data.count
+      } catch (error) {
+        console.log('Error on Advising.vue > getUsersCount', error) // temp
+      }
+    },
+    async nextPage() {
+      if (this.currentPage < this.pages) {
+        this.currentPage++
+        this.getAllUsers()
+      }
+    },
+    async previousPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--
+        this.getAllUsers()
+      }
     }
+    //end OCS view: Pagination Related
+
   }
 }
 </script>
@@ -171,7 +252,78 @@ export default {
     <!-- end ECF -->
   </div>
   <!-- end Student View: Advising Page Body -->
-
+  <!-- start OCS View: Advising Page Body-->
+  <div v-if="this.user.role === 'ocs'" class="align-items-start d-flex flex-column" style="flex-grow: 1; gap: 20px; margin: 2%;">
+    <!-- Pagination Div -->
+    <div style="display: flex; flex-direction: row; gap: 20px; margin: 20px;">
+      <!-- Pages -->
+      <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 20px 15px;">
+        <span>Total users: <b>{{this.usersCount}}</b></span>
+        <span>Showing <input type="number" v-model="this.resultsLimit" style="text-align: center; width: 50px;"> results per page</span>
+        <div style="display: flex; flex-direction: row; gap: 10px;">
+          <div class="hoverTransform">
+            <span @click="this.previousPage()" v-if="this.currentPage_static > 1" class="myButton1" style="background-color: #751518;">
+              <i class="bi bi-caret-left-fill"></i>
+            </span>
+          </div>
+          <span>Page <input v-model="this.currentPage" type="number" style="text-align: center; width: 50px;"> of {{this.pages}}</span>
+          <div class="hoverTransform">
+            <span @click="this.nextPage()" v-if="this.currentPage_static < this.pages" class="myButton1" style="background-color: #751518;">
+              <i class="bi bi-caret-right-fill"></i>
+            </span>
+          </div>            
+        </div>
+        <div>
+          <div class="hoverTransform" style="margin-top: 5px;">
+            <span @click="getAllUsers()" class="myButton1" style="background-color: #751518;">Apply</span>
+          </div>                                 
+        </div>
+      </div>
+      <!-- end Pages -->
+      <!-- Sort and Filter -->
+      <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 15px;">
+        <span style="font-family: Open_Sans_Bold;">Sort</span>
+        <div style="display: flex; flex-direction: row; gap: 10px;">
+          <select v-model="sortBy" @change="getAllUsers()">
+            <option value="role">Role</option>
+            <option value="up_mail">UP Mail</option>
+            <option value="first_name">First Name</option>
+            <option value="last_name">Last Name</option>
+          </select>
+          <select v-model="sortOrder" @change="getAllUsers()">
+            <option value="ASC">Ascending</option>
+            <option value="DESC">Descending</option>
+          </select>
+        </div>
+        <div><div style="line-height: 1; margin-top: 10px;"><span style="font-family: Open_Sans_Bold;">Filter by Role</span></div></div>
+        <select v-model="filterByRole" @change="getAllUsers()">
+          <option value="">Any</option>
+          <option value="admin">Admin</option>
+          <option value="adviser">Adviser</option>
+          <option value="student">Student</option>
+        </select>           
+      </div>           
+      <!-- end Sort and Filter -->
+      <!-- Search -->
+      <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 15px;">
+        <span style="font-family: Open_Sans_Bold;">Search Current Page</span>
+        <div style="align-items: center; display: flex; flex-direction: row; gap: 5px;">
+          <input v-model="searchString" type="text">
+          <div @click="clearSearchField()" v-if="this.searchString !== ''" class="hoverTransform">
+            <span class="align-items-center d-flex myButton1" style="background-color: #751518; padding: 3px 7px;">Clear</span>
+          </div>            
+        </div>
+        <div>
+          <div @click="getAllUsers()" class="hoverTransform" style="margin-top: 5px;">
+            <span class="myButton1" style="background-color: #751518;">Search</span>
+          </div>
+        </div>
+      </div>
+      <!-- end Search -->
+    </div>
+    <!-- end Pagination Div --> 
+  </div>
+  <!-- end OCS View: Advising Page Body -->
   <Footer />
 </div>
 <!-- end Advising Div -->
