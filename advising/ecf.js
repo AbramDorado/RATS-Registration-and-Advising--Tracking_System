@@ -17,7 +17,9 @@ const router = express.Router()
           class_number,
           adviser_up_mail
         ) VALUES (?, ?, ?, ?)
-      `, [req.body.student_up_mail+req.body.class_number, req.body.student_up_mail, req.body.class_number, req.body.adviser_up_mail], false)
+      `, [req.user.up_mail+req.body.class_number, req.user.up_mail, req.body.class_number, req.body.adviser_up_mail], false)
+      // update advising_status
+      await database.run(db, `UPDATE advising_status SET step2_status = ? WHERE student_up_mail = ?`, ['waiting for approval', req.user.up_mail], false)
       res.json({message: `Added ${req.body.class_number} to student ${req.body.student_up_mail}'s ECF with adviser ${req.body.adviser_up_mail}`}).send()
     } catch (error) {
       console.log('Error on api > ecf > create', error)
@@ -72,6 +74,8 @@ const router = express.Router()
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       await database.run(db, `DELETE FROM ecf WHERE student_up_mail = ? AND class_number = ?`, [req.user.up_mail, req.body.class_number], false)
+      // update advising_status
+      await database.run(db, `UPDATE advising_status SET step2_status = ? WHERE student_up_mail = ?`, ['waiting for approval', req.user.up_mail], false)      
       res.json({message: `Delete ecf row for student ${req.user.up_mail} with class number ${req.body.class_number}`}).send()
     } catch (error) {
       console.log('Error on api > ecf > delete > all', error)
