@@ -109,10 +109,10 @@ async function createInitialRows(db) {
   // Global Variables
     await database.run(db, `
       INSERT INTO global_variables (key, value) VALUES (?, ?)
-    `, ['semester', 'Second'], false)
+    `, ['semester', 'Second'], true)
     await database.run(db, `
       INSERT INTO global_variables (key, value) VALUES (?, ?)
-    `, ['acad_year', '2022-2023'], false)
+    `, ['acad_year', '2022-2023'], true)
   // end Global Variables
 
   // Users
