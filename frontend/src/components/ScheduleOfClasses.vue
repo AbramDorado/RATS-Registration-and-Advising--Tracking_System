@@ -21,6 +21,13 @@ export default {
   },
   methods: {
     async addCourse(course) {
+      // handler for approved status
+      const response1 = await this.axios.post('/api/advising/getStatus', {student_up_mail: this.user.up_mail})
+      if (response.data.step2_status.toLowercase() == 'approved') {
+        if (confirm('This will change your ADVISING STATUS from APPROVED to WAITING FOR APPROVAL. Proceed?') == false) {
+          throw 'Cancelled'
+        }
+      }
       // console.log('course is', course) // temp
       const response = await this.axios.post('/api/ecf/create', {
         student_up_mail: this.user.up_mail,
