@@ -80,6 +80,12 @@ async function createInitialTables(db) {
     adviser_up_mail TEXT
   `)
   // end ecf table
+  // global_variables table
+  await database.createTable(db, 'global_variables', `
+    key TEXT UNIQUE PRIMARY KEY,
+    value
+  `)
+  // end global_variables table
 }
 
 async function createInitialRows(db) {
@@ -99,6 +105,15 @@ async function createInitialRows(db) {
     `, ['jmlicup@up.edu.ph', 'johnpaolomlicup@gmail.com', 'dpsm', 'BS Computer Science', 'not started', 'not started', 'no access'], true)
     // end student jmlicup@up.edu.ph
   // end Advising Status
+
+  // Global Variables
+    await database.run(db, `
+      INSERT INTO global_variables (key, value) VALUES (?, ?)
+    `, ['semester', 'Second'], false)
+    await database.run(db, `
+      INSERT INTO global_variables (key, value) VALUES (?, ?)
+    `, ['acad_year', '2022-2023'], false)
+  // end Global Variables
 
   // Users
     // student jmlicup@up.edu.ph
