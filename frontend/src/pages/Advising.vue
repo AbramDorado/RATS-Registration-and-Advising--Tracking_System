@@ -39,7 +39,7 @@ export default {
       sortBy: 'role', // Passed in getAllUsers API
       sortOrder: 'ASC', // Passed in getAllUsers API
       users: [], // Main list of rows shown in users table
-      usersCount: 0, // Stores reponse of countUsers API
+      usersCount: 0, // Stores response of countUsers API
 
     }
   },

@@ -272,6 +272,29 @@ router.post('/api/advising/curri/read', studentOnly, async (req, res) => {
 })
 // end Read Curri Progress
 
+// Read Curri Progress Using Adviser Account
+router.post('/api/advising/curri/read/adviser', adviserOnly, async (req, res) => {
+  try {
+    const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB(source)
+    const row = await database.get(db, `SELECT * FROM curri_progress WHERE student_up_mail = ?`, [req.body.student_up_mail], false)
+    if (row) {
+      // const row_parsed = {
+      //   student_up_mail: row.student_up_mail,
+      //   curri_progress: JSON.parse(curri_progress)
+      // }
+      res.status(200).json({row: row}).send()
+    } else {
+      res.status(200).json({message: 'No record found'}).send()
+    }
+  } catch (error) {
+    console.log('Error on advising.js > api > advising > curri > read > adviser')
+    console.log(error)
+    res.status(401).json({message: error}).send()
+  }
+})
+// end Read Curri Progress Using Adviser Account
+
 // Read All Curri Progress
 router.post('/api/advising/curri/read/all', adviserOnly, async (req, res) => {
   try {
@@ -303,7 +326,7 @@ router.post('/api/advising/curri/delete/all', ocsOnly, async (req, res) => {
 // end Delete All Status
 
 // Middlewares
-function adminOnly(res, req, next){
+function adminOnly(req, res, next){
   try{
     if (req.user.role !== 'admin') {
       throw 'User not Admin'
@@ -315,7 +338,7 @@ function adminOnly(res, req, next){
     res.status(401).json({message: error}).send()
   }
 }
-function adviserOnly(res, req, next){
+function adviserOnly(req, res, next){
   try{
     if (req.user.role !== 'adviser') {
       throw 'User not Adviser'
@@ -327,7 +350,7 @@ function adviserOnly(res, req, next){
     res.status(401).json({message: error}).send()
   }
 }
-function adviserOrStudentOnly(res, req, next){
+function adviserOrStudentOnly(req, res, next){
   try{
     if (req.user.role === 'adviser' || req.user.role === 'student') {
       next()

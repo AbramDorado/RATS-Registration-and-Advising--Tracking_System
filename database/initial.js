@@ -130,7 +130,7 @@ async function createInitialRows(db) {
     // end student jmlicup@up.edu.ph
     // admin jpmlicup@gmail.com
     await database.run(db, `
-      INSERT OR REPLACE INTO user (
+      INSERT INTO user (
         id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail, department
       ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?

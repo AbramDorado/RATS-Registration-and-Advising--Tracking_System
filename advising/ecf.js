@@ -57,8 +57,12 @@ const router = express.Router()
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       const rows = await database.all(db, `
-        SELECT * FROM ecf WHERE adviser_up_mail = ? AND student_up_mail = ?
-      `, [req.user.up_mail, req.body.student_up_mail], false)
+        SELECT
+          user.up_mail, user.first_name, user.last_name, user.degree_program, user.sais_id, user.student_number, advising_status.step1_status, advising_status.step2_status
+        FROM user INNER JOIN advising_status
+          ON user.up_mail = advising_status.student_up_mail
+        WHERE user.adviser_up_mail = ?
+      `, [req.user.up_mail], false)
       res.json({rows: rows}).send()
     } catch (error) {
       console.log('Error on api > ecf > read > all > adviser', error)
@@ -101,7 +105,7 @@ const router = express.Router()
 // end Routes
 
 // Middlewares
-function adminOnly(res, req, next){
+function adminOnly(req, res, next){
   try{
     if (req.user.role !== 'admin') {
       throw 'User not Admin'
@@ -113,7 +117,7 @@ function adminOnly(res, req, next){
     res.status(401).json({message: error}).send()
   }
 }
-function adviserOnly(res, req, next){
+function adviserOnly(req, res, next){
   try{
     if (req.user.role !== 'adviser') {
       throw 'User not Adviser'

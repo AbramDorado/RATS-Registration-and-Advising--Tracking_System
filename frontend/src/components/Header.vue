@@ -59,7 +59,7 @@ export default {
       if (this.user.role === 'student') {
         location.href = '/advising'
       } else if (this.user.role === 'adviser') {
-        location.href = 'adviser'
+        location.href = '/adviser'
       } else if (this.user.role === 'ocs') {
         location.href = '/ocs'
       } else if (this.user.role === 'admin') {
