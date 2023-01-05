@@ -54,7 +54,7 @@ export default {
       }
     },
     formatted_course_code(course) {
-      return `${course.subject} ${course.catalog_no}`
+      return `${course.subject} ${course.catalog_no}` 
     },
     async getAdvisingStatus() {
       try {
