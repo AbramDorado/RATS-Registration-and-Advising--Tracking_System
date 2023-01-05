@@ -93,7 +93,7 @@ async function createInitialRows(db) {
   // Advising Status
     // student jmlicup@up.edu.ph
     await database.run(db, `
-      INSERT OR REPLACE INTO advising_status (
+      INSERT INTO advising_status (
         student_up_mail,
         adviser_up_mail,
         department,
@@ -118,14 +118,14 @@ async function createInitialRows(db) {
   // Users
     // student jmlicup@up.edu.ph
     await database.run(db, `
-      INSERT OR REPLACE INTO user (
+      INSERT INTO user (
         id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail, department
       ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     `, [
       uuidv4(),
-      'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'BS Computer Science', '10008', '2019-46188', 'vcmagboo@up.edu.ph', 'dpsm'
+      'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'BS Computer Science', '10008', '2019-46188', 'jpmlicup@gmail.com', 'dpsm'
     ], true)
     // end student jmlicup@up.edu.ph
     // admin jpmlicup@gmail.com

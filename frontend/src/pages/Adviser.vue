@@ -45,9 +45,17 @@ export default {
       }
     },
     async viewCurriProg(advisee) {
-      this.view_advisee_curri_progress = advisee
-      this.hideDiv('adviserDashboard')
-      this.showDiv('viewAdviseeCurriProgressDiv')
+      try {
+        this.view_advisee_curri_progress = advisee
+        const response = await this.axios.post('/api/advising/curri/read/adviser', {student_up_mail: advisee.up_mail})
+        this.view_advisee_curri_progress.curri_progress = response.data.row
+        this.hideDiv('adviserDashboard')
+        this.showDiv('viewAdviseeCurriProgressDiv')
+
+      } catch (error) {
+        console.log('Error on viewCurriProg', error)
+        alert('Error')
+      }
     },
     async viewECF(advisee) {
 
@@ -155,8 +163,9 @@ export default {
         <span style="font-weight: bold;">Student Number: <span style="font-weight: normal;">{{this.view_advisee_curri_progress.student_number}}</span></span>
         <span style="font-weight: bold;">Curriculum Progress: <span style="font-weight: normal; text-transform: capitalize;">{{this.view_advisee_curri_progress.step1_status}}</span></span>
         <span style="font-weight: bold;">Advising Status: <span style="font-weight: normal; text-transform: capitalize;">{{this.view_advisee_curri_progress.step2_status}}</span></span>
+        Curri Progress: {{view_advisee_curri_progress.curri_progress}}
       </div>
-      <!-- end View Advisee Curri Progress Body -->      
+      <!-- end View Advisee Curri Progress Body -->
     </div>
     <!-- end View Advisee Curri Progress Div -->    
   </div>
