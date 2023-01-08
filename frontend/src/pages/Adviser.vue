@@ -140,8 +140,6 @@ export default {
                 </div>
                 <!-- end View Details Button -->
               </td>
-              <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-              </td>
             </tr>
           </tbody>
         </table>
@@ -180,7 +178,7 @@ export default {
         <span style="font-weight: bold;">SAIS ID: <span style="font-weight: normal;">{{this.view_advisee.sais_id}}</span></span>
         <span style="font-weight: bold;">Student Number: <span style="font-weight: normal;">{{this.view_advisee.student_number}}</span></span>
         <span style="font-weight: bold;">Curriculum Progress: <span style="font-weight: normal; text-transform: capitalize;">{{this.view_advisee.step1_status}}</span></span>
-        <span style="font-weight: bold;">Advising Status: <span style="font-weight: normal; text-transform: capitalize;">{{this.view_advisee.step2_status}}</span></span>
+        <!-- <span style="font-weight: bold;">Advising Status: <span style="font-weight: normal; text-transform: capitalize;">{{this.view_advisee.step2_status}}</span></span> -->
         <!-- Curri Progress: {{view_advisee.curri_progress}} -->
         <!-- Curriculum Progress -->
         <div>
@@ -235,6 +233,11 @@ export default {
         </div>
         <!-- end ECF -->
         <!-- Actions -->
+        <div class="align-items-center d-flex flex-column justify-content-center">
+          <div class="alert alert-primary text-center" style="font-family: Open_Sans_Bold; font-size: 20px; text-transform: capitalize;">
+            Advising Status: {{this.view_advisee.step2_status}}
+          </div>
+        </div>
         <div class="align-items-center d-flex flex-row justify-content-center" style="gap: 15px;">
           <div @click="updateStatus('Waiting for Revision')" class="hoverTransform myButton2" style="background-color: #7F6000">For Revision</div>
           <div @click="updateStatus('Approved')" class="hoverTransform myButton2" style="background-color: #093405">Approve</div>
