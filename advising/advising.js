@@ -180,20 +180,14 @@ router.post('/api/advising/read/all/adviser', adviserOnly, async (req, res) => {
 
 // Update Status
 router.post('/api/advising_status/update', adviserOnly, async (req, res) => {
-  // req.body = {student_up_mail, step1_status, step2_status, step3_status}
+  // req.body = {student_up_mail, status}
   try {
     const source = './database/db.sqlite'
     const db = await database.openOrCreateDB(source)
-    var studentToChange
-    if (req.user.role === 'student') {
-      studentToChange = req.user.up_mail
-    } else {
-      studentToChange = req.body.student_up_mail
-    }
     await database.run(db, `
-      UPDATE advising_status SET step1_status = ?, step2_status = ?, step3_status = ? WHERE student_up_mail = ?
-    `, [req.body.step1_status, req.body.step2_status, req.body.step3_status, studentToChange], false)
-    res.json({message: `Update advising_status for ${studentToChange} successfully`}).send()
+      UPDATE advising_status SET step2_status = ? WHERE student_up_mail = ?
+    `, [req.body.status, req.body.student_up_mail], false)
+    res.json({message: `Updated status for ${req.body.student_up_mail} to ${req.body.status} successfully`}).send()
   } catch (error) {
     console.log('Error on api > advising_status > update', error)
     res.json({message: error}).send()

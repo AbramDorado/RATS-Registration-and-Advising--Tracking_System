@@ -50,6 +50,28 @@ const router = express.Router()
   })
   // end Read All from Student
 
+  // Read All from Student Using Adviser Account
+  router.post('/api/ecf/read/all/student/adviserAcc', adviserOnly, async (req, res) => {
+    // required body: {student_up_mail}
+    try {
+      const source = './database/db.sqlite'
+      const db = await database.openOrCreateDB(source)
+      const ecf_rows = await database.all(db, `
+        SELECT * FROM ecf WHERE student_up_mail = ?
+      `, [req.body.student_up_mail], false)
+      var ecf_complete_rows = []
+      for (let i=0; i<ecf_rows.length; i++) {
+        const row = await database.get(db, `SELECT * FROM course WHERE class_number = ?`, [ecf_rows[i].class_number], false)
+        ecf_complete_rows.push(row)
+      }
+      res.json({rows: ecf_complete_rows}).send()
+    } catch (error) {
+      console.log('Error on api > ecf > read > all > student > adviserAcc', error)
+      res.status(401).json({message: error}).send()
+    }
+  })
+  // end Read All from Student Using Adviser Account
+
   // Read All Rows from Student And from Adviser
   router.post('/api/ecf/read/all/adviser', adviserOnly, async (req, res) => {
     // req.body = {student_up_mail}
