@@ -61,7 +61,7 @@ export default {
                   <b style="font-size: 20px; font-family: IBM_Plex_Sans_Condensed_Bold">College of Arts and Sciences</b>
                 </div>
                 <div class="lh-1">
-                  <span style="font-size: 20px; font-family: IBM_Plex_Sans_Condensed_Bold">Registration and Advising Tool (R.A.T.)</span>
+                  <span style="font-size: 20px; font-family: IBM_Plex_Sans_Condensed_Bold">Registration and Advising Tracking System (R.A.T.S.)</span>
                 </div>
               </div>
 

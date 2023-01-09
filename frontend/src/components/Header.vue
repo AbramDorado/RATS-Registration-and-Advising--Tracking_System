@@ -88,7 +88,7 @@ export default {
   <!-- Header Left Div -->
   <div @click="redirect('/')" class="align-items-center d-flex flex-row" style="cursor: pointer;">
     <img src="/UPM_CAS_logo.png" alt="UPM CAS Logo" style="height: 65px; margin-right: 8px; width: 65px; ">
-    <h1 style="font-family: IBM_Plex_Sans_Condensed_Bold; font-size: 40px; margin: 0;">CAS R.A.T.</h1>
+    <h1 style="font-family: IBM_Plex_Sans_Condensed_Bold; font-size: 40px; margin: 0;">CAS R.A.T.S.</h1>
   </div>
   <!-- end Header Left Div -->
   <!-- Header Middle Div -->

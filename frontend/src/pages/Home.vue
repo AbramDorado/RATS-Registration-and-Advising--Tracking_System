@@ -92,74 +92,85 @@ export default {
         <AnnouncementCard v-for="(obj, index) in announcements" :key="index" :header="announcements[index].title" :date="this.formatted_date(announcements[index].modified)" :content="announcements[index].body" />
         <a @click="getNextAnnouncements()" v-if="!this.announcementsEmpty" href="javascript:;">Show more</a>
       </div>
-      <!-- Status Div -->
-      <div v-if="this.user.role === 'student'" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px 20px 20px;">
-        <div id="statusHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
-          <i class="align-items-center bi bi-clipboard-check-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
-          <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Enrollment Status</span>
-        </div>
-
-        <!-- Status Timeline -->
-        <div class="d-flex flex-column justify-content-center" style="gap: 20px;">         
-          
-          <!-- Curriculum Progress -->
-          <div class="d-flex flex-column" style="background-color: white; border: 2px solid black; border-radius: 10px; padding: 10px 15px;">
-            <span style="font-family: Open_Sans_Bold; font-size: 16px; margin-bottom: 10px;">Step 1: Update Curriculum Progress</span>
-            <span style="align-self: center; font-family: Open_Sans_Bold; font-size: 20px; margin-bottom: 5px;">
-              Status:
-              <span style="font-family: Open_Sans; font-size: 20px; text-transform: capitalize;">{{this.step1_status}}</span>
-            </span>
-            <!-- Start/Edit Button -->
-            <div class="d-flex hoverTransform justify-content-center" style="align-self: center; width: 100px;">
-              <span @click="redirect('/advising')" v-if="this.step1_status === 'not started'" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
-                Start
+      <div style="flex: 1 1 0;">
+        <div v-if="this.user.role === 'student'" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; margin-bottom: 20px; padding: 15px 20px 20px 20px;">
+          <div id="statusHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
+            <i class="align-items-center bi bi-clipboard-check-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
+            <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Enrollment Status</span>
+          </div>
+          <!-- Status Timeline -->
+          <div class="d-flex flex-column justify-content-center" style="gap: 20px;">         
+            
+            <!-- Curriculum Progress -->
+            <div class="d-flex flex-column" style="background-color: white; border: 2px solid black; border-radius: 10px; padding: 10px 15px;">
+              <span style="font-family: Open_Sans_Bold; font-size: 16px; margin-bottom: 10px;">Step 1: Update Curriculum Progress</span>
+              <span style="align-self: center; font-family: Open_Sans_Bold; font-size: 20px; margin-bottom: 5px;">
+                Status:
+                <span style="font-family: Open_Sans; font-size: 20px; text-transform: capitalize;">{{this.step1_status}}</span>
               </span>
-              <span @click="redirect('/advising')" v-else style="background-color: #7F6000; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
-                Edit
-              </span>              
+              <!-- Start/Edit Button -->
+              <div class="d-flex hoverTransform justify-content-center" style="align-self: center; width: 100px;">
+                <span @click="redirect('/advising')" v-if="this.step1_status === 'not started'" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
+                  Start
+                </span>
+                <span @click="redirect('/advising')" v-else style="background-color: #7F6000; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
+                  Edit
+                </span>              
+              </div>
+              <!-- end Start/Edit Button -->               
             </div>
-            <!-- end Start/Edit Button -->               
-          </div>
-          <!-- end Curriculum Progress -->
+            <!-- end Curriculum Progress -->
 
-          <!-- Advising  -->
-          <div class="d-flex flex-column" style="background-color: white; border: 2px solid black; border-radius: 10px; padding: 10px 15px;">
-            <span style="font-family: Open_Sans_Bold; font-size: 16px; margin-bottom: 10px;">Step 2: Obtain Approved Enrollment Checklist Form</span>
-            <span style="align-self: center; font-family: Open_Sans_Bold; font-size: 20px; margin-bottom: 5px;">
-              Status:
-              <span style="font-family: Open_Sans; font-size: 20px; text-transform: capitalize;">{{this.step2_status}}</span>
-            </span>
-            <!-- Start Button -->
-            <div v-if="this.step1_status != 'not started'" class="d-flex hoverTransform justify-content-center" style="align-self: center; width: 100px;">
-              <span @click="redirect('/advising#ecfDiv')" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
-                Start
+            <!-- Advising  -->
+            <div class="d-flex flex-column" style="background-color: white; border: 2px solid black; border-radius: 10px; padding: 10px 15px;">
+              <span style="font-family: Open_Sans_Bold; font-size: 16px; margin-bottom: 10px;">Step 2: Obtain Approved Enrollment Checklist Form</span>
+              <span style="align-self: center; font-family: Open_Sans_Bold; font-size: 20px; margin-bottom: 5px;">
+                Status:
+                <span style="font-family: Open_Sans; font-size: 20px; text-transform: capitalize;">{{this.step2_status}}</span>
               </span>
+              <!-- Start Button -->
+              <div v-if="this.step1_status != 'not started'" class="d-flex hoverTransform justify-content-center" style="align-self: center; width: 100px;">
+                <span @click="redirect('/advising#ecfDiv')" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
+                  Start
+                </span>
+              </div>
+              <!-- end Start Button -->               
             </div>
-            <!-- end Start Button -->               
-          </div>
-          <!-- end Advising -->
+            <!-- end Advising -->
 
-          <!-- SAIS  -->
-          <div class="d-flex flex-column" style="background-color: white; border: 2px solid black; border-radius: 10px; padding: 10px 15px;">
-            <span style="font-family: Open_Sans_Bold; font-size: 16px; margin-bottom: 10px;">Step 3: Get SAIS Enlistment Access</span>
-            <span style="align-self: center; font-family: Open_Sans_Bold; font-size: 20px; margin-bottom: 5px;">
-              Status:
-              <span style="font-family: Open_Sans; font-size: 20px; text-transform: capitalize;">{{this.step3_status}}</span>
-            </span>
-            <!-- Start Button -->
-            <!-- <div class="d-flex hoverTransform justify-content-center" style="align-self: center; width: 100px;">
-              <span @click="redirect('/advising')" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
-                Start
+            <!-- SAIS  -->
+            <div class="d-flex flex-column" style="background-color: white; border: 2px solid black; border-radius: 10px; padding: 10px 15px;">
+              <span style="font-family: Open_Sans_Bold; font-size: 16px; margin-bottom: 10px;">Step 3: Get SAIS Enlistment Access</span>
+              <span style="align-self: center; font-family: Open_Sans_Bold; font-size: 20px; margin-bottom: 5px;">
+                Status:
+                <span style="font-family: Open_Sans; font-size: 20px; text-transform: capitalize;">{{this.step3_status}}</span>
               </span>
-            </div> -->
-            <!-- end Start Button -->               
-          </div>
-          <!-- end SAIS -->          
+              <!-- Start Button -->
+              <!-- <div class="d-flex hoverTransform justify-content-center" style="align-self: center; width: 100px;">
+                <span @click="redirect('/advising')" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
+                  Start
+                </span>
+              </div> -->
+              <!-- end Start Button -->               
+            </div>
+            <!-- end SAIS -->          
 
+          </div>
+          <!-- end Status Timeline -->
         </div>
-        <!-- end Status Timeline -->
+        <!-- Schedule of Activities -->
+        <div style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px 20px 20px;">
+          <div class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
+            <i class="align-items-center bi bi-calendar-week-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
+            <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Schedule of Activities</span>
+          </div>
+          <div>
+            <img src="/Schedule_of_Activities.jpg" alt="Schedule of Activities">
+            <!-- <img src="/UPM_CAS_logo.png" alt="UPM CAS Logo" style="height: 65px; margin-right: 8px; width: 65px; "> -->
+          </div>
+        </div>
+        <!-- end Schedule of Activities -->
       </div>
-      <!-- end Status Div -->
     </div>
   </div>
   <Footer />
