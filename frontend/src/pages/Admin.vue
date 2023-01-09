@@ -215,6 +215,12 @@ export default {
           return
         } else {
           this.registerUserDisabled = true
+          if (this.register_user.role == 'adviser' || this.register_user.role == 'admin') {
+            this.register_user.adviser_up_mail = ''
+            this.register_user.student_number = ''
+            this.register_user.sais_id = ''
+            this.register_user.degree_program = ''
+          }
           const response = await this.axios.post('/api/register', this.register_user)
           await this.getAllUsers()
           this.clearRegisterUserInputs();
@@ -451,7 +457,16 @@ export default {
             <span v-if="this.register_user.role == 'student'" style="font-family: Open_Sans_Bold;">Student Number</span>
             <input v-if="this.register_user.role == 'student'" v-model="register_user.student_number" type="text" style="margin-bottom: 10px;">
             <span v-if="this.register_user.role == 'student' || this.register_user.role == 'adviser'" style="font-family: Open_Sans_Bold;">Department</span>
-            <input v-if="this.register_user.role == 'student' || this.register_user.role == 'adviser'" v-model="register_user.department" type="text" style="margin-bottom: 10px; text-transform: uppercase;">
+            <select v-if="this.register_user.role == 'student' || this.register_user.role == 'adviser'" v-model="register_user.department" style="margin-bottom: 10px;">
+              <option value="dac">DAC</option>
+              <option value="dpsm">DPSM</option>
+              <option value="db">DB</option>
+              <option value="dbs">DBS</option>
+              <option value="dpe">DPE</option>
+              <option value="dss">DSS</option>
+              <option value="mm">MM</option>
+            </select>            
+            <!-- <input v-if="this.register_user.role == 'student' || this.register_user.role == 'adviser'" v-model="register_user.department" type="text" style="margin-bottom: 10px; text-transform: uppercase;"> -->
           </div>
           <!-- end Column -->
           <!-- Column -->
@@ -459,7 +474,7 @@ export default {
             <span style="font-family: Open_Sans_Bold;">UP Mail</span>
             <input v-model="register_user.up_mail" type="text" style="margin-bottom: 10px;">
             <span style="font-family: Open_Sans_Bold;">Last Name</span>
-            <input v-model="register_user.up_mail" type="text" style="margin-bottom: 10px;">
+            <input v-model="register_user.last_name" type="text" style="margin-bottom: 10px;">
             <span v-if="this.register_user.role == 'student'" style="font-family: Open_Sans_Bold;">SAIS ID</span>
             <input v-if="this.register_user.role == 'student'" v-model="register_user.sais_id" type="text" style="margin-bottom: 10px;">
             <span v-if="this.register_user.role == 'student'" style="font-family: Open_Sans_Bold;">Adviser UP Mail</span>
