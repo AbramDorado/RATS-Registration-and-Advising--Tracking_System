@@ -130,7 +130,7 @@ async function configureGoogleStrategy(db) {
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       const rows = await database.all(db, `
-        SELECT role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail
+        SELECT role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail, department
         FROM user 
         WHERE
           (up_mail LIKE '%${searchString}%'

@@ -634,10 +634,10 @@ export default {
               <th class="align-middle text-center" scope="col">UP Mail</th>
               <th class="align-middle text-center" scope="col">First Name</th>
               <th class="align-middle text-center" scope="col">Last Name</th>
-              <th class="align-middle text-center" scope="col">Degree Program</th>
-              <th class="align-middle text-center" scope="col">SAIS ID</th>
-              <th class="align-middle text-center" scope="col">Student Number</th>
-              <th class="align-middle text-center" scope="col">Adviser UP Mail</th>
+              <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">Degree Program</th>
+              <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">SAIS ID</th>
+              <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">Student Number</th>
+              <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">Adviser UP Mail</th>
               <th class="align-middle text-center" scope="col">Department</th>
               <th class="align-middle text-center" scope="col">View</th>
               <th class="align-middle text-center" scope="col">Edit</th>
@@ -650,11 +650,11 @@ export default {
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].up_mail}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].first_name}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].last_name}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].degree_program}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].sais_id}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].student_number}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].adviser_up_mail}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].department}}</td>
+              <td v-if="filterByRole == '' || filterByRole == 'student'" class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].degree_program}}</td>
+              <td v-if="filterByRole == '' || filterByRole == 'student'" class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].sais_id}}</td>
+              <td v-if="filterByRole == '' || filterByRole == 'student'" class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].student_number}}</td>
+              <td v-if="filterByRole == '' || filterByRole == 'student'" class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].adviser_up_mail}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap;">{{users[index].department}}</td>
               <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 <!-- View Button -->
                 <div @click="viewUser(users[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto">
