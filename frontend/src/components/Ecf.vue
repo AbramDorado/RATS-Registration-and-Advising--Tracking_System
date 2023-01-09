@@ -89,6 +89,7 @@ export default {
   </div>
   <div class="d-flex flex-column" style="margin-bottom: 10px;">
     <span>STUDENT NAME: <b>{{formatted_name}}</b></span>
+    <span>UP MAIL: <b>{{user.up_mail}}</b></span>
     <span>STUDENT NUMBER: <b>{{user.student_number}}</b></span>
     <span>DEGREE PROGRAM: <b>{{user.degree_program}}</b></span>
     <span>ADVISER: <b>{{user.adviser_up_mail}}</b></span>
@@ -122,7 +123,7 @@ export default {
     <span>TOTAL NUMBER OF UNITS ENROLLED: <b>{{totalUnits()}}</b></span>
   </div>
   <div class="align-items-center d-flex justify-content-center" style="margin-top: 10px; padding: 0px;">
-    <span class="alert alert-primary" style="margin: 0px;">ADVISING STATUS: <span style="font-weight: bold; text-transform: uppercase;">{{this.step2_status}}</span></span>
+    <span class="alert alert-secondary" style="margin: 0px;">ADVISING STATUS: <span style="font-weight: bold; text-transform: uppercase;">{{this.step2_status}}</span></span>
   </div>
 </div>
 </template>

@@ -214,7 +214,26 @@ export default {
               <td><input v-model="curri_progress[index].section" :disabled="!this.editMode" type="text" class="text-center" style="width: 100%;"></td>
               <td><input v-model="curri_progress[index].academic_year_taken" :disabled="!this.editMode" type="text" class="text-center" style="width: 100%;"></td>
               <td><input v-model="curri_progress[index].semester_taken" :disabled="!this.editMode" type="text" class="text-center" style="width: 100%;"></td>
-              <td><input v-model="curri_progress[index].grade" :disabled="!this.editMode" type="text" class="text-center" style="width: 100%;"></td>
+              <td>
+                <!-- <input v-model="curri_progress[index].grade" :disabled="!this.editMode" type="text" class="text-center" style="width: 100%;"> -->
+                <select v-model="curri_progress[index].grade" :disabled="!this.editMode" class="text-center" style="width: 100%;">
+                  <option value="1.00">1.00</option>
+                  <option value="1.25">1.25</option>
+                  <option value="1.50">1.50</option>
+                  <option value="1.75">1.75</option>
+                  <option value="2.00">2.00</option>
+                  <option value="2.25">2.25</option>
+                  <option value="2.50">2.50</option>
+                  <option value="2.75">2.75</option>
+                  <option value="3.00">3.00</option>
+                  <option value="4.00">4.00</option>
+                  <option value="5.00">5.00</option>
+                  <option value="INC">INC</option>
+                  <option value="DRP">DRP</option>
+                  <option value="P">P</option>
+                  <option value="F">F</option>
+                </select>
+              </td>
               <td><input v-model="curri_progress[index].notes" :disabled="!this.editMode" type="text" class="text-center" style="width: 100%;"></td>
               <td v-if="this.editMode" class="d-flex justify-content-center"><span @click="deleteRow(index)" class="hoverTransform" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Delete Row</span></td>
             </tr>          

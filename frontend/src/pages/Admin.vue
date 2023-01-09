@@ -220,6 +220,9 @@ export default {
             this.register_user.student_number = ''
             this.register_user.sais_id = ''
             this.register_user.degree_program = ''
+            if (this.register_user.role == 'admin') {
+              this.register_user.department = ''
+            }
           }
           const response = await this.axios.post('/api/register', this.register_user)
           await this.getAllUsers()

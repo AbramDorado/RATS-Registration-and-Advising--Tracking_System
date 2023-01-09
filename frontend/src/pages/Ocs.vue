@@ -179,8 +179,8 @@ export default {
           courseObj.room_assigned = rowContent[9]
           courseObj.instructor = rowContent[10]
           courseObj.class_capacity = rowContent[11]
-          courseObj.restrictions = rowContent[13]
-          courseObj.units = rowContent[14]
+          courseObj.restrictions = rowContent[12]
+          courseObj.units = rowContent[13]
           courseObj.registration_type = 'batch'
           if (courseObj.class_number) {
             thiss.batchUploadCoursesProgress += `\nRegistering ${courseObj.class_number}`
@@ -335,7 +335,8 @@ export default {
         <span style="font-family: Open_Sans_Bold;">Title</span>
         <input v-model="add_announcement.title" type="text" style="margin-bottom: 10px;">
         <span style="font-family: Open_Sans_Bold;">Body</span>
-        <input v-model="add_announcement.body" type="text" style="margin-bottom: 10px;">
+        <!-- <input v-model="add_announcement.body" type="text" style="margin-bottom: 10px;"> -->
+        <textarea v-model="add_announcement.body" type="text" style="margin-bottom: 10px; min-height: 300px;"></textarea>
         <!-- Add Button -->
           <div @click="addAnnouncement()" class="align-items-center d-flex justify-content-center hoverTransform">
             <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Post Announcement</span>
@@ -382,9 +383,9 @@ export default {
         <span style="font-family: Open_Sans_Bold;">Title</span>
         <textarea disabled :value="del_announcement.title" style="overflow: auto; white-space: normal;"></textarea>
         <span style="font-family: Open_Sans_Bold;">Created</span>
-        <textarea disabled style="overflow: auto;">{{this.del_announcement.created}}</textarea>
+        <textarea disabled style="overflow: auto;">{{this.formatted_date(this.del_announcement.created)}}</textarea>
         <span style="font-family: Open_Sans_Bold;">Last Modified</span>
-        <textarea disabled style="overflow: auto;">{{this.del_announcement.modified}}</textarea>
+        <textarea disabled style="overflow: auto;">{{this.formatted_date(this.del_announcement.modified)}}</textarea>
         <span style="font-family: Open_Sans_Bold;">Body</span>
         <span v-html="del_announcement.body" style="background-color: rgba(239, 239, 239, 0.3); border: 1px solid gray; cursor: normal; min-height: 300px; overflow: auto; white-space: normal;"></span>        
         <!-- <button @click="deleteAnnouncementAPI()">Delete</button> -->
@@ -463,9 +464,9 @@ export default {
         <span style="font-family: Open_Sans_Bold;">Title</span>
         <textarea disabled :value="view_announcement.title" style="overflow: auto; white-space: normal;"></textarea>
         <span style="font-family: Open_Sans_Bold;">Created</span>
-        <textarea disabled style="overflow: auto;">{{this.view_announcement.created}}</textarea>
+        <textarea disabled style="overflow: auto;">{{this.formatted_date(this.view_announcement.created)}}</textarea>
         <span style="font-family: Open_Sans_Bold;">Last Modified</span>
-        <textarea disabled style="overflow: auto;">{{this.view_announcement.modified}}</textarea>
+        <textarea disabled style="overflow: auto;">{{this.formatted_date(this.view_announcement.modified)}}</textarea>
         <span style="font-family: Open_Sans_Bold;">Body</span>
         <span v-html="view_announcement.body" style="background-color: rgba(239, 239, 239, 0.3); border: 1px solid gray; cursor: normal; min-height: 300px; overflow: auto; white-space: normal;"></span>
       </div>
@@ -714,7 +715,16 @@ export default {
         <span style="font-family: Open_Sans_Bold;">Class Number</span>
         <input v-model="add_course.class_number" type="text" style="margin-bottom: 10px;">
         <span style="font-family: Open_Sans_Bold;">Department</span>
-        <input v-model="add_course.department" type="text" style="margin-bottom: 10px;">
+        <!-- <input v-model="add_course.department" type="text" style="margin-bottom: 10px;"> -->
+        <select v-model="add_course.department" style="margin-bottom: 10px;">
+          <option value="dac">DAC</option>
+          <option value="dpsm">DPSM</option>
+          <option value="db">DB</option>
+          <option value="dbs">DBS</option>
+          <option value="dpe">DPE</option>
+          <option value="dss">DSS</option>
+          <option value="mm">MM</option>
+        </select>
         <span style="font-family: Open_Sans_Bold;">Course Title</span>
         <input v-model="add_course.course_title" type="text" style="margin-bottom: 10px;">
         <span style="font-family: Open_Sans_Bold;">Subject</span>

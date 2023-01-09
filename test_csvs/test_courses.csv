@@ -1,0 +1,6 @@
+class_number,department,course_title,subject,catalog_no,section,component,schedule,learning_delivery_mode,room_assigned,instructor,class_capacity,restrictions,units
+1232,DPSM,Fundamentals of Programming,CMSC,21,LEC1,LEC,01:30 PM - 02:30 PM TF,F2F,TBA,TBA,30,FRESHMEN BS COMPUTER SCIENCE,3
+1233,DPSM,Fundamentals of Programming,CMSC,21,LB1A,LAB,02:30 PM - 05:30 PM T,F2F,TBA,TBA,15,FRESHMEN BS COMPUTER SCIENCE,0
+1234,DPSM,Fundamentals of Programming,CMSC,21,LB1B,LAB,02:30 PM - 05:30 PM F,F2F,TBA,TBA,15,FRESHMEN BS COMPUTER SCIENCE,0
+4092,DPSM,Fundamentals of Programming,CMSC,21,LEC2,LEC,01:30 PM - 02:30 PM TF,F2F,TBA,TBA,15,FRESHMEN BS COMPUTER SCIENCE,3
+4093,DPSM,Fundamentals of Programming,CMSC,21,LAB2,LAB,02:30 PM - 05:30 PM F,F2F,TBA,TBA,15,FRESHMEN BS COMPUTER SCIENCE,0
