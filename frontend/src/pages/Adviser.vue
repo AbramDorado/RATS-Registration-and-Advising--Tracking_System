@@ -232,12 +232,12 @@ export default {
           <div class="text-center" style="font-size: 18px; font-family: Open_Sans_Bold;">Total Units: {{totalUnits()}}</div>
         </div>
         <!-- end ECF -->
-        <!-- Actions -->
         <div class="align-items-center d-flex flex-column justify-content-center">
           <div class="alert alert-primary text-center" style="font-family: Open_Sans_Bold; font-size: 20px; text-transform: capitalize;">
             Advising Status: {{this.view_advisee.step2_status}}
           </div>
         </div>
+        <!-- Actions -->
         <div class="align-items-center d-flex flex-row justify-content-center" style="gap: 15px;">
           <div @click="updateStatus('Waiting for Revision')" class="hoverTransform myButton2" style="background-color: #7F6000">For Revision</div>
           <div @click="updateStatus('Approved')" class="hoverTransform myButton2" style="background-color: #093405">Approve</div>
