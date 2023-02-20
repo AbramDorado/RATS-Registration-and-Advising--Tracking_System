@@ -201,18 +201,6 @@ const router = express.Router()
 // end Routes
 
 // Middlewares
-function adminOnly(res, req, next){
-  try{
-    if (req.user.role !== 'admin') {
-      throw 'User not Admin'
-    } else {
-      next()
-    }
-  } catch(error){
-    console.log('Error on course.js > adminOnly', error)
-    res.status(401).json({message: error}).send()
-  }
-}
 function ocsOnly(req, res, next) {
   try {
     if (req.user.role === 'ocs') {

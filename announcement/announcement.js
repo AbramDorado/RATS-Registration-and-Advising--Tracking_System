@@ -19,8 +19,8 @@ const router = express.Router()
       `, [uuidv4(), req.body.title, req.body.body, Date.now(), Date.now()], false)
       res.json({message: `Announcement added: ${req.body.title}`}).send()
     } catch (error) {
-      console.log('Error on api announcement create') // temp
-      console.log(error) // temp
+      console.log('Error on api announcement create')
+      console.log(error)
       res.json({message: error}).send()
     }
   })

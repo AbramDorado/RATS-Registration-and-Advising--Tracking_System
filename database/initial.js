@@ -1,7 +1,13 @@
 const { v4: uuidv4 } = require('uuid');
 const database = require('./database')
 
+async function main(db) {
+  await createInitialTables(db)
+  await createInitialRows(db)
+}
+
 async function createInitialTables(db) {
+
   // user table
   await database.createTable(db, 'user', `
     id TEXT UNIQUE PRIMARY KEY,
@@ -16,6 +22,7 @@ async function createInitialTables(db) {
     department TEXT
   `)
   // end user table
+
   // announcement table
   await database.createTable(db, 'announcement', `
     id TEXT UNIQUE PRIMARY KEY,
@@ -25,6 +32,7 @@ async function createInitialTables(db) {
     modified INTEGER
   `)
   // end announcement table
+
   // advising_status table
   await database.createTable(db, 'advising_status', `
     student_up_mail TEXT UNIQUE PRIMARY KEY,
@@ -36,6 +44,7 @@ async function createInitialTables(db) {
     step3_status TEXT
   `)
   // end advising_status table
+
   // course table
   await database.createTable(db, 'course', `
     class_number TEXT UNIQUE PRIMARY KEY,
@@ -54,6 +63,7 @@ async function createInitialTables(db) {
     units TEXT
   `)
   // end course table
+
   // course_edit table
   await database.createTable(db, 'course_edit', `
     class_number TEXT UNIQUE PRIMARY KEY,
@@ -64,6 +74,7 @@ async function createInitialTables(db) {
     last_modified TEXT
   `)
   // end course_edit table
+
   // curri_progress table
   await database.createTable(db, 'curri_progress', `
     student_up_mail TEXT UNIQUE PRIMARY KEY,
@@ -72,6 +83,7 @@ async function createInitialTables(db) {
     modified TEXT
   `)
   // end curri_progress table
+
   // ecf table
   await database.createTable(db, 'ecf', `
     id TEXT UNIQUE PRIMARY KEY,
@@ -80,6 +92,7 @@ async function createInitialTables(db) {
     adviser_up_mail TEXT
   `)
   // end ecf table
+
   // global_variables table
   await database.createTable(db, 'global_variables', `
     key TEXT UNIQUE PRIMARY KEY,
@@ -142,7 +155,6 @@ async function createInitialRows(db) {
     // end admin jpmlicup@gmail.com
   // end Users
 
-
 }
 
-module.exports = {createInitialTables, createInitialRows}
+module.exports = {main}
