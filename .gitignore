@@ -1,3 +1,5 @@
+database/session.db
+
 # Frontend
 frontend/node_modules
 frontend/.vscode

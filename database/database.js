@@ -8,13 +8,12 @@ async function openOrCreateDB(source) {
         if (err) {
           throw err
         } else {
-          // console.log('SQLite database', source, 'opened/created.') // temp
           resolve(db)
         }
       })
     } catch (error) {
-      console.log('Error opening/creating database', source, 'in database.js') // temp
-      console.log(error) // temp
+      console.log('Error opening/creating database', source, 'in database.js')
+      console.log(error)
       reject()
     }
   })
@@ -24,18 +23,16 @@ async function openOrCreateDB(source) {
 async function createTable(db, tableName, columns) {
   return new Promise(async (resolve, reject) => {
     try {
-      // console.log('database.js > createTable called.') // temp
       db.run(`CREATE TABLE IF NOT EXISTS ${tableName} (${columns})`, (err) => {
         if (err) {
           throw err
         } else {
-          // console.log('Created table', tableName, 'successfully.') // temp
           resolve()
         }
       })
     } catch (error) {
-      console.log('Error on database.js > createTable') // temp
-      console.log(error) // temp
+      console.log('Error on database.js > createTable')
+      console.log(error)
       reject()
     }
   })
@@ -46,39 +43,16 @@ async function run(db, sql, params, ignoreErrs) {
   return new Promise(async (resolve, reject) => {
     db.run(sql, params, (err) => {
       if (err) {
-        // console.log('Error in database.js > run')
-        // console.log(err)
         if (ignoreErrs) {
           resolve()
         } else {
+          console.log(err)
           reject(err)
         }
       } else {
         resolve()
       }
     })
-    // ORIGINAL
-    // try {
-    //   db.run(sql, params, (err) => {
-    //     if (err) {
-    //       if (ignoreErrs) {
-    //         resolve()
-    //       } else {
-    //         console.log('throwing err', err) // temp
-    //         throw err
-    //       }
-    //     } else {
-    //       // console.log('database.js > run success.') // temp
-    //       resolve()
-    //     }
-    //   })
-    // } catch (error) {
-    //   console.log('Error catched') // temp
-    //   console.log('Error on database.js > run') // temp
-    //   console.log(error) // temp
-    //   reject()
-    // }
-    // END ORIGINAL
   })
 }
 
@@ -93,7 +67,6 @@ async function get(db, sql, params, ignoreErrs) {
           reject(err)
         }
       } else {
-        // console.log('database.js > get success.') // temp
         resolve(row)
       }
     })
@@ -111,7 +84,6 @@ async function all(db, sql, params, ignoreErrs) {
           reject(err)
         }
       } else {
-        // console.log('database.js > all success.') // temp
         resolve(rows)
       }
     })
