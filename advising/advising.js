@@ -23,7 +23,7 @@ router.post('/api/advising/getStatus', loggedIn, async (req, res) => {
   }
 })
 // end Get Status
-
+//advising
 // Read All Advising Status All Departments
 router.post('/api/advising/read/all/all', ocsOnly, async (req, res) => {
   try {
