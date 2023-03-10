@@ -12,8 +12,22 @@ export default {
   data() {
     return {
       advisees: [],
+      adviseesCount: 0,
+      currentPage: 1,
+      currentPage_static: 1,
+      filterByAdvStatus: '',
+      filterByCurrProg: '',
+      filterByDegree: '',
+      resultsLimit: 50,
+      resultsLimit_static: 50,
+      searchString: '',
       user: {},
       view_advisee: {}
+    }
+  },
+  computed: {
+    pages() {
+      return Math.ceil(this.adviseesCount / this.resultsLimit_static)
     }
   },
   async mounted() {
@@ -29,11 +43,59 @@ export default {
         location.href = '/login' // to do: allow logging in as 'guest' for non-cas students
       }
     },
+    clearSearchField() {
+      this.searchString = ''
+      this.updateAdvisees()
+    },
+    async correctLimits() {
+      this.currentPage_static = this.currentPage
+      this.resultsLimit_static = this.resultsLimit
+      if (this.currentPage_static < 1) {
+        this.currentPage_static = 1
+        this.currentPage = 1
+      }
+      if (this.currentPage_static > this.pages) {
+        this.currentPage_static = this.pages
+        this.currentPage = this.pages
+      }
+      if (this.resultsLimit_static < 1) {
+        this.resultsLimit_static = 1
+        this.resultsLimit = 1
+      }
+      if (this.resultsLimit_static > 200) {
+        this.resultsLimit_static = 200
+        this.resultsLimit = 200
+      }
+      if (this.resultsLimit_static > this.adviseesCount) {
+        this.resultsLimit_static = this.adviseesCount
+        this.resultsLimit = this.adviseesCount
+      }
+    },
     formatted_course_code(course) {
       return `${course.subject} ${course.catalog_no}` 
     },
+    // getAdviseesCount() {
+    //   try {
+    //     const response = await this.axios.post('', {filterByRole}) // needs countAdvisees API
+    //     this.adviseesCount = response.data.count
+    //   } catch (error) {
+    //     console.log('Error on Adviser.vue > getAdviseesCount', error) // temp
+    //   }
+    // },
     hideDiv(ref) {
       this.$refs[ref].style.display = 'none'
+    },
+    async nextPage() {
+      if (this.currentPage < this.pages) {
+        this.currentPage++
+        this.updateAdvisees()
+      }
+    },
+    async previousPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--
+        this.updateAdvisees()
+      }
     },
     showDiv(ref) {
       this.$refs[ref].style.display = 'flex'
@@ -51,6 +113,8 @@ export default {
     },
     async updateAdvisees() {
       try {
+        // await this.getAdviseesCount()
+        // await this.correctLimits()
         const response = await this.axios.post('/api/ecf/read/all/adviser')
         this.advisees = response.data.rows
       } catch (error) {
@@ -107,6 +171,77 @@ export default {
         <!-- end Adviser Dashboard Header Left Div -->
       </div>
       <!-- end Adviser Dashboard Header -->
+      <!-- Pagination Div -->
+      <div style="display: flex; flex-direction: row; gap: 20px; margin: 20px;">
+        <!-- Pages -->
+        <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 20px 15px;">
+          <span>Total users: <b>{{this.adviseesCount}}</b></span>
+          <span>Showing <input type="number" v-model="this.resultsLimit" style="text-align: center; width: 50px;"> results per page</span>
+          <div style="display: flex; flex-direction: row; gap: 10px;">
+            <div class="hoverTransform">
+              <span @click="this.previousPage()" v-if="this.currentPage_static > 1" class="myButton1" style="background-color: #751518;">
+                <i class="bi bi-caret-left-fill"></i>
+              </span>
+            </div>
+            <span>Page <input v-model="this.currentPage" type="number" style="text-align: center; width: 50px;"> of {{this.pages}}</span>
+            <div class="hoverTransform">
+              <span @click="this.nextPage()" v-if="this.currentPage_static < this.pages" class="myButton1" style="background-color: #751518;">
+                <i class="bi bi-caret-right-fill"></i>
+              </span>
+            </div>            
+          </div>
+          <div>
+            <div class="hoverTransform" style="margin-top: 5px;">
+              <span @click="updateAdvisees()" class="myButton1" style="background-color: #751518;">Apply</span>
+            </div>                                 
+          </div>
+        </div>
+        <!-- end Pages -->
+        <!-- Sort and Filter -->
+        <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 15px;">
+          <span style="font-family: Open_Sans_Bold;">Sort</span>
+          <div style="display: flex; flex-direction: row; gap: 10px;">
+            <select v-model="sortBy" @change="updateAdvisees()">
+              <option value="degree_program">Degree Program</option>
+            </select>
+            <select v-model="sortOrder" @change="updateAdvisees()">
+              <option value="ASC">Ascending</option>
+              <option value="DESC">Descending</option>
+            </select>
+          </div>
+          <div><div style="line-height: 1; margin-top: 10px;"><span style="font-family: Open_Sans_Bold;">Filter by Curriculum Progress</span></div></div>
+          <select v-model="filterByCurrProg" @change="updateAdvisees()">
+            <option value="">Any</option>
+            <option value="Not Started">Not Started</option>
+            <option value="Done">Done</option>
+          </select>
+          <div><div style="line-height: 1; margin-top: 10px;"><span style="font-family: Open_Sans_Bold;">Filter by Advising Status</span></div></div>
+          <select v-model="filterByAdvStatus" @change="updateAdvisees()">
+            <option value="">Any</option>
+            <option value="Not Started">Not Started</option>
+            <option value="not_started">Waiting for Revision</option>
+            <option value="done">Approved</option>
+          </select>           
+        </div>           
+        <!-- end Sort and Filter -->
+        <!-- Search -->
+        <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 15px;">
+          <span style="font-family: Open_Sans_Bold;">Search Current Page</span>
+          <div style="align-items: center; display: flex; flex-direction: row; gap: 5px;">
+            <input v-model="searchString" type="text">
+            <div @click="clearSearchField()" v-if="this.searchString !== ''" class="hoverTransform">
+              <span class="align-items-center d-flex myButton1" style="background-color: #751518; padding: 3px 7px;">Clear</span>
+            </div>            
+          </div>
+          <div>
+            <div @click="updateAdvisees()" class="hoverTransform" style="margin-top: 5px;">
+              <span class="myButton1" style="background-color: #751518;">Search</span>
+            </div>
+          </div>
+        </div>
+        <!-- end Search -->
+      </div>
+      <!-- end Pagination Div -->
       <!-- Adviser Dashboard Body -->
       <div style="padding: 15px 20px;">
         <table class="fixed-table-body table table-bordered table-responsive">

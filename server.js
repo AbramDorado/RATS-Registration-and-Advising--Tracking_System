@@ -54,7 +54,7 @@ async function main() {
     // end Serve frontend
 
   // Start express server
-  app.listen(process.env.PORT, () => {
+  app.listen(8000, () => {
     console.log(`Express app listening on port ${process.env.PORT}`)
   })
   // end Start express server
