@@ -14,6 +14,9 @@ export default {
       step1_status: '',
       step2_status: '',
       step3_status: '',
+      adviseesCountApp: 0,
+      adviseesCountPend: 0,
+      adviseesCountNot: 0,
       user: {}
     }
   },
@@ -95,7 +98,7 @@ export default {
         <AnnouncementCard v-for="(obj, index) in announcements" :key="index" :header="announcements[index].title" :date="this.formatted_date(announcements[index].modified)" :content="announcements[index].body" />
         <a @click="getNextAnnouncements()" v-if="!this.announcementsEmpty" href="javascript:;">Show more</a>
       </div>
-      <div style="flex: 1 1 0;">
+      <div style="flex: 0.5 1 0;">
         <div v-if="this.user.role === 'student'" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; margin-bottom: 20px; padding: 15px 20px 20px 20px;">
           <div id="statusHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
             <i class="align-items-center bi bi-clipboard-check-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
@@ -160,6 +163,32 @@ export default {
 
           </div>
           <!-- end Status Timeline -->
+        </div>
+        <!-- Adviser Overview -->
+        <div v-if="this.user.role === 'adviser'" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; margin-bottom: 20px; padding: 15px 20px 20px 20px;">
+          <!-- Adviser Overview Header -->
+          <div id="statusHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
+            <i class="align-items-center bi bi-clipboard-check-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
+            <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Advising Overview</span>
+          </div>
+          <!-- end Adviser Overview Header -->
+          
+          <!-- Advisees Overview -->
+          <div class="d-flex flex-column justify-content-center" style="gap: 20px; margin-left: 30px;">
+            <span style="align-self: left; font-family: Open_Sans_Bold; font-size: 30px; margin-bottom: 5px; ">
+              Approved:
+              <span style="font-family: Open_Sans; font-size: 30px;">{{ this.adviseesCountApp }}</span>
+            </span>
+            <span style="align-self: left; font-family: Open_Sans_Bold; font-size: 30px; margin-bottom: 5px;">
+              Pending:
+              <span style="font-family: Open_Sans; font-size: 30px;">{{ this.adviseesCountPend }}</span>
+            </span>
+            <span style="align-self: left; font-family: Open_Sans_Bold; font-size: 30px; margin-bottom: 5px;">
+              Not Approved:
+              <span style="font-family: Open_Sans; font-size: 30px;">{{ this.adviseesCountNot }}</span>
+            </span>
+          </div>
+          <!-- Advisees Overview -->
         </div>
         <!-- Schedule of Activities -->
         <div style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px 20px 20px;">

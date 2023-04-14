@@ -55,7 +55,11 @@ async function main() {
 
   // Start express server
   app.listen(8000, () => {
+<<<<<<< HEAD
+    console.log(`Express app listening on port ${process.env.PORT}`)
+=======
     console.log(`Express app listening on port 8000`)
+>>>>>>> main
   })
   // end Start express server
 }
