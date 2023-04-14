@@ -48,23 +48,25 @@ export default {
     <div class="loginMainDiv align-items-center d-flex justify-content-center" style="background-color: white; height: 500px; width: 1000px;">
       <div class="loginDiv d-flex flex-row" style="height: 100%; min-height: 400px;">
         <div class="leftDiv align-items-center d-flex flex-column justify-content-center" style="gap: 81px; height: 500px; width: 500px;">
-          <div class="header d-flex flex-row justify-content-between " style="margin-right: 5px; max-height: 100px; width: 436px;">
+          <div class="align-items-center header d-flex flex-row justify-content-between px-3" style="flex: 1; gap: 15px; max-height: 100px;">
             <div class="headerLeft d-flex align-items-center justify-content-center">
               <img src="/UPM_CAS_logo.png" alt="UPM CAS Logo" style="display: block; height: 100px; width: 100px;">
             </div>
-            <div class="headerRight d-flex flex-column justify-content-center">
-              <div style="height: 66px;" class="d-flex flex-column justify-content-between">
-                <div class="lh-1">
-                  <span style="font-size: 15px;">University of the Philippines Manila</span>
-                </div>
-                <div class="lh-1">
-                  <b style="font-size: 20px; font-family: IBM_Plex_Sans_Condensed_Bold">College of Arts and Sciences</b>
-                </div>
-                <div class="lh-1">
-                  <span style="font-size: 20px; font-family: IBM_Plex_Sans_Condensed_Bold">Registration and Advising Tracking System (R.A.T.S.)</span>
+            <div class="align-items-start d-flex flex-column">
+              <div class="align-items-start headerRight d-flex flex-column justify-content-start">
+                <div class="align-items-start d-flex flex-column justify-content-start">
+                  <div class="lh-1" style="margin-bottom: 10px;">
+                    <span style="font-size: 15px;">University of the Philippines Manila</span>
+                  </div>
+                  <div class="lh-1">
+                    <b style="font-size: 16px; font-family: IBM_Plex_Sans_Condensed_Bold">College of Arts and Sciences</b>
+                  </div>
+                  <div class="d-flex flex-column lh-1">
+                    <span style="font-size: 16px; font-family: IBM_Plex_Sans_Condensed_Bold">Registration and Advising Tracking System</span>
+                    <span style="font-size: 16px; font-family: IBM_Plex_Sans_Condensed_Bold">(R.A.T.S.)</span>
+                  </div>
                 </div>
               </div>
-
             </div>
           </div>
           <div v-if="error1" class="alert alert-danger p-3" role="alert">

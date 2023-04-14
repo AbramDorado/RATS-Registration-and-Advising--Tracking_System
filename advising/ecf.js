@@ -169,18 +169,6 @@ const router = express.Router()
 // end Routes
 
 // Middlewares
-function adminOnly(req, res, next){
-  try{
-    if (req.user.role !== 'admin') {
-      throw 'User not Admin'
-    } else {
-      next()
-    }
-  } catch(error){
-    console.log('Error on ecf.js > adminOnly', error)
-    res.status(401).json({message: error}).send()
-  }
-}
 function adviserOnly(req, res, next){
   try{
     if (req.user.role !== 'adviser') {

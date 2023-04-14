@@ -1,62 +1,62 @@
 const express = require('express')
 const app = express()
-const port = 8000
-
-const advising = require('./advising/advising')
-const course = require('./course/course')
-const database = require('./database/database')
-const ecf = require('./advising/ecf')
-const global_variables = require('./global_variables/global_variables')
-const initial = require('./database/initial')
-const announcement = require('./announcement/announcement')
-const auth = require('./auth/auth')
 
 // Main
 async function main() {
   // Insert async calls here
 
-    // Create db.sqlite Database
-    const source = './database/db.sqlite'
-    const db = await database.openOrCreateDB(source)
-    // end Create db.sqlite Database
+    // Initialize dotenv
+    require('dotenv').config()
+    // end Initialize dotenv
 
-    // Initial
-    await initial.createInitialTables(db)
-    await initial.createInitialRows(db)
-    // end Initial
-
-    // Passport Auth and Session
-    await auth.main(app)
-    await auth.configureGoogleStrategy(db)
-    // end Passport Auth and Session
-
-    // Body Parser
+    // Initialize body Parser
     const bodyParser = require('body-parser')
     app.use(bodyParser.json())
+    // end Initialize body parser
 
-    // Cookie Parser
-    const cookieParser = require('cookie-parser')
-    app.use(cookieParser())
+    // Initialize database
+    const source = './database/db.sqlite'
+    const database = require('./database/database')
+    const db = await database.openOrCreateDB(source)
+    // end Initialize database
 
-    // Routers
-    app.use('/', auth.router)
+    // Initial database
+    const initial = require('./database/initial')
+    await initial.main(db)
+    // end Initial database
+
+    // Initialize passport auth and session
+    const auth = require('./auth/auth')
+    await auth.main(app, db)
+    // end Initialize passport auth and session
+
+    // Initialize routers
+    const announcement = require('./announcement/announcement')
     app.use('/', announcement.router)
+    const advising = require('./advising/advising')
     app.use('/', advising.router)
+    const course = require('./course/course')
     app.use('/', course.router)
+    const ecf = require('./advising/ecf')
     app.use('/', ecf.router)
+    const global_variables = require('./global_variables/global_variables')
     app.use('/', global_variables.router)
+    // end Initialize routers
 
-    // HTML Middleware
+    // Initialize fallback
     const history = require('connect-history-api-fallback')
     app.use(history())
+    // end Initialize fallback
 
-    // Serving Frontend
+    // Serving frontend
     const path = require('path')
-    app.use(express.static(path.join(__dirname, 'dist'))) // added
+    app.use(express.static(path.join(__dirname, 'dist')))
+    // end Serve frontend
 
   // Start express server
-  app.listen(port, () => {
-    console.log(`Express app listening on port ${port}`)
+  app.listen(8000, () => {
+    console.log(`Express app listening on port 8000`)
   })
+  // end Start express server
 }
 main() // Main Call

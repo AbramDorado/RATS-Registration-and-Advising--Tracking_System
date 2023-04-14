@@ -23,12 +23,11 @@ router.post('/api/advising/getStatus', loggedIn, async (req, res) => {
   }
 })
 // end Get Status
-//advising
+
 // Read All Advising Status All Departments
 router.post('/api/advising/read/all/all', ocsOnly, async (req, res) => {
   try {
     // req.body = {offset, limit, column, order, searchString, filterByDepartmentText, filterByDegreeProgramText, filterByStep1StatusText, filterByStep2StatusText, filterByStep3StatusText }
-    
     var myOffset = 0
     if (req.body.offset) {
       myOffset = req.body.offset
@@ -250,10 +249,6 @@ router.post('/api/advising/curri/read', studentOnly, async (req, res) => {
     const db = await database.openOrCreateDB(source)
     const row = await database.get(db, `SELECT * FROM curri_progress WHERE student_up_mail = ?`, [req.user.up_mail], false)
     if (row) {
-      // const row_parsed = {
-      //   student_up_mail: row.student_up_mail,
-      //   curri_progress: JSON.parse(curri_progress)
-      // }
       res.status(200).json({row: row}).send()
     } else {
       res.status(200).json({message: 'No record found'}).send()
@@ -338,18 +333,6 @@ function adviserOnly(req, res, next){
       throw 'User not Adviser'
     } else {
       next()
-    }
-  } catch(error){
-    console.log('Error on advising.js > adviserOnly', error)
-    res.status(401).json({message: error}).send()
-  }
-}
-function adviserOrStudentOnly(req, res, next){
-  try{
-    if (req.user.role === 'adviser' || req.user.role === 'student') {
-      next()
-    } else {
-      throw 'User not Adviser nor Student'
     }
   } catch(error){
     console.log('Error on advising.js > adviserOnly', error)
