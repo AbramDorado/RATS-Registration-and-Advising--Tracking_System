@@ -136,7 +136,9 @@ export default {
       try {
         this.view_advisee = advisee
         const response = await this.axios.post('/api/advising/curri/read/adviser', {student_up_mail: advisee.up_mail})
-        this.view_advisee.curri_progress = JSON.parse(response.data.row.curri_progress)
+        if (response.data.row) {
+          this.view_advisee.curri_progress = JSON.parse(response.data.row.curri_progress)
+        }
         // Get ECF
         const response2 = await this.axios.post('/api/ecf/read/all/student/adviserAcc', {student_up_mail: advisee.up_mail})
         this.view_advisee.ecf = response2.data.rows
