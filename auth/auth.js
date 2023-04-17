@@ -40,6 +40,23 @@ async function main(app, db) {
           }
         })
 
+        router.post('/api/countAdvisees', adminOnly, async (req, res) => {
+          try {
+            const adviserId = req.user.id // get the id of the current adviser
+            const source = './database/db.sqlite'
+            const db = await database.openOrCreateDB(source)
+            const rows = await database.get(db, `
+              SELECT COUNT(*) AS count FROM user
+              WHERE role = 'student' AND adviser_id = ?
+            `, [adviserId], false)
+            res.json({'count': rows.count}).send()
+          } catch (error) {
+            console.log('error on /api/countAdvisees')
+            console.log(error)
+            res.status(401).json({message: error}).send()
+          }
+        })
+
         // get all users
         router.post('/api/getUsers', adminOnly, async (req, res) => {
           try {
