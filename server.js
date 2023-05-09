@@ -1,9 +1,18 @@
+/*
+@dependencies
+    body-parser
+    connect-history-api-fallback
+    dotenv
+    express
+*/
+
 const express = require('express')
 const app = express()
 
 // Main
 async function main() {
-  // Insert async calls here
+
+    // Insert async calls here
 
     // Initialize dotenv
     require('dotenv').config()
@@ -53,10 +62,10 @@ async function main() {
     app.use(express.static(path.join(__dirname, 'dist')))
     // end Serve frontend
 
-  // Start express server
-  app.listen(8000, () => {
-    console.log(`Express app listening on port 8000`)
-  })
-  // end Start express server
+    // Start express server
+    app.listen(8000, () => {
+        console.log(`Express app listening on port ${8000}`)
+    })
+    // end Start express server
 }
 main() // Main Call
