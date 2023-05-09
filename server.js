@@ -30,8 +30,9 @@ async function main() {
     // end Initialize database
 
     // Initial database
-    const initial = require('./database/initial')
-    await initial.main(db)
+    // to do: separate initial migration files in each module
+    // const initial = require('./database/initial')
+    // await initial.main(db)
     // end Initial database
 
     // Initialize passport auth and session

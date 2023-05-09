@@ -8,3 +8,6 @@ idea on: loading announcements and pagination
       nextTenAnnouncements = query limit 10 offset (counter+10)
       backend sends (announcements: nextTenAnnouncements, more: 'true')
 
+
+May 10 Notes
+To do: Initial.js files aka migration files should be separated on each module
