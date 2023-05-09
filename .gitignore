@@ -1,6 +1,5 @@
 .env
 node_modules
-database/session.db
-
+auth/session.db
 # Frontend
 frontend/node_modules

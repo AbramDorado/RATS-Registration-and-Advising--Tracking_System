@@ -36,21 +36,23 @@ async function main() {
     // end Initial database
 
     // Initialize passport auth and session
+    const authDbPath = './auth/auth.sqlite'
+    const authDb = await database.openOrCreateDB(authDbPath)
     const auth = require('./auth/auth')
-    await auth.main(app, db)
+    await auth.main(app, authDbPath, authDb, './auth')
     // end Initialize passport auth and session
 
     // Initialize routers
-    const announcement = require('./announcement/announcement')
-    app.use('/', announcement.router)
-    const advising = require('./advising/advising')
-    app.use('/', advising.router)
-    const course = require('./course/course')
-    app.use('/', course.router)
-    const ecf = require('./advising/ecf')
-    app.use('/', ecf.router)
-    const global_variables = require('./global_variables/global_variables')
-    app.use('/', global_variables.router)
+    // const announcement = require('./announcement/announcement')
+    // app.use('/', announcement.router)
+    // const advising = require('./advising/advising')
+    // app.use('/', advising.router)
+    // const course = require('./course/course')
+    // app.use('/', course.router)
+    // const ecf = require('./advising/ecf')
+    // app.use('/', ecf.router)
+    // const global_variables = require('./global_variables/global_variables')
+    // app.use('/', global_variables.router)
     // end Initialize routers
 
     // Initialize fallback
@@ -64,9 +66,17 @@ async function main() {
     // end Serve frontend
 
     // Start express server
-    app.listen(8000, () => {
-        console.log(`Express app listening on port ${8000}`)
-    })
+    const ip = '' // replace this with your ip (cmd > ipconfig) if you want to expose to LAN
+    if (ip) {
+        app.listen(8000, ip, () => {
+            console.log(`Express app listening on port ${8000} exposed to IP ${ip}`)
+        })
+    } else {
+        app.listen(8000, () => {
+            console.log(`Express app listening on port ${8000}`)
+        })
+    }
+
     // end Start express server
 }
 main() // Main Call

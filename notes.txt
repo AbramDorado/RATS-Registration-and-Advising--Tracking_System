@@ -11,3 +11,4 @@ idea on: loading announcements and pagination
 
 May 10 Notes
 To do: Initial.js files aka migration files should be separated on each module
+To do: Auth routes
