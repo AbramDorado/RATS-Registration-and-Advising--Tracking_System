@@ -38,21 +38,23 @@ async function main() {
     // Initialize passport auth and session
     const authDbPath = './auth/auth.sqlite'
     const authDb = await database.openOrCreateDB(authDbPath)
+    const authMigration = require('./auth/migration')
+    await authMigration.main(database, authDb)
     const auth = require('./auth/auth')
     await auth.main(app, authDbPath, authDb, './auth')
     // end Initialize passport auth and session
 
     // Initialize routers
-    // const announcement = require('./announcement/announcement')
-    // app.use('/', announcement.router)
-    // const advising = require('./advising/advising')
-    // app.use('/', advising.router)
-    // const course = require('./course/course')
-    // app.use('/', course.router)
-    // const ecf = require('./advising/ecf')
-    // app.use('/', ecf.router)
-    // const global_variables = require('./global_variables/global_variables')
-    // app.use('/', global_variables.router)
+    const announcement = require('./announcement/announcement')
+    app.use('/', announcement.router)
+    const advising = require('./advising/advising')
+    app.use('/', advising.router)
+    const course = require('./course/course')
+    app.use('/', course.router)
+    const ecf = require('./advising/ecf')
+    app.use('/', ecf.router)
+    const global_variables = require('./global_variables/global_variables')
+    app.use('/', global_variables.router)
     // end Initialize routers
 
     // Initialize fallback
