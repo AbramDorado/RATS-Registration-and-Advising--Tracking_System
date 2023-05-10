@@ -13,3 +13,4 @@ May 10 Notes
 To do: Initial.js files aka migration files should be separated on each module
 To do: Auth routes
 To do: user table columns that depend on role should be created on separate tables i.e. user table should only contain columns related to all types of user
+To do: Rebuild frontend with auth backend only

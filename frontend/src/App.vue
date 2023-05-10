@@ -30,7 +30,7 @@ export default {
 
 <template>
 <div @click="this.rvClicked($event)" style="display: flex; flex-direction: column; min-height: 100vh;">
-  <router-view />
+  <router-view :key="$route.fullPath" />
 </div>
 </template>
 
