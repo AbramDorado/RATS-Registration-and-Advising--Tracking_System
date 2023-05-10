@@ -24,12 +24,7 @@ async function createTables() {
         role TEXT,
         up_mail TEXT UNIQUE,
         first_name TEXT,
-        last_name TEXT,
-        degree_program TEXT,
-        sais_id TEXT UNIQUE,
-        student_number TEXT UNIQUE,
-        adviser_up_mail TEXT,
-        department TEXT
+        last_name TEXT
     `)
     // end users table
 
@@ -39,4 +34,4 @@ async function createRows() {
 
 }
 
-module.exports = { main}
+module.exports = { main }
