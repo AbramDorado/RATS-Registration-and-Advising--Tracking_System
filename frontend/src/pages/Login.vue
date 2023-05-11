@@ -1,44 +1,48 @@
 <script>
+import LoginScheduleOfClasses from '../components/LoginScheduleOfClasses.vue'
 export default {
-  name: 'Login',
-  data() {
-    return {
-      error1: false,
-      loading: false,
-      loggedOut: false,
-      remember: false
-    }
-  },
-  methods: {
-    async doLogin() {
-      if (this.loading) {
-        return
-      }
-      this.loading = true
-      if (this.remember) {
-        document.cookie = 'remember=true'
-      } else {
-        document.cookie = 'remember=false'
-      }
-      location.href = '/api/login/federated/google'
-    }
-  },
-  async mounted() {
-    const thiss = this
-    try {
-      const response = await this.axios.post('/api/authorize')
-      location.href = '/'
-    } catch(error) {
-      console.log('Error on Login Page > api/authorize', error) // temp
-    }
-    if (location.search === '?error=1') {
-      this.error1 = true
-    }
-    if (location.search === '?loggedOut=true') {
-      this.loggedOut = true
-    }
-    this.$refs['login'].style.display = 'flex'
-  }
+    name: "Login",
+    data() {
+        return {
+            error1: false,
+            loading: false,
+            loggedOut: false,
+            remember: false
+        };
+    },
+    methods: {
+        async doLogin() {
+            if (this.loading) {
+                return;
+            }
+            this.loading = true;
+            if (this.remember) {
+                document.cookie = "remember=true";
+            }
+            else {
+                document.cookie = "remember=false";
+            }
+            location.href = "/api/login/federated/google";
+        }
+    },
+    async mounted() {
+        const thiss = this;
+        try {
+            const response = await this.axios.post("/api/authorize");
+            location.href = "/";
+        }
+        catch (error) {
+            console.log("Error on Login Page > api/authorize", error); // temp
+        }
+        if (location.search === "?error=1") {
+            this.error1 = true;
+        }
+        if (location.search === "?loggedOut=true") {
+            this.loggedOut = true;
+        }
+        this.$refs["login"].style.display = "flex";
+    },
+    components: { LoginScheduleOfClasses }
 }
 </script>
 
@@ -102,6 +106,7 @@ export default {
       </div>
     </div>
   </div>
+  <LoginScheduleOfClasses/>
 </div>
 
 </template>
