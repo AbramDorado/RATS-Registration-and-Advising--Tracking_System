@@ -100,13 +100,54 @@ const router = express.Router()
     try {
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
+      
+      // Extracting filter parameters from request body
+      var myOffset = 0
+      if (req.body.offset) {
+        myOffset = req.body.offset
+      }
+      var myLimit = 50
+      if (req.body.limit) {
+        myLimit = req.body.limit
+      }
+      var sortColumn = 'user.degree_program'
+      if (req.body.sortColumn) {
+        sortColumn = `user.${req.body.sortColumn}`
+      }
+      var sortOrder = 'ASC'
+      if (req.body.sortOrder) {
+        sortOrder = req.body.sortOrder
+      }
+      var searchString = ''
+      if (req.body.searchString) {
+        searchString = req.body.searchString
+      }
+      var filterByCurriculumProgress = ''
+      if (req.body.curriculumProgress) {
+        filterByCurriculumProgress = `AND (advising_status.step1_status = '${req.body.curriculumProgress}'
+        OR advising_status.step2_status = '${req.body.curriculumProgress}')`
+      }
+      var filterByAdvisingStatus = ''
+      if (req.body.advisingStatus) {
+        filterByAdvisingStatus = `AND advising_status.step2_status = '${req.body.advisingStatus}'`
+      }
+  
+      // Modifying query to include filter parameters
       const rows = await database.all(db, `
         SELECT
           user.up_mail, user.first_name, user.last_name, user.degree_program, user.sais_id, user.student_number, advising_status.step1_status, advising_status.step2_status
         FROM user INNER JOIN advising_status
           ON user.up_mail = advising_status.student_up_mail
         WHERE user.adviser_up_mail = ?
-      `, [req.user.up_mail], false)
+          AND (user.degree_program LIKE '%${searchString}%'
+          OR user.up_mail LIKE '%${searchString}%'
+          OR user.first_name LIKE '%${searchString}%'
+          OR user.last_name LIKE '%${searchString}%')
+          ${filterByCurriculumProgress}
+          ${filterByAdvisingStatus}
+        ORDER BY ${sortColumn} ${sortOrder}
+        LIMIT ${myLimit}
+        OFFSET ${myOffset}`, [req.user.up_mail], false)
       res.json({rows: rows}).send()
     } catch (error) {
       console.log('Error on api > ecf > read > all > adviser', error)
