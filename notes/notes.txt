@@ -1,0 +1,26 @@
+idea on: loading announcements and pagination
+    frontend keeps a counter of (total announcements currently displayed), default 0
+    frontend sends (counter+10) to backend
+    backend counts total announcements
+        if total announcements - (counter+10) <= 0, backend sends (more: 'false')
+        if total announcements - (counter+10) <= 10, backend sends (announcements: remainingAnnouncements, more: 'false)
+        else (if total announcements - (counter+10) > 10)
+            nextTenAnnouncements = query limit 10 offset (counter+10)
+            backend sends (announcements: nextTenAnnouncements, more: 'true')
+
+May 10 Notes
+To do: Initial.js files aka migration files should be separated on each module
+To do: Auth routes
+To do: user table columns that depend on role should be created on separate tables i.e. user table should only contain columns related to all types of user
+To do: Rebuild frontend with auth backend only
+
+May 14 Notes
+To do: Disable router component re-use. Mounted should be called on route view change
+    https://router.vuejs.org/guide/advanced/navigation-guards.html#using-the-options-api
+    beforeRouteEnter (to, from, next) {
+        next(vm => {
+            vm.mounted()
+        })
+    },
+To do: auth.js > line 147, creating initial rows on other table such as enrollment data (for students) on register
+To do: auth.js > login route > redirect different roles to different pages upon login success

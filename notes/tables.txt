@@ -1,0 +1,7 @@
+Authentication Module
+    user
+        id TEXT UNIQUE PRIMARY KEY,
+        role TEXT,
+        up_mail TEXT UNIQUE,
+        first_name TEXT,
+        last_name TEXT

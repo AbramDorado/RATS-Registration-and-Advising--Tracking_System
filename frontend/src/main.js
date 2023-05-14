@@ -7,12 +7,14 @@ const app = createApp(App)
 import { createRouter, createWebHistory } from 'vue-router'
 
 // import route components
+  // auth
+  import Login from './pages/auth/Login.vue'
+
 import Admin from './pages/Admin.vue'
 import Adviser from './pages/Adviser.vue'
 import Advising from './pages/Advising.vue'
 import Contact from './pages/Contact.vue'
 import Home from './pages/Home.vue'
-import Login from './pages/Login.vue'
 import Ocs from './pages/OCS.vue'
 
 // set routes

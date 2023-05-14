@@ -66,6 +66,9 @@ td {
   font-family: IBM_Plex_Sans_Condensed_Bold;
   src: url(/IBM_Plex_Sans_Condensed/IBMPlexSansCondensed-Bold.ttf);
 }
+.ibm-bold {
+  font-family: IBM_Plex_Sans_Condensed_Bold;
+}
 @font-face {
   font-family: Open_Sans;
   src: url(/Open_Sans/static/OpenSans/OpenSans-Regular.ttf);
