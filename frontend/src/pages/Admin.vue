@@ -215,12 +215,12 @@ export default {
           return
         } else {
           this.registerUserDisabled = true
-          if (this.register_user.role == 'adviser' || this.register_user.role == 'admin') {
+          if (this.register_user.role == 'adviser' || this.register_user.role == 'admin' || this.register_user.role == 'ocs') {
             this.register_user.adviser_up_mail = ''
             this.register_user.student_number = ''
             this.register_user.sais_id = ''
             this.register_user.degree_program = ''
-            if (this.register_user.role == 'admin') {
+            if (this.register_user.role == 'admin' || this.register_user.role == 'ocs') {
               this.register_user.department = ''
             }
           }
@@ -270,11 +270,11 @@ export default {
   <!-- Admin Div -->
   <div class="align-items-center d-flex flex-column justify-content-center" style="background-color: lightgray; flex-basis: 0; flex-grow: 1; gap: 20px; padding: 30px;">
     <!-- Menu Div -->
-    <div ref="menuDiv" style="align-items: center; display: flex; flex-direction: column; gap: 20px;">
+    <!-- <div ref="menuDiv" style="align-items: center; display: flex; flex-direction: column; gap: 20px;">
       <div class="d-flex hoverTransform">
         <span @click="hideDiv('menuDiv'); showDiv('usersDashboard');" class="myButton2" style="background-color: rgb(117, 21, 24);">Users Dashboard</span>
       </div>
-    </div>
+    </div> -->
     <!-- end Menu Div -->
     <!-- Batch Upload Div -->
     <div ref="batchUploadDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
@@ -452,6 +452,7 @@ export default {
               <option value="admin">Admin</option>
               <option value="adviser">Adviser</option>
               <option value="student">Student</option>
+              <option value="ocs">OCS</option>
             </select>
             <span style="font-family: Open_Sans_Bold;">First Name</span>
             <input v-model="register_user.first_name" type="text" style="margin-bottom: 10px;">
@@ -534,7 +535,7 @@ export default {
     </div>
     <!-- end View User Div -->    
     <!-- Users Dashboard -->
-    <div ref="usersDashboard" class="flex-column" style="background-color: #f3f3f3; border: 2px solid black; display: none; min-height: 300px; width: 1200px;">
+    <div ref="usersDashboard" class="flex-column" style="background-color: #f3f3f3; border: 2px solid black; display: flex; min-height: 300px; width: 1200px;">
       <!-- <a @click="hideDiv('usersDashboard'); showDiv('menuDiv');" href="#">Back to Menu</a> -->
       <!-- Users Dashboard Header -->
       <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
@@ -612,6 +613,7 @@ export default {
             <option value="admin">Admin</option>
             <option value="adviser">Adviser</option>
             <option value="student">Student</option>
+            <option value="ocs">OCS</option>
           </select>           
         </div>           
         <!-- end Sort and Filter -->
