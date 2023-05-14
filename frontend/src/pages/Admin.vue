@@ -559,9 +559,9 @@ export default {
             <span @click="hideDiv('usersDashboard'); showDiv('registerUserDiv')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Register User</span>
           </div>
           <!-- end Register User -->  
-          <div class="hoverTransform">
+          <!-- <div class="hoverTransform">
             <span @click="hideDiv('usersDashboard'); showDiv('menuDiv');" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Back to Menu</span>
-          </div>                  
+          </div>                   -->
         </div>
         <!-- end Users Dashboard Header Right Div -->
       </div>
