@@ -339,8 +339,8 @@ export default {
       <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
         <span>Role: <span style="text-transform: capitalize; font-weight: bold;">{{this.delete_user.role}}</span></span>
         <span>UP Mail: <span style="font-weight: bold;">{{this.delete_user.up_mail}}</span></span>
-        <span>First Name: <span style="text-transform: capitalize; font-weight: bold;">{{this.delete_user.first_name}}</span></span>
         <span>Last Name: <span style="text-transform: capitalize; font-weight: bold;">{{this.delete_user.last_name}}</span></span>
+        <span>First Name: <span style="text-transform: capitalize; font-weight: bold;">{{this.delete_user.first_name}}</span></span>
         <span>Middle Name: <span style="text-transform: capitalize; font-weight: bold;">{{this.delete_user.middle_name}}</span></span>
         <span v-if="this.delete_user.role == 'student'">Degree Program: <span style="text-transform: capitalize; font-weight: bold;">{{this.delete_user.degree_program}}</span></span>
         <span v-if="this.delete_user.role == 'student'">SAIS ID: <span style="text-transform: capitalize; font-weight: bold;">{{this.delete_user.sais_id}}</span></span>
@@ -529,9 +529,9 @@ export default {
       <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
         <span>Role: <span style="font-weight: bold; text-transform: capitalize;">{{this.view_user.role}}</span></span>
         <span>UP Mail: <span style="font-weight: bold; text-transform: lowercase;">{{this.view_user.up_mail}}</span></span>
+        <span>Last Name: <span style="font-weight: bold; text-transform: capitalize;">{{this.view_user.last_name}}</span></span>
         <span>First Name: <span style="font-weight: bold; text-transform: capitalize;">{{this.view_user.first_name}}</span></span>
         <span>Middle Name: <span style="font-weight: bold; text-transform: capitalize;">{{this.view_user.middle_name}}</span></span>
-        <span>Last Name: <span style="font-weight: bold; text-transform: capitalize;">{{this.view_user.last_name}}</span></span>
         <span v-if="view_user.role == 'student'">Degree Program: <span v-if="view_user.role == 'student'" style="font-weight: bold; text-transform: uppercase;">{{this.view_user.degree_program}}</span></span>
         <span v-if="view_user.role == 'student'">SAIS ID: <span v-if="view_user.role == 'student'" style="font-weight: bold;">{{this.view_user.sais_id}}</span></span>
         <span v-if="view_user.role == 'student'">Student Number: <span v-if="view_user.role == 'student'" style="font-weight: bold;">{{this.view_user.student_number}}</span></span>
@@ -649,9 +649,9 @@ export default {
             <tr>
               <th class="align-middle text-center" scope="col">Role</th>
               <th class="align-middle text-center" scope="col">UP Mail</th>
+              <th class="align-middle text-center" scope="col">Last Name</th>
               <th class="align-middle text-center" scope="col">First Name</th>
               <th class="align-middle text-center" scope="col">Middle Name</th>
-              <th class="align-middle text-center" scope="col">Last Name</th>
               <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">Degree Program</th>
               <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">SAIS ID</th>
               <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">Student Number</th>
@@ -666,9 +666,9 @@ export default {
             <tr v-for="(obj, index) in users" :key="index">
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].role}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].up_mail}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].last_name}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].first_name}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].middle_name}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].last_name}}</td>
               <td v-if="filterByRole == '' || filterByRole == 'student'" class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap;">{{users[index].degree_program}}</td>
               <td v-if="filterByRole == '' || filterByRole == 'student'" class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].sais_id}}</td>
               <td v-if="filterByRole == '' || filterByRole == 'student'" class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].student_number}}</td>

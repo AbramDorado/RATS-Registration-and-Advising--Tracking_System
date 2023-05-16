@@ -3,7 +3,7 @@ export default {
   name: 'Ecf',
   computed: {
     formatted_name() {
-      return this.user.first_name + ' ' + this.user.last_name
+      return this.user.first_name + ' ' + this.user.middle_name + ' ' + this.user.last_name
     }    
   },
   data() {
