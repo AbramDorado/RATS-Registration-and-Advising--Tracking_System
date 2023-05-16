@@ -76,6 +76,7 @@ async function configureGoogleStrategy() {
                         role: user.role,
                         up_mail: user.up_mail,
                         first_name: user.first_name,
+                        middle_name: user.middle_name,
                         last_name: user.last_name
                     }
                     return cb(null, userWithoutId);
@@ -123,6 +124,7 @@ async function configureRoutes(app) {
                 SELECT * FROM user WHERE
                     (up_mail LIKE '%${searchString}%'
                     OR first_name LIKE '%${searchString}%'
+                    OR middle_name LIKE '%${searchString}%'
                     OR last_name LIKE '%${searchString}%')
                     ${filterByRoleText}
                     ORDER BY ${sortColumn} ${sortOrder}
@@ -170,6 +172,7 @@ async function configureRoutes(app) {
                 !req.body.role ||
                 !req.body.up_mail ||
                 !req.body.first_name ||
+                !req.body.middle_name ||
                 !req.body.last_name
                 ) {
                     // invalid body
@@ -189,13 +192,15 @@ async function configureRoutes(app) {
                             role,
                             up_mail,
                             first_name,
+                            middle_name,
                             last_name
-                            ) VALUES (?, ?, ?, ?, ?)
+                            ) VALUES (?, ?, ?, ?, ?, ?)
                     `, [
                         uuidv4(),
                         req.body.role.toLowerCase(),
                         req.body.up_mail.toLowerCase(),
                         req.body.first_name.toLowerCase(),
+                        req.body.middle_name.toLowerCase(),
                         req.body.last_name.toLowerCase()
                     ], false)
                     // Create row in advising_status table if student
@@ -256,7 +261,7 @@ async function configureRoutes(app) {
     router.post('/api/editUser', adminOnly, async (req, res) => {
         try {
             // body checker
-            if (!req.body.role || !req.body.up_mail || !req.body.first_name || !req.body.last_name) {
+            if (!req.body.role || !req.body.up_mail || !req.body.first_name || !req.body.middle_name || !req.body.last_name) {
                 // invalid body
                 throw 'Invalid request body'
             } else {
@@ -269,8 +274,8 @@ async function configureRoutes(app) {
                     // user with up_mail exists
                     // update user
                     await database.run(db, `
-            UPDATE user SET role = ?, first_name = ?, last_name = ?, degree_program = ?, sais_id = ?, student_number = ?, adviser_up_mail = ?, department = ? WHERE up_mail = ?
-        `, [req.body.role.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.sais_id.toLowerCase(), req.body.student_number.toLowerCase(), req.body.adviser_up_mail.toLowerCase(), req.body.department.toLowerCase(), req.body.up_mail.toLowerCase()], false)
+            UPDATE user SET role = ?, first_name = ?, middle_name = ?, last_name = ?, degree_program = ?, sais_id = ?, student_number = ?, adviser_up_mail = ?, department = ? WHERE up_mail = ?
+        `, [req.body.role.toLowerCase(), req.body.first_name.toLowerCase(), req.body.middle_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.sais_id.toLowerCase(), req.body.student_number.toLowerCase(), req.body.adviser_up_mail.toLowerCase(), req.body.department.toLowerCase(), req.body.up_mail.toLowerCase()], false)
                     res.send('Edit success.')
                 } else {
                     throw 'No user with that upmail'

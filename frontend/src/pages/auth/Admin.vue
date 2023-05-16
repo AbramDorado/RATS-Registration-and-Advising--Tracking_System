@@ -713,13 +713,17 @@ export default {
     background-color: white;
     border: 2px solid black;
     display: none;
-    min-height: 90%;
+    flex: 1;
+    margin-bottom: 5rem;
+    margin-top: 5rem; 
     width: 90%;
 }
 .users-dashboard-div {
     background-color: #F8F6F0;
     border: 2px solid black;
     display: none;
+    margin-bottom: 5rem;
+    margin-top: 5rem; 
     width: 60%;
 }
 .users-dashboard-div-header {

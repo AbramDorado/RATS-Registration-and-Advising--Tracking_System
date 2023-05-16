@@ -24,6 +24,7 @@ async function createTables() {
         role TEXT,
         up_mail TEXT UNIQUE,
         first_name TEXT,
+        middle_name TEXT,
         last_name TEXT
     `)
     // end users table
