@@ -88,7 +88,7 @@ async function main(app, db) {
             const source = './database/db.sqlite'
             const db = await database.openOrCreateDB(source)
             const rows = await database.all(db, `
-              SELECT role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail, department
+              SELECT role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
               FROM user 
               WHERE
                 (up_mail LIKE '%${searchString}%'
@@ -135,8 +135,8 @@ async function main(app, db) {
               } else {
                 // insert the new user
                 await database.run(db, `
-                  INSERT OR REPLACE INTO user (id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail, department) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                `, [uuidv4(), req.body.role.toLowerCase(), req.body.up_mail.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.sais_id.toLowerCase(), req.body.student_number.toLowerCase(), req.body.adviser_up_mail.toLowerCase(), req.body.department.toLowerCase()], false)
+                  INSERT OR REPLACE INTO user (id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                `, [uuidv4(), req.body.role.toLowerCase(), req.body.up_mail.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.middle_name.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.sais_id.toLowerCase(), req.body.student_number.toLowerCase(), req.body.adviser_up_mail.toLowerCase(), req.body.department.toLowerCase()], false)
                 // Create row in advising_status table if student
                 if (req.body.role == 'student') {
                   await database.run(db, `
@@ -197,8 +197,8 @@ async function main(app, db) {
                 // user with up_mail exists
                 // update user
                 await database.run(db, `
-                  UPDATE user SET role = ?, first_name = ?, last_name = ?, degree_program = ?, sais_id = ?, student_number = ?, adviser_up_mail = ?, department = ? WHERE up_mail = ? 
-                `, [req.body.role.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.sais_id.toLowerCase(), req.body.student_number.toLowerCase(), req.body.adviser_up_mail.toLowerCase(), req.body.department.toLowerCase(), req.body.up_mail.toLowerCase()], false)
+                  UPDATE user SET role = ?, first_name = ?, last_name = ?, middle_name = ?, degree_program = ?, sais_id = ?, student_number = ?, adviser_up_mail = ?, department = ? WHERE up_mail = ? 
+                `, [req.body.role.toLowerCase(), req.body.first_name.toLowerCase(), req.body.last_name.toLowerCase(), req.body.middle_name.toLowerCase(), req.body.degree_program.toLowerCase(), req.body.sais_id.toLowerCase(), req.body.student_number.toLowerCase(), req.body.adviser_up_mail.toLowerCase(), req.body.department.toLowerCase(), req.body.up_mail.toLowerCase()], false)
                 res.send('Edit success.')
               } else {
                 throw 'No user with that upmail'
@@ -304,7 +304,7 @@ async function configureGoogleStrategy(db) {
       
       passport.deserializeUser(function(user, cb) {
         process.nextTick(function() {
-          const userWithoutId = {role: user.role, up_mail: user.up_mail, first_name: user.first_name, last_name: user.last_name, degree_program: user.degree_program, sais_id: user.sais_id, student_number: user.student_number, adviser_up_mail: user.adviser_up_mail}
+          const userWithoutId = {role: user.role, up_mail: user.up_mail, first_name: user.first_name, last_name: user.last_name, middle_name: user.middle_name, degree_program: user.degree_program, sais_id: user.sais_id, student_number: user.student_number, adviser_up_mail: user.adviser_up_mail}
           return cb(null, userWithoutId);
         })
       })
