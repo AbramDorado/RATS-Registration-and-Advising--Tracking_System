@@ -177,7 +177,7 @@ export default {
       <div style="display: flex; flex-direction: row; gap: 20px; margin: 20px;">
         <!-- Pages -->
         <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 20px 15px;">
-          <span>Total users: <b>{{this.adviseesCount}}</b></span>
+          <span>Total advisees: <b>{{this.adviseesCount}}</b></span>
           <span>Showing <input type="number" v-model="this.resultsLimit" style="text-align: center; width: 50px;"> results per page</span>
           <div style="display: flex; flex-direction: row; gap: 10px;">
             <div class="hoverTransform">
@@ -201,16 +201,6 @@ export default {
         <!-- end Pages -->
         <!-- Sort and Filter -->
         <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 15px;">
-          <span style="font-family: Open_Sans_Bold;">Sort</span>
-          <div style="display: flex; flex-direction: row; gap: 10px;">
-            <select v-model="sortBy" @change="updateAdvisees()">
-              <option value="degree_program">Degree Program</option>
-            </select>
-            <select v-model="sortOrder" @change="updateAdvisees()">
-              <option value="ASC">Ascending</option>
-              <option value="DESC">Descending</option>
-            </select>
-          </div>
           <div><div style="line-height: 1; margin-top: 10px;"><span style="font-family: Open_Sans_Bold;">Filter by Curriculum Progress</span></div></div>
           <select v-model="filterByCurrProg" @change="updateAdvisees()">
             <option value="">Any</option>
@@ -250,9 +240,9 @@ export default {
           <thead>
             <tr>
               <th class="align-middle text-center" scope="col">UP Mail</th>
-              <th class="align-middle text-center" scope="col">First Name</th>
               <th class="align-middle text-center" scope="col">Last Name</th>
-              <th class="align-middle text-center" scope="col">Degree Program</th>
+              <th class="align-middle text-center" scope="col">First Name</th>
+              <th class="align-middle text-center" scope="col">Middle Name</th>
               <th class="align-middle text-center" scope="col">SAIS ID</th>
               <th class="align-middle text-center" scope="col">Student Number</th>
               <th class="align-middle text-center" scope="col">Curriculum Progress</th>
@@ -263,9 +253,9 @@ export default {
           <tbody>
             <tr v-for="(obj, index) in advisees" :key="index">
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: none; white-space: nowrap;">{{advisees[index].up_mail}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{advisees[index].first_name}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{advisees[index].last_name}}</td>
-              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap;">{{advisees[index].degree_program}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{advisees[index].first_name}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{advisees[index].middle_name}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: none; white-space: nowrap;">{{advisees[index].sais_id}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: none; white-space: nowrap;">{{advisees[index].student_number}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{advisees[index].step1_status}}</td>
@@ -309,8 +299,9 @@ export default {
       <!-- View Advisee Details Body -->
       <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
         <span style="font-weight: bold;">UP Mail: <span style="font-weight: normal;">{{this.view_advisee.up_mail}}</span></span>
-        <span style="font-weight: bold;">First Name: <span style="font-weight: normal;">{{this.view_advisee.first_name}}</span></span>
         <span style="font-weight: bold;">Last Name: <span style="font-weight: normal;">{{this.view_advisee.last_name}}</span></span>
+        <span style="font-weight: bold;">First Name: <span style="font-weight: normal;">{{this.view_advisee.first_name}}</span></span>
+        <span style="font-weight: bold;">Middle Name: <span style="font-weight: normal;">{{this.view_advisee.middle_name}}</span></span>
         <span style="font-weight: bold;">Degree Program: <span style="font-weight: normal; text-transform: uppercase;">{{this.view_advisee.degree_program}}</span></span>
         <span style="font-weight: bold;">SAIS ID: <span style="font-weight: normal;">{{this.view_advisee.sais_id}}</span></span>
         <span style="font-weight: bold;">Student Number: <span style="font-weight: normal;">{{this.view_advisee.student_number}}</span></span>

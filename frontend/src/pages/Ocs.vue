@@ -1045,8 +1045,9 @@ export default {
             <thead>
               <tr>
                 <th class="align-middle text-center" scope="col">UP Mail</th>
-                <th class="align-middle text-center" scope="col">First Name</th>
                 <th class="align-middle text-center" scope="col">Last Name</th>
+                <th class="align-middle text-center" scope="col">First Name</th>
+                <th class="align-middle text-center" scope="col">Middle Name</th>
                 <th class="align-middle text-center" scope="col">Degree Program</th>
                 <th class="align-middle text-center" scope="col">SAIS ID</th>
                 <th class="align-middle text-center" scope="col">Student Number</th>
@@ -1059,8 +1060,9 @@ export default {
             <tbody>
               <tr v-for="(obj, index) in advisees" :key="index">
                 <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: none; white-space: nowrap;">{{advisees[index].up_mail}}</td>
-                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{advisees[index].first_name}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{advisees[index].last_name}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{advisees[index].first_name}}</td>
+                <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{advisees[index].middle_name}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap;">{{advisees[index].degree_program}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: none; white-space: nowrap;">{{advisees[index].sais_id}}</td>
                 <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: none; white-space: nowrap;">{{advisees[index].student_number}}</td>
@@ -1106,8 +1108,9 @@ export default {
         <!-- View Advisee Details Body -->
         <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
           <span style="font-weight: normal;">UP Mail: <span style="font-weight: bold;">{{this.view_advisee.up_mail}}</span></span>
-          <span style="font-weight: normal;">First Name: <span style="font-weight: bold;">{{this.view_advisee.first_name}}</span></span>
           <span style="font-weight: normal;">Last Name: <span style="font-weight: bold;">{{this.view_advisee.last_name}}</span></span>
+          <span style="font-weight: normal;">First Name: <span style="font-weight: bold;">{{this.view_advisee.first_name}}</span></span>
+          <span style="font-weight: normal;">Middle Name: <span style="font-weight: bold;">{{this.view_advisee.middle_name}}</span></span>
           <span style="font-weight: normal;">Degree Program: <span style="font-weight: bold; text-transform: uppercase;">{{this.view_advisee.degree_program}}</span></span>
           <span style="font-weight: normal;">SAIS ID: <span style="font-weight: bold;">{{this.view_advisee.sais_id}}</span></span>
           <span style="font-weight: normal;">Student Number: <span style="font-weight: bold;">{{this.view_advisee.student_number}}</span></span>

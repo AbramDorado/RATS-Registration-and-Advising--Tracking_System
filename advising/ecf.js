@@ -135,7 +135,7 @@ const router = express.Router()
       // Modifying query to include filter parameters
       const rows = await database.all(db, `
         SELECT
-          user.up_mail, user.first_name, user.last_name, user.degree_program, user.sais_id, user.student_number, advising_status.step1_status, advising_status.step2_status
+          user.up_mail, user.first_name, user.last_name, user.middle_name, user.degree_program, user.sais_id, user.student_number, advising_status.step1_status, advising_status.step2_status
         FROM user INNER JOIN advising_status
           ON user.up_mail = advising_status.student_up_mail
         WHERE user.adviser_up_mail = ?
@@ -163,7 +163,7 @@ const router = express.Router()
       const db = await database.openOrCreateDB(source)
       const rows = await database.all(db, `
         SELECT
-          user.up_mail, user.first_name, user.last_name, user.degree_program, user.sais_id, user.student_number, user.adviser_up_mail, user.department, advising_status.step1_status, advising_status.step2_status
+          user.up_mail, user.first_name, user.last_name, user.middle_name, user.degree_program, user.sais_id, user.student_number, user.adviser_up_mail, user.department, advising_status.step1_status, advising_status.step2_status
         FROM user INNER JOIN advising_status
           ON user.up_mail = advising_status.student_up_mail
         WHERE user.role = ?
