@@ -26,7 +26,7 @@ export default {
   methods: {
     async authorize() {
       try {
-        const response = await this.axios.post('/api/authorize')
+        const response = await this.axios.post('/api/auth/authorize')
         this.user = response.data
       } catch(err) {
         location.href = '/login' // to do: allow logging in as 'guest' for non-cas students

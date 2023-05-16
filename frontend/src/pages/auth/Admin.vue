@@ -56,7 +56,7 @@ export default {
                 this.showDiv('mainDiv')
             } catch (error) {
                 console.log('Error on Admin.vue > authorize()', error)
-                // location.href = '/login'
+                location.href = '/login'
                 this.showDiv('mainDiv')
             }
         },
@@ -187,8 +187,8 @@ export default {
             try {
                 await this.getUsersCount()
                 await this.correctLimits()
-                const response = await this.axios.post('/api/getUsers', {column: this.sortBy, order: this.sortOrder, offset: (this.currentPage_static-1) * this.resultsLimit_static, limit: this.resultsLimit_static, searchString: this.searchString, filterByRole: this.filterByRole})
-                this.users = response.data
+                const response = await this.axios.post('/api/auth/index', {column: this.sortBy, order: this.sortOrder, offset: (this.currentPage_static-1) * this.resultsLimit_static, limit: this.resultsLimit_static, searchString: this.searchString, filterByRole: this.filterByRole})
+                this.users = response.data.rows
             } catch (error) {
                 console.log('Error on Admin.vue > getAllUsers', error) // temp
             }
@@ -593,7 +593,7 @@ export default {
                     </div>
                     <div>
                         <div class="hoverTransform" style="margin-top: 5px;">
-                            <span @click="getAllUsers()" class="myButton1" style="background-color: #751518;">Apply</span>
+                            <span @click="getAllUsers()" class="myButton1" style="background-color: #093405;">Apply</span>
                         </div>
                     </div>
                 </div>
@@ -633,7 +633,7 @@ export default {
                     </div>
                     <div>
                         <div @click="getAllUsers()" class="hoverTransform" style="margin-top: 5px;">
-                            <span class="myButton1" style="background-color: #751518;">Search</span>
+                            <span class="myButton1" style="background-color: #093405;">Search</span>
                         </div>
                     </div>
                 </div>
@@ -641,55 +641,51 @@ export default {
             </div>
             <!-- end Pagination Div -->
             <!-- Users Dashboard Body -->
-            <div style="padding: 15px 20px;">
-                <table class="fixed-table-body table table-responsive" style="table-layout: fixed;">
+            <div id="usersDashboardBody" style="padding: 15px 20px;">
+                <table class="table table-bordered table-sm" style="table-layout: fixed;">
                     <thead>
                         <tr>
-                            <th class="align-middle text-center" scope="col">Role</th>
-                            <th class="align-middle text-center" scope="col">UP Mail</th>
-                            <th class="align-middle text-center" scope="col">First Name</th>
-                            <th class="align-middle text-center" scope="col">Last Name</th>
-                            <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">Degree Program</th>
-                            <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">SAIS ID</th>
-                            <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">Student Number</th>
-                            <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">Adviser UP Mail</th>
-                            <th class="align-middle text-center" scope="col">Department</th>
-                            <th class="align-middle text-center" scope="col">View</th>
-                            <th class="align-middle text-center" scope="col">Edit</th>
-                            <th class="align-middle text-center" scope="col">Delete</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">UP Mail</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Middle Name</th>
+                            <th scope="col">Last Name</th>
+                            <th v-if="filterByRole == 'student'" scope="col">Degree Program</th>
+                            <th v-if="filterByRole == 'student'" scope="col">SAIS ID</th>
+                            <th v-if="filterByRole == 'student'" scope="col">Student Number</th>
+                            <th v-if="filterByRole == 'student'" scope="col">Adviser UP Mail</th>
+                            <th v-if="filterByRole == 'student' || filterByRole == 'adviser'" scope="col">Department</th>
+                            <th scope="col">View</th>
+                            <th scope="col">Edit</th>
+                            <th scope="col">Delete</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(obj, index) in users" :key="index">
-                            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].role}}</td>
-                            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].up_mail}}</td>
-                            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].first_name}}</td>
-                            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].last_name}}</td>
-                            <td v-if="filterByRole == '' || filterByRole == 'student'" class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap;">{{users[index].degree_program}}</td>
-                            <td v-if="filterByRole == '' || filterByRole == 'student'" class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].sais_id}}</td>
-                            <td v-if="filterByRole == '' || filterByRole == 'student'" class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].student_number}}</td>
-                            <td v-if="filterByRole == '' || filterByRole == 'student'" class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].adviser_up_mail}}</td>
-                            <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap;">{{users[index].department}}</td>
-                            <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                <!-- View Button -->
-                                <div @click="viewUser(users[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto">
+                            <td class="text-center" style="text-transform: capitalize;">{{users[index].role}}</td>
+                            <td class="text-center">{{users[index].up_mail}}</td>
+                            <td class="text-center" style="text-transform: capitalize;">{{users[index].first_name}}</td>
+                            <td class="text-center" style="text-transform: capitalize;">{{users[index].middle_name}}</td>
+                            <td class="text-center" style="text-transform: capitalize;">{{users[index].last_name}}</td>
+                            <td v-if="filterByRole == 'student'" class="text-center" style="text-transform: uppercase;">{{users[index].degree_program}}</td>
+                            <td v-if="filterByRole == 'student'" class="text-center" style="text-transform: capitalize;">{{users[index].sais_id}}</td>
+                            <td v-if="filterByRole == 'student'" class="text-center" style="text-transform: capitalize;">{{users[index].student_number}}</td>
+                            <td v-if="filterByRole == 'student'" class="text-center">{{users[index].adviser_up_mail}}</td>
+                            <td v-if="filterByRole == 'student' || filterByRole == 'adviser'" class="text-center" style="text-transform: uppercase;">{{users[index].department}}</td>
+                            <td>
+                                <div @click="viewUser(users[index])" class="align-items-center d-flex hoverTransform justify-content-center m-auto">
                                     <span class="myButton1" style="background-color: #093405;">View</span>
                                 </div>
-                                <!-- end View Button -->
                             </td>
-                            <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; position: relative; text-overflow: ellipsis; white-space: nowrap;">
-                                <!-- Edit Button -->
-                                <div @click="editUser(users[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto">
+                            <td>
+                                <div @click="editUser(users[index])" class="align-items-center d-flex hoverTransform justify-content-center m-auto">
                                     <span class="myButton1" style="background-color: #7F6000;">Edit</span>
                                 </div>
-                                <!-- end Edit Button -->
                             </td>
-                            <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                <!-- Delete Button -->
-                                <div @click="deleteUser(users[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto">
+                            <td>
+                                <div @click="deleteUser(users[index])" class="align-items-center d-flex hoverTransform justify-content-center m-auto">
                                     <span class="myButton1" style="background-color: #751518;">Delete</span>
                                 </div>
-                                <!-- end Delete Button -->
                             </td>
                         </tr>
                     </tbody>
@@ -714,9 +710,21 @@ export default {
     border: 2px solid black;
     display: none;
     flex: 1;
-    margin-bottom: 5rem;
-    margin-top: 5rem; 
-    width: 90%;
+    margin-bottom: 2rem;
+    margin-top: 2rem; 
+    width: 95%;
+}
+#usersDashboardBody td {
+    font-family: Open_Sans;
+    font-size: .7rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#usersDashboardBody th {
+    font-size: .8rem;
+    text-align: center;
+    vertical-align: middle;
 }
 .users-dashboard-div {
     background-color: #F8F6F0;

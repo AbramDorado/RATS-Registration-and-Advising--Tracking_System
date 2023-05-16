@@ -1,7 +1,9 @@
 /*
 @dependencies
-    
+    uuid
 */
+
+const { v4: uuidv4 } = require('uuid');
 
 let database
 let authDb
@@ -32,6 +34,16 @@ async function createTables() {
 }
 
 async function createRows() {
+
+    // users
+    await database.run(authDb, `
+        INSERT INTO users (
+            id, role, up_mail, first_name, middle_name, last_name
+        ) VALUES (?, ?, ?, ?, ?, ?)
+    `, [
+        uuidv4(), 'admin', 'jmlicup@up.edu.ph', 'john paolo', 'mercado', 'licup'
+    ], true)
+    // end users
 
 }
 

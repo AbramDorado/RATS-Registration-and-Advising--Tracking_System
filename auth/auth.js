@@ -121,7 +121,7 @@ async function configureRoutes(app) {
             var filterByRoleText = ''
             if (req.body.filterByRole) {filterByRoleText = `AND (role = '${req.body.filterByRole}')`}
             const rows = await database.all(authDb, `
-                SELECT * FROM user WHERE
+                SELECT * FROM users WHERE
                     (up_mail LIKE '%${searchString}%'
                     OR first_name LIKE '%${searchString}%'
                     OR middle_name LIKE '%${searchString}%'
