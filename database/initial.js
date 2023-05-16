@@ -15,6 +15,7 @@ async function createInitialTables(db) {
     up_mail TEXT UNIQUE,
     first_name TEXT,
     last_name TEXT,
+    middle_name TEXT,
     degree_program TEXT,
     sais_id TEXT,
     student_number TEXT,
@@ -41,7 +42,8 @@ async function createInitialTables(db) {
     department TEXT,
     step1_status TEXT,
     step2_status TEXT,
-    step3_status TEXT
+    step3_status TEXT,
+    remarks TEXT
   `)
   // end advising_status table
 
@@ -71,6 +73,7 @@ async function createInitialTables(db) {
     catalog_no TEXT,
     section TEXT,
     modification TEXT,
+    notes TEXT
     last_modified TEXT
   `)
   // end course_edit table
@@ -113,9 +116,10 @@ async function createInitialRows(db) {
         degree_program,
         step1_status,
         step2_status,
-        step3_status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?)
-    `, ['jmlicup@up.edu.ph', 'johnpaolomlicup@gmail.com', 'dpsm', 'BS Computer Science', 'not started', 'not started', 'no access'], true)
+        step3_status,
+        remarks
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `, ['jmlicup@up.edu.ph', 'johnpaolomlicup@gmail.com', 'dpsm', 'BS Computer Science', 'not started', 'not started', 'no access', 'incomplete grades'], true)
     // end student jmlicup@up.edu.ph
   // end Advising Status
 
@@ -132,25 +136,25 @@ async function createInitialRows(db) {
     // student jmlicup@up.edu.ph
     await database.run(db, `
       INSERT INTO user (
-        id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail, department
+        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
       ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     `, [
       uuidv4(),
-      'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'BS Computer Science', '10008', '2019-46188', 'jpmlicup@gmail.com', 'dpsm'
+      'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'Dimagiba', 'BS Computer Science', '10008', '2019-46188', 'jpmlicup@gmail.com', 'dpsm'
     ], true)
     // end student jmlicup@up.edu.ph
     // admin jpmlicup@gmail.com
     await database.run(db, `
       INSERT INTO user (
-        id, role, up_mail, first_name, last_name, degree_program, sais_id, student_number, adviser_up_mail, department
+        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
       ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
       )
     `, [
       uuidv4(),
-      'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', '', '', '', '', ''
+      'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', 'Dimagiba', '', '', '', '', ''
     ], true)
     // end admin jpmlicup@gmail.com
   // end Users
