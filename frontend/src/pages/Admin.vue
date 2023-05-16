@@ -80,11 +80,12 @@ export default {
             userObj.up_mail = rowContent[1]
             userObj.first_name = rowContent[2]
             userObj.last_name = rowContent[3]
-            userObj.degree_program = rowContent[4]
-            userObj.sais_id = rowContent[5]
-            userObj.student_number = rowContent[6]
-            userObj.adviser_up_mail = rowContent[7]
-            userObj.department = rowContent[8]
+            userObj.middle_name = rowContent[4]
+            userObj.degree_program = rowContent[5]
+            userObj.sais_id = rowContent[6]
+            userObj.student_number = rowContent[7]
+            userObj.adviser_up_mail = rowContent[8]
+            userObj.department = rowContent[9]
             thiss.batchUploadProgress += `\nRegistering ${userObj.up_mail}...`
             try {
               const response = await thiss.axios.post('/api/register', userObj)
@@ -340,6 +341,7 @@ export default {
         <span>UP Mail: <span style="font-weight: bold;">{{this.delete_user.up_mail}}</span></span>
         <span>First Name: <span style="text-transform: capitalize; font-weight: bold;">{{this.delete_user.first_name}}</span></span>
         <span>Last Name: <span style="text-transform: capitalize; font-weight: bold;">{{this.delete_user.last_name}}</span></span>
+        <span>Middle Name: <span style="text-transform: capitalize; font-weight: bold;">{{this.delete_user.middle_name}}</span></span>
         <span v-if="this.delete_user.role == 'student'">Degree Program: <span style="text-transform: capitalize; font-weight: bold;">{{this.delete_user.degree_program}}</span></span>
         <span v-if="this.delete_user.role == 'student'">SAIS ID: <span style="text-transform: capitalize; font-weight: bold;">{{this.delete_user.sais_id}}</span></span>
         <span v-if="this.delete_user.role == 'student'">Student Number: <span style="text-transform: capitalize; font-weight: bold;">{{this.delete_user.student_number}}</span></span>
@@ -387,6 +389,8 @@ export default {
             </select>
             <span style="font-family: Open_Sans_Bold;">First Name</span>
             <input v-model="edit_user.first_name" type="text" style="margin-bottom: 10px;">
+            <span style="font-family: Open_Sans_Bold;">Middle Name</span>
+            <input v-model="edit_user.middle_name" type="text" style="margin-bottom: 10px;">
             <span v-if="this.edit_user.role == 'student'" style="font-family: Open_Sans_Bold;">Degree Program</span>
             <input v-if="this.edit_user.role == 'student'" v-model="edit_user.degree_program" type="text" style="margin-bottom: 10px;">
             <span v-if="this.edit_user.role == 'student'" style="font-family: Open_Sans_Bold;">Student Number</span>
@@ -456,6 +460,8 @@ export default {
             </select>
             <span style="font-family: Open_Sans_Bold;">First Name</span>
             <input v-model="register_user.first_name" type="text" style="margin-bottom: 10px;">
+            <span style="font-family: Open_Sans_Bold;">Middle Name</span>
+            <input v-model="register_user.middle_name" type="text" style="margin-bottom: 10px;">
             <span v-if="this.register_user.role == 'student'" style="font-family: Open_Sans_Bold;">Degree Program</span>
             <input v-if="this.register_user.role == 'student'" v-model="register_user.degree_program" type="text" style="margin-bottom: 10px;">
             <span v-if="this.register_user.role == 'student'" style="font-family: Open_Sans_Bold;">Student Number</span>
@@ -524,6 +530,7 @@ export default {
         <span>Role: <span style="font-weight: bold; text-transform: capitalize;">{{this.view_user.role}}</span></span>
         <span>UP Mail: <span style="font-weight: bold; text-transform: lowercase;">{{this.view_user.up_mail}}</span></span>
         <span>First Name: <span style="font-weight: bold; text-transform: capitalize;">{{this.view_user.first_name}}</span></span>
+        <span>Middle Name: <span style="font-weight: bold; text-transform: capitalize;">{{this.view_user.middle_name}}</span></span>
         <span>Last Name: <span style="font-weight: bold; text-transform: capitalize;">{{this.view_user.last_name}}</span></span>
         <span v-if="view_user.role == 'student'">Degree Program: <span v-if="view_user.role == 'student'" style="font-weight: bold; text-transform: uppercase;">{{this.view_user.degree_program}}</span></span>
         <span v-if="view_user.role == 'student'">SAIS ID: <span v-if="view_user.role == 'student'" style="font-weight: bold;">{{this.view_user.sais_id}}</span></span>
@@ -643,6 +650,7 @@ export default {
               <th class="align-middle text-center" scope="col">Role</th>
               <th class="align-middle text-center" scope="col">UP Mail</th>
               <th class="align-middle text-center" scope="col">First Name</th>
+              <th class="align-middle text-center" scope="col">Middle Name</th>
               <th class="align-middle text-center" scope="col">Last Name</th>
               <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">Degree Program</th>
               <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">SAIS ID</th>
@@ -659,6 +667,7 @@ export default {
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].role}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{users[index].up_mail}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].first_name}}</td>
+              <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].middle_name}}</td>
               <td class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].last_name}}</td>
               <td v-if="filterByRole == '' || filterByRole == 'student'" class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap;">{{users[index].degree_program}}</td>
               <td v-if="filterByRole == '' || filterByRole == 'student'" class="text-center" style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; text-transform: capitalize; white-space: nowrap;">{{users[index].sais_id}}</td>

@@ -73,7 +73,7 @@ async function createInitialTables(db) {
     catalog_no TEXT,
     section TEXT,
     modification TEXT,
-    notes TEXT
+    notes TEXT,
     last_modified TEXT
   `)
   // end course_edit table
@@ -155,6 +155,16 @@ async function createInitialRows(db) {
     `, [
       uuidv4(),
       'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', 'Dimagiba', '', '', '', '', ''
+    ], true)
+    await database.run(db, `
+      INSERT INTO user (
+        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+      ) VALUES (
+        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+      )
+    `, [
+      uuidv4(),
+      'admin', 'romercado1@up.edu.ph', 'Russel Lenard', 'Mercado', 'Middle', '', '', '', '', ''
     ], true)
     // end admin jpmlicup@gmail.com
   // end Users
