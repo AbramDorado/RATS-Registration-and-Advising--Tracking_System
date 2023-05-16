@@ -9,6 +9,11 @@ export default {
             remember: false
         }
     },
+    beforeRouteEnter (to, from, next) {
+        next(async vm => {
+            await vm.myMounted()
+        })
+    },
     methods: {
         async doLogin() {
             if (this.loading) {
@@ -21,26 +26,21 @@ export default {
                 document.cookie = 'remember=false'
             }
             location.href = '/api/login/federated/google'
+        },
+        async myMounted() {
+            try {
+                await this.axios.post('/api/auth/authorize')
+            } catch(error) {
+                console.log('Error on Login.vue > api/auth/authorize', error)
+            }
+            if (location.search === '?error=1') {
+                this.error1 = true
+            }
+            if (location.search === '?loggedOut=true') {
+                this.loggedOut = true
+            }
+            this.$refs['mainDiv'].style.display = 'flex'
         }
-    },
-    beforeRouteEnter (to, from, next) {
-        next(vm => {
-            vm.mounted()
-        })
-    },
-    async mounted() {
-        try {
-            await this.axios.post('/api/auth/authorize')
-        } catch(error) {
-            console.log('Error on Login.vue > api/auth/authorize', error)
-        }
-        if (location.search === '?error=1') {
-            this.error1 = true
-        }
-        if (location.search === '?loggedOut=true') {
-            this.loggedOut = true
-        }
-        this.$refs['mainDiv'].style.display = 'flex'
     }
 }
 </script>

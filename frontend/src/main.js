@@ -9,8 +9,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 // import route components
   // auth
   import Login from './pages/auth/Login.vue'
+  import Admin from './pages/auth/Admin.vue'
 
-import Admin from './pages/Admin.vue'
 import Adviser from './pages/Adviser.vue'
 import Advising from './pages/Advising.vue'
 import Contact from './pages/Contact.vue'
