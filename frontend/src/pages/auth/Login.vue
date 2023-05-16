@@ -25,7 +25,7 @@ export default {
             } else {
                 document.cookie = 'remember=false'
             }
-            location.href = '/api/login/federated/google'
+            location.href = '/api/auth/login/federated/google'
         },
         async myMounted() {
             try {

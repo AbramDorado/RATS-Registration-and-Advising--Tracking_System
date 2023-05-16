@@ -2,6 +2,7 @@
 @dependencies
     body-parser
     connect-history-api-fallback
+    cors
     dotenv
     express
 */
@@ -13,6 +14,10 @@ const app = express()
 async function main() {
 
     // Insert async calls here
+
+    // CORS
+    const cors = require('cors')
+    app.use(cors({origin: 'http://localhost:5173'}))
 
     // Initialize dotenv
     require('dotenv').config()
@@ -41,7 +46,7 @@ async function main() {
     const authMigration = require('./auth/migration')
     await authMigration.main(database, authDb)
     const auth = require('./auth/auth')
-    await auth.main(app, authDbPath, authDb, './auth')
+    await auth.main(app, database, authDb, './auth')
     // end Initialize passport auth and session
 
     // Initialize routers

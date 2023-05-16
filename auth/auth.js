@@ -19,10 +19,10 @@ const { v4: uuidv4 } = require('uuid')
 let database // database.js file containing sql queries helper functions
 let authDb // auth.sqlite
 
-async function main(app, dbPath, _authDb, authFolderPath) {
+async function main(app, _database, _authDb, authFolderPath) {
     return new Promise(async (resolve, reject) => {
         try {
-            database = dbPath
+            database = _database
             authDb = _authDb
             app.use(session({
                 secret: 'zrfvnzr',
@@ -32,7 +32,7 @@ async function main(app, dbPath, _authDb, authFolderPath) {
             }))
             app.use(passport.initialize())
             app.use(passport.session())
-            await configureGoogleStrategy(_authDb)
+            await configureGoogleStrategy()
             await configureRoutes(app)
             resolve()
         } catch (error) {
@@ -43,7 +43,7 @@ async function main(app, dbPath, _authDb, authFolderPath) {
     })
 }
 
-async function configureGoogleStrategy(db) {
+async function configureGoogleStrategy() {
     return new Promise(async (resolve, reject) => {
         try {
             // Configure GoogleStrategy
@@ -53,7 +53,7 @@ async function configureGoogleStrategy(db) {
                 callbackURL: '/oauth2/redirect/google',
                 scope: ['https://www.googleapis.com/auth/userinfo.email', 'profile'],
             }, async function verify(issuer, profile, cb) {
-                const row = await database.get(db, `SELECT * FROM user WHERE up_mail = ?`, [
+                const row = await database.get(authDb, `SELECT * FROM users WHERE up_mail = ?`, [
                     profile.emails[0].value
                 ], false)
                 if (row) {

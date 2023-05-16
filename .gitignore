@@ -2,5 +2,6 @@
 auth/auth.sqlite
 auth/session.db
 database/db.sqlite
+frontend/.env
 frontend/node_modules
 node_modules
