@@ -15,8 +15,9 @@ export default {
       step2_status: '',
       step3_status: '',
       adviseesCountApp: 0,
-      adviseesCountPend: 0,
       adviseesCountNot: 0,
+      adviseesCountPend: 0,
+      adviseesCountTot: 0,
       user: {}
     }
   },
@@ -36,6 +37,38 @@ export default {
       var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
       var myDate = new Date(parseInt(miliseconds))
       return myDate.toLocaleDateString("en-US", options)
+    },
+    async getAdviseesCountApp() {
+      try {
+        const response = await this.axios.post('/api/ecf/countAdvisees', {advisingStatus: 'Approved'})
+        this.adviseesCountApp = response.data.count
+      } catch (error) {
+        console.log('Error on Adviser.vue > getAdviseesCount', error) // temp
+      }
+    },
+    async getAdviseesCountNot() {
+      try {
+        const response = await this.axios.post('/api/ecf/countAdvisees', {advisingStatus: 'Waiting for Revision'})
+        this.adviseesCountNot = response.data.count
+      } catch (error) {
+        console.log('Error on Adviser.vue > getAdviseesCount', error) // temp
+      }
+    },
+    async getAdviseesCountPend() {
+      try {
+        const response = await this.axios.post('/api/ecf/countAdvisees', {advisingStatus: 'waiting for approval'})
+        this.adviseesCountPend = response.data.count
+      } catch (error) {
+        console.log('Error on Adviser.vue > getAdviseesCount', error) // temp
+      }
+    },
+    async getAdviseesCountPend() {
+      try {
+        const response = await this.axios.post('/api/ecf/countAdvisees')
+        this.adviseesCountTot = response.data.count
+      } catch (error) {
+        console.log('Error on Adviser.vue > getAdviseesCount', error) // temp
+      }
     },
     async getAdvisingStatus() {
       try {
@@ -78,6 +111,9 @@ export default {
     if (this.user.role === 'student') {
       await this.getAdvisingStatus()
     }
+    await this.getAdviseesCountApp()
+    await this.getAdviseesCountNot()
+    await this.getAdviseesCountPend()
     console.log('this called')
     this.$refs.home.style.display = 'flex'
   }
@@ -175,17 +211,21 @@ export default {
           
           <!-- Advisees Overview -->
           <div class="d-flex flex-column justify-content-center" style="gap: 20px; margin-left: 30px;">
-            <span style="align-self: left; font-family: Open_Sans_Bold; font-size: 30px; margin-bottom: 5px; ">
+            <span style="align-self: left; font-family: Open_Sans_Bold; font-size: 24px; margin-bottom: 5px; ">
               Approved:
-              <span style="font-family: Open_Sans; font-size: 30px;">{{ this.adviseesCountApp }}</span>
+              <span style="font-family: Open_Sans; font-size: 24px;">{{ this.adviseesCountApp }}</span>
             </span>
-            <span style="align-self: left; font-family: Open_Sans_Bold; font-size: 30px; margin-bottom: 5px;">
+            <span style="align-self: left; font-family: Open_Sans_Bold; font-size: 24px; margin-bottom: 5px;">
               Pending:
-              <span style="font-family: Open_Sans; font-size: 30px;">{{ this.adviseesCountPend }}</span>
+              <span style="font-family: Open_Sans; font-size: 24px;">{{ this.adviseesCountPend }}</span>
+            </span>
+            <span style="align-self: left; font-family: Open_Sans_Bold; font-size: 24px; margin-bottom: 5px;">
+              Not Approved:
+              <span style="font-family: Open_Sans; font-size: 24px;">{{ this.adviseesCountNot }}</span>
             </span>
             <span style="align-self: left; font-family: Open_Sans_Bold; font-size: 30px; margin-bottom: 5px;">
-              Not Approved:
-              <span style="font-family: Open_Sans; font-size: 30px;">{{ this.adviseesCountNot }}</span>
+              Total Advisees:
+              <span style="font-family: Open_Sans; font-size: 30px;">{{ this.adviseesCountTot }}</span>
             </span>
           </div>
           <!-- Advisees Overview -->
