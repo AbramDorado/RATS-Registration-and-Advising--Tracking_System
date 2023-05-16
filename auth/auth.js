@@ -138,6 +138,25 @@ async function configureRoutes(app) {
     })
     // end index
 
+    // count
+    router.post('/api/auth/users/count', adminOnly, async (req, res) => {
+        try {
+            var filterByRoleText = ''
+            if (req.body.filterByRole) {
+                filterByRoleText = `WHERE role = '${req.body.filterByRole}'`
+            }
+            const rows = await database.get(authDb, `
+                SELECT COUNT(*) AS count FROM users ${filterByRoleText}
+            `, [], false)
+            res.json({ count: rows.count }).send()
+        } catch (error) {
+            console.log('error on /api/countUsers')
+            console.log(error)
+            res.status(401).json({ message: error }).send()
+        }
+    })
+    // end count
+
     // login
     router.get('/api/auth/login/federated/google', passport.authenticate('google'))
     router.get('/oauth2/redirect/google', passport.authenticate('google', {
@@ -220,25 +239,6 @@ async function configureRoutes(app) {
     // end register
 
     // OLD
-
-    router.post('/api/countUsers', adminOnly, async (req, res) => {
-        try {
-            var filterByRoleText = ''
-            if (req.body.filterByRole) {
-                filterByRoleText = ` WHERE role = '${req.body.filterByRole}'`
-            }
-            const source = './database/db.sqlite'
-            const db = await database.openOrCreateDB(source)
-            const rows = await database.get(db, `
-        SELECT COUNT(*) AS count FROM user${filterByRoleText}
-    `, [], false)
-            res.json({ 'count': rows.count }).send()
-        } catch (error) {
-            console.log('error on /api/countUsers')
-            console.log(error)
-            res.status(401).json({ message: error }).send()
-        }
-    })
 
     router.post('/api/countAdvisees', adminOnly, async (req, res) => {
         try {

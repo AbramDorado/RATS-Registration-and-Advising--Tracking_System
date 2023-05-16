@@ -36,7 +36,11 @@ export default {
     },
     computed: {
         pages() { // Returns number of pages needed to store all rows in groups
-            return Math.ceil(this.usersCount / this.resultsLimit_static)
+            if (this.usersCount == 0) {
+                return 1
+            } else {
+                return Math.ceil(this.usersCount / this.resultsLimit_static)
+            }
         }
     },
     beforeRouteEnter (to, from, next) {
@@ -56,7 +60,9 @@ export default {
                 this.showDiv('mainDiv')
             } catch (error) {
                 console.log('Error on Admin.vue > authorize()', error)
-                location.href = '/login'
+                if (!import.meta.env.MODE == 'production') {
+                    location.href = '/login'
+                }
                 this.showDiv('mainDiv')
             }
         },
@@ -195,7 +201,7 @@ export default {
         },
         async getUsersCount() {
             try {
-                const response = await this.axios.post('/api/countUsers', {filterByRole: this.filterByRole})
+                const response = await this.axios.post('/api/auth/users/count', {filterByRole: this.filterByRole})
                 this.usersCount = response.data.count
             } catch (error) {
                 console.log('Error on Admin.vue > getUsersCount', error) // temp
@@ -573,18 +579,26 @@ export default {
             </div>
             <!-- end User Dashboard Header -->
             <!-- Pagination Div -->
-            <div style="display: flex; flex-direction: row; gap: 20px; margin: 20px;">
+            <div id="paginationDiv" class="d-flex justify-content-between pb-1 pt-3 px-4">
                 <!-- Pages -->
-                <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 20px 15px;">
-                    <span>Total users: <b>{{this.usersCount}}</b></span>
-                    <span>Showing <input type="number" v-model="this.resultsLimit" style="text-align: center; width: 50px;"> results per page</span>
-                    <div style="display: flex; flex-direction: row; gap: 10px;">
+                <div>
+                    <span>Total users: 
+                        <b>{{this.usersCount}}</b>
+                    </span>
+                    <span>Showing 
+                        <input type="number" v-model="this.resultsLimit" class="text-center" style="width: 50px;">
+                         results per page
+                    </span>
+                    <div class="d-flex" style="gap: 10px;">
                         <div class="hoverTransform">
                             <span @click="this.previousPage()" v-if="this.currentPage_static > 1" class="myButton1" style="background-color: #751518;">
                                 <i class="bi bi-caret-left-fill"></i>
                             </span>
                         </div>
-                        <span>Page <input v-model="this.currentPage" type="number" style="text-align: center; width: 50px;"> of {{this.pages}}</span>
+                        <span>Page 
+                            <input v-model="this.currentPage" type="number" style="text-align: center; width: 50px;">
+                             of {{this.pages}}
+                        </span>
                         <div class="hoverTransform">
                             <span @click="this.nextPage()" v-if="this.currentPage_static < this.pages" class="myButton1" style="background-color: #751518;">
                                 <i class="bi bi-caret-right-fill"></i>
@@ -599,13 +613,14 @@ export default {
                 </div>
                 <!-- end Pages -->
                 <!-- Sort and Filter -->
-                <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 15px;">
+                <div>
                     <span style="font-family: Open_Sans_Bold;">Sort</span>
-                    <div style="display: flex; flex-direction: row; gap: 10px;">
+                    <div class="d-flex" style="gap: 10px;">
                         <select v-model="sortBy" @change="getAllUsers()">
                             <option value="role">Role</option>
                             <option value="up_mail">UP Mail</option>
                             <option value="first_name">First Name</option>
+                            <option value="middle_name">Middle Name</option>
                             <option value="last_name">Last Name</option>
                         </select>
                         <select v-model="sortOrder" @change="getAllUsers()">
@@ -613,7 +628,11 @@ export default {
                             <option value="DESC">Descending</option>
                         </select>
                     </div>
-                    <div><div style="line-height: 1; margin-top: 10px;"><span style="font-family: Open_Sans_Bold;">Filter by Role</span></div></div>
+                    <div>
+                        <div style="line-height: 1; margin-top: 10px;">
+                            <span style="font-family: Open_Sans_Bold;">Filter by Role</span>
+                        </div>
+                    </div>
                     <select v-model="filterByRole" @change="getAllUsers()">
                         <option value="">Any</option>
                         <option value="admin">Admin</option>
@@ -623,9 +642,9 @@ export default {
                 </div>
                 <!-- end Sort and Filter -->
                 <!-- Search -->
-                <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 15px;">
+                <div>
                     <span style="font-family: Open_Sans_Bold;">Search Current Page</span>
-                    <div style="align-items: center; display: flex; flex-direction: row; gap: 5px;">
+                    <div class="align-items-center d-flex" style="gap: 5px;">
                         <input v-model="searchString" type="text">
                         <div @click="clearSearchField()" v-if="this.searchString !== ''" class="hoverTransform">
                             <span class="align-items-center d-flex myButton1" style="background-color: #751518; padding: 3px 7px;">Clear</span>
@@ -705,13 +724,26 @@ export default {
     background-color: lightgray;
     flex: 1;
 }
+#paginationDiv {
+    font-size: .8rem;
+    gap: 1rem;
+}
+#paginationDiv > div {
+    align-items: center;
+    border: 2px solid gray;
+    border-radius: 5px;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 10px; 
+    justify-content: center; 
+    padding: 1rem;
+}
 #usersDashboard {
     background-color: white;
     border: 2px solid black;
     display: none;
-    flex: 1;
-    margin-bottom: 2rem;
-    margin-top: 2rem; 
+    height: 90%;
     width: 95%;
 }
 #usersDashboardBody td {
