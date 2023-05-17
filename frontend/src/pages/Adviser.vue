@@ -17,6 +17,7 @@ export default {
       currentPage_static: 1,
       filterByAdvStatus: '',
       filterByCurrProg: '',
+      remarksString: '',
       resultsLimit: 50,
       resultsLimit_static: 50,
       searchString: '',
@@ -122,7 +123,7 @@ export default {
     },
     async updateStatus(newStatus) {
       try {
-        const response = await this.axios.post('/api/advising_status/update', {student_up_mail: this.view_advisee.up_mail, status: newStatus})
+        const response = await this.axios.post('/api/advising_status/update', {student_up_mail: this.view_advisee.up_mail, status: newStatus, remarks: this.remarksString})
         alert(response.data.message)
         location.href = '/adviser'
       } catch (error) {
@@ -216,7 +217,7 @@ export default {
         <!-- end Sort and Filter -->
         <!-- Search -->
         <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 15px;">
-          <span style="font-family: Open_Sans_Bold;">Search Current Page</span>
+          <span style="font-family: Open_Sans_Bold;">Search</span>
           <div style="align-items: center; display: flex; flex-direction: row; gap: 5px;">
             <input v-model="searchString" type="text">
             <div @click="clearSearchField()" v-if="this.searchString !== ''" class="hoverTransform">
@@ -362,6 +363,10 @@ export default {
           <div class="alert alert-primary text-center" style="font-family: Open_Sans_Bold; font-size: 20px; text-transform: capitalize;">
             Advising Status: {{this.view_advisee.step2_status}}
           </div>
+        </div>
+        <span style="font-family: Open_Sans_Bold;">Remarks for Revision</span>
+        <div class="align-items-center d-flex flex-row justify-content-center" style="gap: 15px;">
+          <textarea class="form-control" v-model="remarksString" rows="3"></textarea>
         </div>
         <!-- Actions -->
         <div class="align-items-center d-flex flex-row justify-content-center" style="gap: 15px;">

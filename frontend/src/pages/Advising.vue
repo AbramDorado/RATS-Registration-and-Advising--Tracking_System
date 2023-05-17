@@ -33,11 +33,13 @@ export default {
       currentPage: 1, // v-model with input; used in pagination
       currentPage_static: 1, // Corrected value
       filterByRole: '', // Passed in getAllUsers API
+      remarksString: '',
       resultsLimit: 50, // v-model with input; used in pagination
       resultsLimit_static: 50, // Correct value
       searchString: '', // Passed in getAllUsers API
       sortBy: 'role', // Passed in getAllUsers API
       sortOrder: 'ASC', // Passed in getAllUsers API
+      step2_status: '',
       users: [], // Main list of rows shown in users table
       usersCount: 0, // Stores response of countUsers API
 
@@ -46,6 +48,7 @@ export default {
   async mounted() {
     await this.authorize()
     await this.update_curri_progress()
+    await this.getECFStatus()
   },
   methods: {
     addCurriProgressRow() {
@@ -148,6 +151,15 @@ export default {
         this.usersCount = response.data.count
       } catch (error) {
         console.log('Error on Advising.vue > getUsersCount', error) // temp
+      }
+    },
+    async getECFStatus() {
+      try {
+        const response = await this.axios.post('/api/advising/getStatus', {student_up_mail: this.user.up_mail})
+        this.step2_status = response.data.step2_status
+        this.remarksString = response.data.remarks
+      } catch (error) {
+        console.log('Error on Advising.vue > getECFRemarks', error)
       }
     },
     async nextPage() {
@@ -263,6 +275,12 @@ export default {
       </div>
       <!-- end ECF Header -->
       <!-- ECF Body -->
+      <div v-if = "this.step2_status == 'Waiting for Revision'" class="d-flex justify-content-center">
+        <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">
+          Remarks: 
+          <span style="color: #460C0F; font-family: Open_Sans; font-size: 18px;">{{ this.remarksString }}</span>
+        </span>
+      </div>
       <div ref="ECF_body" class="d-flex justify-content-center">
         <Ecf ref="ecf" :user="this.user" />
       </div>
