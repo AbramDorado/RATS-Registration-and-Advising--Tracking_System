@@ -157,7 +157,7 @@ async function createInitialRows(db) {
       'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', 'Dimagiba', '', '', '', '', ''
     ], true)
     await database.run(db, `
-      INSERT INTO user (
+      INSERT OR REPLACE INTO user (
         id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
       ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
@@ -167,7 +167,7 @@ async function createInitialRows(db) {
       'admin', 'romercado1@up.edu.ph', 'Russel Lenard', 'Mercado', 'Middle', '', '', '', '', ''
     ], true)
     await database.run(db, `
-      INSERT INTO user (
+      INSERT OR REPLACE INTO user (
         id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
       ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
@@ -177,7 +177,7 @@ async function createInitialRows(db) {
       'adviser', 'vcmagboo@up.edu.ph', 'Vincent Peter', 'Magboo', 'C', '', '', '', '', 'dpsm'
     ], true)
     await database.run(db, `
-      INSERT INTO user (
+      INSERT OR REPLACE INTO user (
         id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
       ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
