@@ -12,9 +12,9 @@ router.post('/api/advising/getStatus', loggedIn, async (req, res) => {
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
       const result = await database.get(db, `
-        SELECT step1_status, step2_status, step3_status FROM advising_status WHERE student_up_mail = ?
+        SELECT step1_status, step2_status, step3_status, remarks FROM advising_status WHERE student_up_mail = ?
       `, [req.body.student_up_mail], false)
-      res.json({step1_status: result.step1_status, step2_status: result.step2_status, step3_status: result.step3_status}).send()
+      res.json({step1_status: result.step1_status, step2_status: result.step2_status, step3_status: result.step3_status, remarks: result.remarks}).send()
     }
   } catch (error) {
     console.log('Error in api advising getStatus')
@@ -183,8 +183,14 @@ router.post('/api/advising_status/update', adviserOnly, async (req, res) => {
   try {
     const source = './database/db.sqlite'
     const db = await database.openOrCreateDB(source)
+    var remarksText = ''
+    if (req.body.status == "Waiting for Revision") {
+      remarksText = `, remarks = '${req.body.remarks}'`
+    }
     await database.run(db, `
-      UPDATE advising_status SET step2_status = ? WHERE student_up_mail = ?
+      UPDATE advising_status SET step2_status = ?
+      ${remarksText} 
+      WHERE student_up_mail = ?
     `, [req.body.status, req.body.student_up_mail], false)
     res.json({message: `Updated status for ${req.body.student_up_mail} to ${req.body.status} successfully`}).send()
   } catch (error) {
