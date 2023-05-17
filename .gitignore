@@ -107,6 +107,5 @@ typings/
 
 # TernJS port file
 .tern-port
-database/session.db
-database/session.db
+
 database/session.db

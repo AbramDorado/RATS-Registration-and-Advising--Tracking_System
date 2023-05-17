@@ -54,6 +54,17 @@ async function main() {
     // end Serve frontend
 
   // Start express server
+  // const ip = '172.16.120.169'
+  // if (ip) {
+  //   app.listen(8000, ip, () => {
+  //     console.log(`Express app listening on port ${8000} exposed to IP ${ip}`)
+  //   })
+  // } else {
+  //   app.listen(8000, () => {
+  //     console.log(`Express app listening on port 8000`)
+  //   })
+  // }
+
   app.listen(8000, () => {
     console.log(`Express app listening on port 8000`)
   })

@@ -17,7 +17,6 @@ export default {
       currentPage_static: 1,
       filterByAdvStatus: '',
       filterByCurrProg: '',
-      filterByDegree: '',
       resultsLimit: 50,
       resultsLimit_static: 50,
       searchString: '',
@@ -74,14 +73,14 @@ export default {
     formatted_course_code(course) {
       return `${course.subject} ${course.catalog_no}` 
     },
-    // getAdviseesCount() {
-    //   try {
-    //     const response = await this.axios.post('', {filterByRole}) // needs countAdvisees API
-    //     this.adviseesCount = response.data.count
-    //   } catch (error) {
-    //     console.log('Error on Adviser.vue > getAdviseesCount', error) // temp
-    //   }
-    // },
+    async getAdviseesCount() {
+      try {
+        const response = await this.axios.post('/api/ecf/countAdvisees', {advisingStatus: this.filterByAdvStatus, curriculumProgress: this.filterByCurrProg})
+        this.adviseesCount = response.data.count
+      } catch (error) {
+        console.log('Error on Adviser.vue > getAdviseesCount', error) // temp
+      }
+    },
     hideDiv(ref) {
       this.$refs[ref].style.display = 'none'
     },
@@ -113,13 +112,12 @@ export default {
     },
     async updateAdvisees() {
       try {
-        // await this.getAdviseesCount()
-        // await this.correctLimits()
-        const response = await this.axios.post('/api/ecf/read/all/adviser')
+        await this.getAdviseesCount()
+        await this.correctLimits()
+        const response = await this.axios.post('/api/ecf/read/all/adviser', {sortColumn: this.sortBy, sortOrder: this.sortOrder, offset: (this.currentPage_static-1) * this.resultsLimit_static, limit: this.resultsLimit_static, searchString: this.searchString, advisingStatus: this.filterByAdvStatus, curriculumProgress: this.filterByCurrProg})
         this.advisees = response.data.rows
       } catch (error) {
         console.log('Error on Adviser.vue > updateAdvisees()', error)
-        alert('Error on updateAdvisees()')
       }
     },
     async updateStatus(newStatus) {
@@ -204,15 +202,15 @@ export default {
           <div><div style="line-height: 1; margin-top: 10px;"><span style="font-family: Open_Sans_Bold;">Filter by Curriculum Progress</span></div></div>
           <select v-model="filterByCurrProg" @change="updateAdvisees()">
             <option value="">Any</option>
-            <option value="Not Started">Not Started</option>
-            <option value="Done">Done</option>
+            <option value="not started">Not Started</option>
+            <option value="done">Done</option>
           </select>
           <div><div style="line-height: 1; margin-top: 10px;"><span style="font-family: Open_Sans_Bold;">Filter by Advising Status</span></div></div>
           <select v-model="filterByAdvStatus" @change="updateAdvisees()">
             <option value="">Any</option>
-            <option value="Not Started">Not Started</option>
-            <option value="not_started">Waiting for Revision</option>
-            <option value="done">Approved</option>
+            <option value="not started">Not Started</option>
+            <option value="waiting for approval">Waiting for Revision</option>
+            <option value="Approved">Approved</option>
           </select>           
         </div>           
         <!-- end Sort and Filter -->

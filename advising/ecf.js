@@ -124,8 +124,7 @@ const router = express.Router()
       }
       var filterByCurriculumProgress = ''
       if (req.body.curriculumProgress) {
-        filterByCurriculumProgress = `AND (advising_status.step1_status = '${req.body.curriculumProgress}'
-        OR advising_status.step2_status = '${req.body.curriculumProgress}')`
+        filterByCurriculumProgress = `AND advising_status.step1_status = '${req.body.curriculumProgress}'`
       }
       var filterByAdvisingStatus = ''
       if (req.body.advisingStatus) {
@@ -207,6 +206,32 @@ const router = express.Router()
   })
   // end Delete All
 
+  router.post('/api/ecf/countAdvisees', adviserOnly, async (req, res) => {
+    try {
+      var filterByCurriculumProgress = ''
+      if (req.body.curriculumProgress) {
+        filterByCurriculumProgress = `AND (advising_status.step1_status = '${req.body.curriculumProgress}')`
+      }
+      var filterByAdvisingStatus = ''
+      if (req.body.advisingStatus) {
+        filterByAdvisingStatus = `AND (advising_status.step2_status = '${req.body.advisingStatus}')`
+      }
+      const adviserUPMail = req.user.up_mail // get the id of the current adviser
+      const source = './database/db.sqlite'
+      const db = await database.openOrCreateDB(source)
+      const rows = await database.get(db, `
+        SELECT COUNT(*) AS count FROM user
+        INNER JOIN advising_status
+        ON user.up_mail = advising_status.student_up_mail
+        WHERE (user.role = 'student') AND (user.adviser_up_mail = ?)${filterByCurriculumProgress} ${filterByAdvisingStatus}
+      `, [adviserUPMail], false)
+      res.json({'count': rows.count}).send()
+    } catch (error) {
+      console.log('error on /api/countAdvisees')
+      console.log(error)
+      res.status(401).json({message: error}).send()
+    }
+  })
 // end Routes
 
 // Middlewares
