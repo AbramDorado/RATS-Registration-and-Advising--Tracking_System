@@ -187,7 +187,7 @@ async function createInitialRows(db) {
       'student', 'rztan@up.edu.ph', 'Roland Anthony', 'Tan', 'Z', 'BS Computer Science', '10038', '2020-46188', 'vcmagboo@up.edu.ph', 'dpsm'
     ], true)
     await database.run(db, `
-      INSERT INTO user (
+      INSERT OR REPLACE INTO user (
         id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
       ) VALUES (
         ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
