@@ -164,7 +164,7 @@ async function createInitialRows(db) {
       )
     `, [
       uuidv4(),
-      'admin', 'romercado1@up.edu.ph', 'Russel Lenard', 'Mercado', 'Middle', '', '', '', '', ''
+      'adviser', 'romercado1@up.edu.ph', 'Russel Lenard', 'Mercado', 'Middle', '', '', '', '', ''
     ], true)
     await database.run(db, `
       INSERT OR REPLACE INTO user (
@@ -194,7 +194,7 @@ async function createInitialRows(db) {
       )
     `, [
       uuidv4(),
-      'student', 'rlomercado22@gmail.com', 'Russel Lenard', 'Mercado', 'O', 'BS Computer Science', '10238', '2021-46188', 'vcmagboo@up.edu.ph', 'dpsm'
+      'student', 'rlomercado22@gmail.com', 'Russel Lenard', 'Mercado', 'O', 'BS Computer Science', '10238', '2021-46188', 'romercado1@up.edu.ph', 'dpsm'
     ], true)
     
   // end Users

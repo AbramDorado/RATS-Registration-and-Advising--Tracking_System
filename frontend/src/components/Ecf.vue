@@ -92,7 +92,7 @@ export default {
     <span>UP MAIL: <b>{{user.up_mail}}</b></span>
     <span>STUDENT NUMBER: <b>{{user.student_number}}</b></span>
     <span>DEGREE PROGRAM: <b>{{user.degree_program}}</b></span>
-    <span>ADVISER: <b>{{user.adviser_up_mail}}</b></span>
+    <span>ADVISER UP MAIL: <b>{{user.adviser_up_mail}}</b></span>
     <span>SAIS ID NUMBER: <b>{{user.sais_id}}</b></span>
   </div>
   <div style="border: 2px solid lightgray;">
