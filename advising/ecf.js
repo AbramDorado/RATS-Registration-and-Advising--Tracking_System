@@ -160,13 +160,58 @@ const router = express.Router()
     try {
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
+      var myOffset = 0
+      if (req.body.offset) {
+        myOffset = req.body.offset
+      }
+      var myLimit = 50
+      if (req.body.limit) {
+        myLimit = req.body.limit
+      }
+      var sortColumn = 'last_name'
+      if (req.body.sortColumn) {
+        sortColumn = `user.${req.body.sortColumn}`
+      }
+      var sortOrder = 'ASC'
+      if (req.body.sortOrder) {
+        sortOrder = req.body.sortOrder
+      }
+      var searchString = ''
+      if (req.body.searchString) {
+        searchString = req.body.searchString
+      }
+      var filterByCurriculumProgress = ''
+      if (req.body.curriculumProgress) {
+        filterByCurriculumProgress = `AND advising_status.step1_status = '${req.body.curriculumProgress}'`
+      }
+      var filterByAdvisingStatus = ''
+      if (req.body.advisingStatus) {
+        filterByAdvisingStatus = `AND advising_status.step2_status = '${req.body.advisingStatus}'`
+      }
+  
+      // Modifying query to include filter parameters
       const rows = await database.all(db, `
         SELECT
-          user.up_mail, user.first_name, user.last_name, user.middle_name, user.degree_program, user.sais_id, user.student_number, user.adviser_up_mail, user.department, advising_status.step1_status, advising_status.step2_status
+          user.up_mail, user.first_name, user.last_name, user.middle_name, user.degree_program, user.sais_id, user.student_number, advising_status.step1_status, advising_status.step2_status
         FROM user INNER JOIN advising_status
           ON user.up_mail = advising_status.student_up_mail
         WHERE user.role = ?
-      `, ['student'], false)
+          AND (user.degree_program LIKE '%${searchString}%'
+          OR user.up_mail LIKE '%${searchString}%'
+          OR user.first_name LIKE '%${searchString}%'
+          OR user.last_name LIKE '%${searchString}%')
+          ${filterByCurriculumProgress}
+          ${filterByAdvisingStatus}
+        ORDER BY ${sortColumn} ${sortOrder}
+        LIMIT ${myLimit}
+        OFFSET ${myOffset}`, ['student'], false)
+      // const rows = await database.all(db, `
+      //   SELECT
+      //     user.up_mail, user.first_name, user.last_name, user.middle_name, user.degree_program, user.sais_id, user.student_number, user.adviser_up_mail, user.department, advising_status.step1_status, advising_status.step2_status
+      //   FROM user INNER JOIN advising_status
+      //     ON user.up_mail = advising_status.student_up_mail
+      //   WHERE user.role = ?
+      // `, ['student'], false)
       res.json({rows: rows}).send()
     } catch (error) {
       console.log('Error on api > ecf > read > all > OCS', error)
@@ -206,7 +251,7 @@ const router = express.Router()
   })
   // end Delete All
 
-  router.post('/api/ecf/countAdvisees', adviserOnly, async (req, res) => {
+  router.post('/api/ecf/countAdvisees', adviserOrOCSOnly, async (req, res) => {
     try {
       var filterByCurriculumProgress = ''
       if (req.body.curriculumProgress) {
@@ -216,6 +261,10 @@ const router = express.Router()
       if (req.body.advisingStatus) {
         filterByAdvisingStatus = `AND (advising_status.step2_status = '${req.body.advisingStatus}')`
       }
+      var adviserText = ''
+      if (req.user.role === 'adviser') {
+        adviserText = `AND (user.adviser_up_mail = '${req.user.up_mail}')`
+      }
       const adviserUPMail = req.user.up_mail // get the id of the current adviser
       const source = './database/db.sqlite'
       const db = await database.openOrCreateDB(source)
@@ -223,8 +272,8 @@ const router = express.Router()
         SELECT COUNT(*) AS count FROM user
         INNER JOIN advising_status
         ON user.up_mail = advising_status.student_up_mail
-        WHERE (user.role = 'student') AND (user.adviser_up_mail = ?)${filterByCurriculumProgress} ${filterByAdvisingStatus}
-      `, [adviserUPMail], false)
+        WHERE (user.role = 'student') ${adviserText} ${filterByCurriculumProgress} ${filterByAdvisingStatus}
+      `, [], false)
       res.json({'count': rows.count}).send()
     } catch (error) {
       console.log('error on /api/countAdvisees')
@@ -244,6 +293,18 @@ function adviserOnly(req, res, next){
     }
   } catch(error){
     console.log('Error on advising.js > adviserOnly', error)
+    res.status(401).json({message: error}).send()
+  }
+}
+function adviserOrOCSOnly(req, res, next){
+  try{
+    if (req.user.role === 'adviser' || req.user.role === 'ocs') {
+      next()
+    } else {
+      throw 'Not adviser nor OCS'
+    }
+  } catch(error){
+    console.log('Error on advising.js > adviserOrOCSOnly', error)
     res.status(401).json({message: error}).send()
   }
 }

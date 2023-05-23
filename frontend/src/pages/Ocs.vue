@@ -43,8 +43,11 @@ export default {
       // end advisingDashboard-related
 
       // pagination-related
-      studentsCount: 'UNFINISHED', // TEMP
-      resultsLimit: 1, // TEMP
+      currentPage: 1,
+      currentPage_static: 1,
+      studentsCount: 0, // TEMP
+      resultsLimit: 50, // TEMP
+      resultsLimit_static: 50,
       currentPage: 1, // TEMP
       sortBy: '',
       sortOrder: 'ASC',
@@ -55,7 +58,9 @@ export default {
     }
   },
   computed: {
-
+    pages() {
+      return Math.ceil(this.studentsCount / this.resultsLimit_static)
+    }
   },
   methods: {
     // announcementDashboard-related
@@ -140,6 +145,14 @@ export default {
         this.announcements = response.data.rows
       } catch (error) {
         console.log('Error on Admin.vue > getAllAnnouncements', error) // temp
+      }
+    },
+    async getStudentsCount() {
+      try {
+        const response = await this.axios.post('/api/ecf/countAdvisees', {advisingStatus: this.filterByAdvStatus, curriculumProgress: this.filterByCurrProg})
+        this.studentsCount = response.data.count
+      } catch (error) {
+        console.log('Error on Adviser.vue > getAdviseesCount', error) // temp
       }
     },
     viewAnnouncement(announcement) {
@@ -228,6 +241,34 @@ export default {
     clearEditCourseInputs() {
       this.edit_course = {}
     },
+    clearSearchField() {
+      this.searchString = ''
+      this.updateAdvisees()
+    },
+    async correctLimits() {
+      this.currentPage_static = this.currentPage
+      this.resultsLimit_static = this.resultsLimit
+      if (this.currentPage_static < 1) {
+        this.currentPage_static = 1
+        this.currentPage = 1
+      }
+      if (this.currentPage_static > this.pages) {
+        this.currentPage_static = this.pages
+        this.currentPage = this.pages
+      }
+      if (this.resultsLimit_static < 1) {
+        this.resultsLimit_static = 1
+        this.resultsLimit = 1
+      }
+      if (this.resultsLimit_static > 200) {
+        this.resultsLimit_static = 200
+        this.resultsLimit = 200
+      }
+      if (this.resultsLimit_static > this.adviseesCount) {
+        this.resultsLimit_static = this.adviseesCount
+        this.resultsLimit = this.adviseesCount
+      }
+    },
     deleteCourse(course) {
       this.hideDiv('coursesDashboard')
       this.showDiv('deleteCourseDiv')
@@ -293,9 +334,23 @@ export default {
     formatted_course_code(course) {
       return `${course.subject} ${course.catalog_no}` 
     },
+    async nextPage() {
+      if (this.currentPage < this.pages) {
+        this.currentPage++
+        this.updateAdvisees()
+      }
+    },
+    async previousPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--
+        this.updateAdvisees()
+      }
+    },
     async updateAdvisees() {
       try {
-        const response = await this.axios.post('/api/ecf/read/all/OCS')
+        await this.getStudentsCount()
+        await this.correctLimits()
+        const response = await this.axios.post('/api/ecf/read/all/OCS', {sortColumn: this.sortBy, sortOrder: this.sortOrder, offset: (this.currentPage_static-1) * this.resultsLimit_static, limit: this.resultsLimit_static, searchString: this.searchString, advisingStatus: this.filterByAdvStatus, curriculumProgress: this.filterByCurrProg})
         this.advisees = response.data.rows
       } catch (error) {
         console.log('Error on Ocs.vue > updateAdvisees()', error)
@@ -343,6 +398,7 @@ export default {
     await this.getAllAnnouncements()
     await this.updateCourses()
     await this.updateAdvisees()
+    await this.getStudentsCount()
   }
 }
 </script>
@@ -979,7 +1035,7 @@ export default {
               </div>
               <div>
                 <div class="hoverTransform" style="margin-top: 5px;">
-                  <span @click="getAllUsers()" class="myButton1" style="background-color: #751518;">Apply</span>
+                  <span @click="updateAdvisees()" class="myButton1" style="background-color: #751518;">Apply</span>
                 </div>                                 
               </div>
             </div>
@@ -988,7 +1044,7 @@ export default {
             <div style="align-items: center; border: 2px solid gray; border-radius: 5px; display: flex; flex-basis: 0; flex-direction: column; flex-grow: 1; gap: 10px; justify-content: center; padding: 15px;">
               <span style="font-family: Open_Sans_Bold;">Sort</span>
               <div style="display: flex; flex-direction: row; gap: 10px;">
-                <select v-model="sortBy" @change="getAllUsers()">
+                <select v-model="sortBy" @change="updateAdvisees()">
                   <option value=""></option>
                   <option value="up_mail">UP Mail</option>
                   <option value="first_name">First Name</option>
@@ -1000,24 +1056,23 @@ export default {
                   <option value="curriculum_progress">Curriculum Progress</option>
                   <option value="advising_status">Advising Status</option>
                 </select>
-                <select v-model="sortOrder" @change="getAllUsers()">
+                <select v-model="sortOrder" @change="updateAdvisees()">
                   <option value="ASC">Ascending</option>
                   <option value="DESC">Descending</option>
                 </select>
               </div>
-              <div><div style="line-height: 1; margin-top: 10px;"><span style="font-family: Open_Sans_Bold;">Filter by</span></div></div>
-              <select v-model="filterBy" @change="getAllUsers()">
-                <option value=""></option>
-                <option value="degree_program">Degree Program</option>
-                <option value="adviser_up_mail">Adviser</option>
-                <option value="curriculum_progress">Curriculum Progress</option>
-                <option value="advising_status">Advising Status</option>
+              <div><div style="line-height: 1; margin-top: 10px;"><span style="font-family: Open_Sans_Bold;">Filter by Curriculum Progress</span></div></div>
+              <select v-model="filterByCurrProg" @change="updateAdvisees()">
+                <option value="">Any</option>
+                <option value="not started">Not Started</option>
+                <option value="done">Done</option>
               </select>
-              <select>
-                <option value=""></option>
-                <option value="UNFINISHED1">UNFINISHED1</option>
-                <option value="UNFINISHED2">UNFINISHED2</option>
-                <option value="UNFINISHED3">UNFINISHED3</option>
+              <div><div style="line-height: 1; margin-top: 10px;"><span style="font-family: Open_Sans_Bold;">Filter by Advising Status</span></div></div>
+              <select v-model="filterByAdvStatus" @change="updateAdvisees()">
+                <option value="">Any</option>
+                <option value="not started">Not Started</option>
+                <option value="waiting for approval">Waiting for Revision</option>
+                <option value="Approved">Approved</option>
               </select>   
             </div>           
             <!-- end Sort and Filter -->
@@ -1031,7 +1086,7 @@ export default {
                 </div>            
               </div>
               <div>
-                <div @click="getAllUsers()" class="hoverTransform" style="margin-top: 5px;">
+                <div @click="updateAdvisees()" class="hoverTransform" style="margin-top: 5px;">
                   <span class="myButton1" style="background-color: #751518;">Search</span>
                 </div>
               </div>
