@@ -1053,8 +1053,6 @@ export default {
                   <option value="sais_id">SAIS ID</option>
                   <option value="student_number">Student Number</option>
                   <option value="adviser_up_mail">Adviser's UP Mail</option>
-                  <option value="curriculum_progress">Curriculum Progress</option>
-                  <option value="advising_status">Advising Status</option>
                 </select>
                 <select v-model="sortOrder" @change="updateAdvisees()">
                   <option value="ASC">Ascending</option>
