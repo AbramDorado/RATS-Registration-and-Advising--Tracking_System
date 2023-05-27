@@ -832,13 +832,13 @@ export default {
         <span style="font-family: Open_Sans_Bold;">Department</span>
         <!-- <input v-model="add_course.department" type="text" style="margin-bottom: 10px;"> -->
         <select v-model="add_course.department" style="margin-bottom: 10px;">
-          <option value="dac">DAC</option>
-          <option value="dpsm">DPSM</option>
-          <option value="db">DB</option>
-          <option value="dbs">DBS</option>
-          <option value="dpe">DPE</option>
-          <option value="dss">DSS</option>
-          <option value="mm">MM</option>
+          <option value="DAC">DAC</option>
+          <option value="DPSM">DPSM</option>
+          <option value="DB">DB</option>
+          <option value="DBS">DBS</option>
+          <option value="DPE">DPE</option>
+          <option value="DSS">DSS</option>
+          <option value="MM">MM</option>
         </select>
         <span style="font-family: Open_Sans_Bold;">Course Title</span>
         <input v-model="add_course.course_title" type="text" style="margin-bottom: 10px;">
