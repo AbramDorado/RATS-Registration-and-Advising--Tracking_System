@@ -132,6 +132,7 @@ const router = express.Router()
         // end get original course row        
         await database.run(db, `DELETE FROM course WHERE class_number = ?`, [req.body.class_number], false)
         console.log('delete success') // temp
+        await database.run(db, `DELETE FROM ecf WHERE class_number = ?`, [req.body.class_number], false)
         // insert into course_edit
         await database.run(db, `
           INSERT OR REPLACE INTO course_edit (
