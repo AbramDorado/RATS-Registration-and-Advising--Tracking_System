@@ -132,6 +132,10 @@ const router = express.Router()
         // end get original course row        
         await database.run(db, `DELETE FROM course WHERE class_number = ?`, [req.body.class_number], false)
         console.log('delete success') // temp
+        await database.run(db, `
+          UPDATE advising_status SET step2_status = ? WHERE student_up_mail 
+          IN (SELECT student_up_mail FROM ecf WHERE class_number = ?)
+          `, ['waiting for approval', req.body.class_number], false)
         await database.run(db, `DELETE FROM ecf WHERE class_number = ?`, [req.body.class_number], false)
         // insert into course_edit
         await database.run(db, `
