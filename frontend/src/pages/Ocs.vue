@@ -1069,7 +1069,8 @@ export default {
               <select v-model="filterByAdvStatus" @change="updateAdvisees()">
                 <option value="">Any</option>
                 <option value="not started">Not Started</option>
-                <option value="waiting for approval">Waiting for Revision</option>
+                <option value="Waiting for Revision">Waiting for Revision</option>
+                <option value="waiting for approval">Waiting for Approval</option>
                 <option value="Approved">Approved</option>
               </select>   
             </div>           
