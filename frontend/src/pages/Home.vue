@@ -62,7 +62,7 @@ export default {
         console.log('Error on Adviser.vue > getAdviseesCount', error) // temp
       }
     },
-    async getAdviseesCountPend() {
+    async getAdviseesCount() {
       try {
         const response = await this.axios.post('/api/ecf/countAdvisees')
         this.adviseesCountTot = response.data.count
@@ -114,6 +114,7 @@ export default {
     await this.getAdviseesCountApp()
     await this.getAdviseesCountNot()
     await this.getAdviseesCountPend()
+    await this.getAdviseesCount()
     console.log('this called')
     this.$refs.home.style.display = 'flex'
   }

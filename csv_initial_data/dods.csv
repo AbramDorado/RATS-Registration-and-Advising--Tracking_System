@@ -1,0 +1,4 @@
+role,up_mail,first_name,last_name,middle_name,degree_program,sais_id,student_number,adviser_up_mail,department
+adviser,acdorado2@up.edu.ph,Adviiser,test,test,,,,,
+student,abramdorado18@gmail.com,Abram,Dorado,c,bs computer science,43506725,201776263,acdorado2@up.edu.ph,dpsm
+ocs,doradobam@gmail.com,OCS,test,test,,,,,

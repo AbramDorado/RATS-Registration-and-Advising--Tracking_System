@@ -1,9 +1,20 @@
 const { v4: uuidv4 } = require('uuid');
-const database = require('./database')
+const database = require('./database');
+const fs = require('fs');
+const csv = require('csv-parser');
 
 async function main(db) {
+  //csv file insertions
   await createInitialTables(db)
   await createInitialRows(db)
+  await processCsv1()
+  await processCsv2()
+  await processCsv3()
+  // await processCsv4()
+  // await processCsv5()
+  // await processCsv6()
+  // await processCsv7()
+  // await processCsv8()
 }
 
 async function createInitialTables(db) {
@@ -29,8 +40,8 @@ async function createInitialTables(db) {
     id TEXT UNIQUE PRIMARY KEY,
     title TEXT,
     body TEXT UNIQUE,
-    created INTEGER,
-    modified INTEGER
+    created TIMESTAMP,
+    modified TIMESTAMP
   `)
   // end announcement table
 
@@ -97,98 +108,570 @@ async function createInitialTables(db) {
   // end ecf table
 
   // global_variables table
-  await database.createTable(db, 'global_variables', `
-    key TEXT UNIQUE PRIMARY KEY,
-    value
+  await database.createTable(db, 'global_variables',
+    `key TEXT UNIQUE PRIMARY KEY,
+    value TEXT
   `)
   // end global_variables table
 }
 
-async function createInitialRows(db) {
 
-  // Advising Status
-    // student jmlicup@up.edu.ph
-    await database.run(db, `
-      INSERT INTO advising_status (
-        student_up_mail,
-        adviser_up_mail,
-        department,
-        degree_program,
-        step1_status,
-        step2_status,
-        step3_status,
-        remarks
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `, ['jmlicup@up.edu.ph', 'johnpaolomlicup@gmail.com', 'dpsm', 'BS Computer Science', 'not started', 'not started', 'no access', 'incomplete grades'], true)
-    // end student jmlicup@up.edu.ph
-  // end Advising Status
+async function createInitialRows() {
+  const db = await database.openOrCreateDB();
+  const client = await db.connect();
+  try {
+    // Insert Advising Status data
+    // await client.query(`
+    //   INSERT INTO advising_status (
+    //     student_up_mail,
+    //     adviser_up_mail,
+    //     department,
+    //     degree_program,
+    //     step1_status,
+    //     step2_status,
+    //     step3_status,
+    //     remarks
+    //   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    // `, ['jmlicup@up.edu.ph', 'johnpaolomlicup@gmail.com', 'dpsm', 'BS Computer Science', 'not started', 'not started', 'no access', 'incomplete grades']);
+    await client.query(`
+    INSERT INTO advising_status (
+      student_up_mail,
+      adviser_up_mail,
+      department,
+      degree_program,
+      step1_status,
+      step2_status,
+      step3_status,
+      remarks
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    ON CONFLICT (student_up_mail) DO UPDATE
+    SET
+      adviser_up_mail = EXCLUDED.adviser_up_mail,
+      department = EXCLUDED.department,
+      degree_program = EXCLUDED.degree_program,
+      step1_status = EXCLUDED.step1_status,
+      step2_status = EXCLUDED.step2_status,
+      step3_status = EXCLUDED.step3_status,
+      remarks = EXCLUDED.remarks
+  `, ['jmlicup@up.edu.ph', 'acdorado2@up.edu.ph', 'dpsm', 'BS Computer Science', 'not started', 'not started', 'no access', 'incomplete grades']);
 
-  // Global Variables
-    await database.run(db, `
-      INSERT INTO global_variables (key, value) VALUES (?, ?)
-    `, ['semester', 'Second'], true)
-    await database.run(db, `
-      INSERT INTO global_variables (key, value) VALUES (?, ?)
-    `, ['acad_year', '2022-2023'], true)
-  // end Global Variables
+    // Insert Global Variables data
+    // await client.query(`
+    //   INSERT INTO global_variables (key, value) VALUES ($1, $2)
+    // `, ['semester', 'Second']);
 
-  // Users
-    // student jmlicup@up.edu.ph
-    await database.run(db, `
-      INSERT INTO user (
-        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
-      ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-      )
-    `, [
-      uuidv4(),
-      'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'Dimagiba', 'BS Computer Science', '10008', '2019-46188', 'jpmlicup@gmail.com', 'dpsm'
-    ], true)
-    // end student jmlicup@up.edu.ph
-    // admin jpmlicup@gmail.com
-    await database.run(db, `
-      INSERT INTO user (
-        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
-      ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-      )
-    `, [
-      uuidv4(),
-      'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', 'Dimagiba', '', '', '', '', ''
-    ], true)
-    await database.run(db, `
-      INSERT OR REPLACE INTO user (
-        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
-      ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-      )
-    `, [
-      uuidv4(),
-      'adviser', 'romercado1@up.edu.ph', 'Russel Lenard', 'Mercado', 'Middle', '', '', '', '', ''
-    ], true)
-    await database.run(db, `
-      INSERT OR REPLACE INTO user (
-        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
-      ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-      )
-    `, [
-      uuidv4(),
-      'adviser', 'vcmagboo@up.edu.ph', 'Vincent Peter', 'Magboo', 'C', '', '', '', '', 'dpsm'
-    ], true)
-    await database.run(db, `
-      INSERT OR REPLACE INTO user (
-        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
-      ) VALUES (
-        ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
-      )
-    `, [
-      uuidv4(),
-      'admin', 'rlomercado22@gmail.com', 'Russel Lenard', 'Mercado', 'O', '', '', '', '', ''
-    ], true)
-    
-  // end Users
+    await client.query(`
+  INSERT INTO global_variables (key, value)
+  VALUES ($1, $2)
+  ON CONFLICT (key) DO UPDATE
+  SET value = EXCLUDED.value;
+`, ['semester', 'Second']);
 
+
+    // await client.query(`
+    //   INSERT INTO global_variables (key, value) VALUES ($1, $2)
+    // `, ['acad_year', '2022-2023']);
+    await client.query(`
+    INSERT INTO global_variables (key, value)
+    VALUES ($1, $2)
+    ON CONFLICT (key) DO UPDATE
+    SET value = EXCLUDED.value;
+  `, ['acad_year', '2022-2023']);
+
+    // Insert Users data
+    // Insert student data
+    // await client.query(`
+    //   INSERT INTO "user" (
+    //     id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    //   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    // `, [
+    //   uuidv4(), 'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'Dimagiba', 'BS Computer Science', '10008', '2019-46188', 'jpmlicup@gmail.com', 'dpsm'
+    // ]);
+    await client.query(`
+    INSERT INTO "user" (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    ON CONFLICT (up_mail) DO UPDATE
+    SET
+      role = EXCLUDED.role,
+      first_name = EXCLUDED.first_name,
+      last_name = EXCLUDED.last_name,
+      middle_name = EXCLUDED.middle_name,
+      degree_program = EXCLUDED.degree_program,
+      sais_id = EXCLUDED.sais_id,
+      student_number = EXCLUDED.student_number,
+      adviser_up_mail = EXCLUDED.adviser_up_mail,
+      department = EXCLUDED.department;
+  `, [
+      uuidv4(), 'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'Dimagiba', 'BS Computer Science', '10008', '2019-46188', 'acdorado2@up.edu.ph', 'dpsm'
+    ]);
+
+    // Insert admin data
+    // await client.query(`
+    //   INSERT INTO "user" (
+    //     id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    //   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    // `, [
+    //   uuidv4(), 'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', 'Dimagiba', '', '', '', '', ''
+    // ]);
+    await client.query(`
+    INSERT INTO "user" (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    ON CONFLICT (up_mail) DO UPDATE
+    SET
+      role = EXCLUDED.role,
+      first_name = EXCLUDED.first_name,
+      last_name = EXCLUDED.last_name,
+      middle_name = EXCLUDED.middle_name,
+      degree_program = EXCLUDED.degree_program,
+      sais_id = EXCLUDED.sais_id,
+      student_number = EXCLUDED.student_number,
+      adviser_up_mail = EXCLUDED.adviser_up_mail,
+      department = EXCLUDED.department;
+  `, [
+    uuidv4(), 'admin', 'gdsc.upmanila@gmail.com', 'Admin', 'Last', 'Test', '', '', '', '', ''
+  ]);
+
+    // Insert adviser data
+    // await client.query(`
+    //   INSERT INTO "user" (
+    //     id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    //   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    // `, [
+    //   uuidv4(), 'adviser', 'romercado1@up.edu.ph', 'Russel Lenard', 'Mercado', 'Middle', '', '', '', '', ''
+    // ]);
+    await client.query(`
+    INSERT INTO "user" (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    ON CONFLICT (up_mail) DO UPDATE
+    SET
+      role = EXCLUDED.role,
+      first_name = EXCLUDED.first_name,
+      last_name = EXCLUDED.last_name,
+      middle_name = EXCLUDED.middle_name,
+      degree_program = EXCLUDED.degree_program,
+      sais_id = EXCLUDED.sais_id,
+      student_number = EXCLUDED.student_number,
+      adviser_up_mail = EXCLUDED.adviser_up_mail,
+      department = EXCLUDED.department;
+  `, [
+      uuidv4(), 'adviser', 'romercado1@up.edu.ph', 'Russel Lenard', 'Mercado', 'Middle', '', '', '', '', ''
+    ]);
+
+    // await client.query(`
+    //   INSERT INTO "user" (
+    //     id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    //   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    // `, [
+    //   uuidv4(), 'adviser', 'vcmagboo@up.edu.ph', 'Vincent Peter', 'Magboo', 'C', '', '', '', '', 'dpsm'
+    // ]);
+    await client.query(`
+  INSERT INTO "user" (
+    id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+  ON CONFLICT (up_mail) DO UPDATE
+  SET
+    role = EXCLUDED.role,
+    first_name = EXCLUDED.first_name,
+    last_name = EXCLUDED.last_name,
+    middle_name = EXCLUDED.middle_name,
+    degree_program = EXCLUDED.degree_program,
+    sais_id = EXCLUDED.sais_id,
+    student_number = EXCLUDED.student_number,
+    adviser_up_mail = EXCLUDED.adviser_up_mail,
+    department = EXCLUDED.department;
+`, [
+      uuidv4(), 'adviser', 'vcmagboo@up.edu.ph', 'Vincent Peter', 'Magboo', 'C', '', '', '', '', 'dpsm'
+    ]);
+
+    await client.query(
+      `INSERT INTO "user" (
+        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+      )
+      ON CONFLICT (up_mail)
+      DO UPDATE SET
+        role = EXCLUDED.role,
+        first_name = EXCLUDED.first_name,
+        last_name = EXCLUDED.last_name,
+        middle_name = EXCLUDED.middle_name,
+        degree_program = EXCLUDED.degree_program,
+        sais_id = EXCLUDED.sais_id,
+        student_number = EXCLUDED.student_number,
+        adviser_up_mail = EXCLUDED.adviser_up_mail,
+        department = EXCLUDED.department
+      `, [
+      uuidv4(),
+      'admin',
+      'rlomercado22@gmail.com',
+      'Russel Lenard',
+      'Mercado',
+      'O',
+      '', '', '', '', ''
+    ]
+    );
+
+
+    // Insert more users if needed
+
+  } catch (error) {
+    console.error('Error inserting data:', error);
+  }
 }
 
-module.exports = {main}
+
+////////////////////////////////// If you want to insert data from csv file /////////////////////////////////////////////
+
+
+//course table
+const tableName1 = 'course'; // Replace with your table name
+
+// Replace these with your CSV file path and delimiter
+const csvFilePath1 = './csv_initial_data/course.csv';
+const csvDelimiter1 = ',';
+
+const processCsv1 = async () => {
+  try {
+    const stream = fs.createReadStream(csvFilePath1);
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
+
+    stream.pipe(csv({ delimiter: csvDelimiter1 }))
+      .on('data', async (row) => {
+        try {
+          // Assuming the CSV column names match the database column names
+          const columns = Object.keys(row).join(', ');
+          const values = Object.values(row);
+          const placeholders = values.map((_, index) => `$${index + 1}`).join(', ');
+
+          const query = `
+            INSERT INTO ${tableName1} (${columns})
+            VALUES (${placeholders})
+            ON CONFLICT (class_number)
+            DO UPDATE SET
+            ${Object.keys(row).map((col, index) => `${col} = EXCLUDED.${col}`).join(', ')}
+          `;
+
+          await client.query(query, values);
+        } catch (insertError) {
+          console.error('Error inserting row:', insertError.message);
+        }
+      })
+      .on('end', () => {
+        console.log('CSV file successfully processed.');
+        client.release();
+      });
+  } catch (error) {
+    console.error('Error processing CSV:', error);
+  }
+};
+
+//announcement table
+const tableName2 = 'announcement'; // Replace with your table name
+
+// Replace these with your CSV file path and delimiter
+const csvFilePath2 = './csv_initial_data/announcement.csv';
+const csvDelimiter2 = ',';
+
+const processCsv2 = async () => {
+  try {
+    const stream = fs.createReadStream(csvFilePath2);
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
+
+    stream.pipe(csv({ delimiter: csvDelimiter2 }))
+      .on('data', async (row) => {
+        try {
+          // Assuming the CSV column names match the database column names
+          const columns = Object.keys(row).join(', ');
+          const values = Object.values(row);
+          const placeholders = values.map((_, index) => `$${index + 1}`).join(', ');
+
+          const query = `
+            INSERT INTO ${tableName2} (${columns})
+            VALUES (${placeholders})
+            ON CONFLICT (id)
+            DO UPDATE SET
+            ${Object.keys(row).map((col, index) => `${col} = EXCLUDED.${col}`).join(', ')}
+          `;
+
+          await client.query(query, values);
+        } catch (insertError) {
+          console.error('Error inserting row:', insertError.message);
+        }
+      })
+      .on('end', () => {
+        console.log('CSV file successfully processed.');
+        client.release();
+      });
+  } catch (error) {
+    console.error('Error processing CSV:', error);
+  }
+};
+
+//course edit table
+const tableName3 = 'course_edit'; // Replace with your table name
+
+// Replace these with your CSV file path and delimiter
+const csvFilePath3 = './csv_initial_data/course_edit.csv';
+const csvDelimiter3 = ',';
+
+const processCsv3 = async () => {
+  try {
+    const stream = fs.createReadStream(csvFilePath3);
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
+
+    stream.pipe(csv({ delimiter: csvDelimiter3 }))
+      .on('data', async (row) => {
+        try {
+          // Assuming the CSV column names match the database column names
+          const columns = Object.keys(row).join(', ');
+          const values = Object.values(row);
+          const placeholders = values.map((_, index) => `$${index + 1}`).join(', ');
+
+          const query = `
+            INSERT INTO ${tableName3} (${columns})
+            VALUES (${placeholders})
+            ON CONFLICT (class_number)
+            DO UPDATE SET
+            ${Object.keys(row).map((col, index) => `${col} = EXCLUDED.${col}`).join(', ')}
+          `;
+
+          await client.query(query, values);
+        } catch (insertError) {
+          console.error('Error inserting row:', insertError.message);
+        }
+      })
+      .on('end', () => {
+        console.log('CSV file successfully processed.');
+        client.release();
+      });
+  } catch (error) {
+    console.error('Error processing CSV:', error);
+  }
+};
+
+// //advising status table
+// const tableName4 = 'advising_status'; // Replace with your table name
+
+// // Replace these with your CSV file path and delimiter
+// const csvFilePath4 = './csv_initial_data/advising_status.csv';
+// const csvDelimiter4 = ',';
+
+// const processCsv4 = async () => {
+//   try {
+//     const stream = fs.createReadStream(csvFilePath4);
+//     const db = await database.openOrCreateDB();
+//     const client = await db.connect();
+
+//     stream.pipe(csv({ delimiter: csvDelimiter4 }))
+//       .on('data', async (row) => {
+//         try {
+//           // Assuming the CSV column names match the database column names
+//           const columns = Object.keys(row).join(', ');
+//           const values = Object.values(row);
+//           const placeholders = values.map((_, index) => `$${index + 1}`).join(', ');
+
+//           const query = `
+//             INSERT INTO ${tableName4} (${columns})
+//             VALUES (${placeholders})
+//             ON CONFLICT (student_up_mail)
+//             DO UPDATE SET
+//             ${Object.keys(row).map((col, index) => `${col} = EXCLUDED.${col}`).join(', ')}
+//           `;
+
+//           await client.query(query, values);
+//         } catch (insertError) {
+//           console.error('Error inserting row:', insertError.message);
+//         }
+//       })
+//       .on('end', () => {
+//         console.log('CSV file successfully processed.');
+//         client.release();
+//       });
+//   } catch (error) {
+//     console.error('Error processing CSV:', error);
+//   }
+// };
+
+
+// //curri progress table
+// const tableName5 = 'curri_progress'; // Replace with your table name
+
+// // Replace these with your CSV file path and delimiter
+// const csvFilePath5 = './csv_initial_data/curri_progress.csv';
+// const csvDelimiter5 = ',';
+
+// const processCsv5 = async () => {
+//   try {
+//     const stream = fs.createReadStream(csvFilePath5);
+//     const db = await database.openOrCreateDB();
+//     const client = await db.connect();
+
+//     stream.pipe(csv({ delimiter: csvDelimiter5 }))
+//       .on('data', async (row) => {
+//         try {
+//           // Assuming the CSV column names match the database column names
+//           const columns = Object.keys(row).join(', ');
+//           const values = Object.values(row);
+//           const placeholders = values.map((_, index) => `$${index + 1}`).join(', ');
+
+//           const query = `
+//             INSERT INTO ${tableName5} (${columns})
+//             VALUES (${placeholders})
+//             ON CONFLICT (student_up_mail)
+//             DO UPDATE SET
+//             ${Object.keys(row).map((col, index) => `${col} = EXCLUDED.${col}`).join(', ')}
+//           `;
+
+//           await client.query(query, values);
+//         } catch (insertError) {
+//           console.error('Error inserting row:', insertError.message);
+//         }
+//       })
+//       .on('end', () => {
+//         console.log('CSV file successfully processed.');
+//         client.release();
+//       });
+//   } catch (error) {
+//     console.error('Error processing CSV:', error);
+//   }
+// };
+
+// //ecf table
+// const tableName6 = 'ecf'; // Replace with your table name
+
+// // Replace these with your CSV file path and delimiter
+// const csvFilePath6 = './csv_initial_data/ecf.csv';
+// const csvDelimiter6 = ',';
+
+// const processCsv6 = async () => {
+//   try {
+//     const stream = fs.createReadStream(csvFilePath6);
+//     const db = await database.openOrCreateDB();
+//     const client = await db.connect();
+
+//     stream.pipe(csv({ delimiter: csvDelimiter6 }))
+//       .on('data', async (row) => {
+//         try {
+//           // Assuming the CSV column names match the database column names
+//           const columns = Object.keys(row).join(', ');
+//           const values = Object.values(row);
+//           const placeholders = values.map((_, index) => `$${index + 1}`).join(', ');
+
+//           const query = `
+//             INSERT INTO ${tableName6} (${columns})
+//             VALUES (${placeholders})
+//             ON CONFLICT (id)
+//             DO UPDATE SET
+//             ${Object.keys(row).map((col, index) => `${col} = EXCLUDED.${col}`).join(', ')}
+//           `;
+
+//           await client.query(query, values);
+//         } catch (insertError) {
+//           console.error('Error inserting row:', insertError.message);
+//         }
+//       })
+//       .on('end', () => {
+//         console.log('CSV file successfully processed.');
+//         client.release();
+//       });
+//   } catch (error) {
+//     console.error('Error processing CSV:', error);
+//   }
+// };
+
+// //global variables table
+// const tableName7 = 'global_variables'; // Replace with your table name
+
+// // Replace these with your CSV file path and delimiter
+// const csvFilePath7 = './csv_initial_data/global_variables.csv';
+// const csvDelimiter7 = ',';
+
+// const processCsv7 = async () => {
+//   try {
+//     const stream = fs.createReadStream(csvFilePath7);
+//     const db = await database.openOrCreateDB();
+//     const client = await db.connect();
+
+//     stream.pipe(csv({ delimiter: csvDelimiter7 }))
+//       .on('data', async (row) => {
+//         try {
+//           // Assuming the CSV column names match the database column names
+//           const columns = Object.keys(row).join(', ');
+//           const values = Object.values(row);
+//           const placeholders = values.map((_, index) => `$${index + 1}`).join(', ');
+
+//           const query = `
+//             INSERT INTO ${tableName7} (${columns})
+//             VALUES (${placeholders})
+//             ON CONFLICT (key)
+//             DO UPDATE SET
+//             ${Object.keys(row).map((col, index) => `${col} = EXCLUDED.${col}`).join(', ')}
+//           `;
+
+//           await client.query(query, values);
+//         } catch (insertError) {
+//           console.error('Error inserting row:', insertError.message);
+//         }
+//       })
+//       .on('end', () => {
+//         console.log('CSV file successfully processed.');
+//         client.release();
+//       });
+//   } catch (error) {
+//     console.error('Error processing CSV:', error);
+//   }
+// };
+
+
+// //user table
+// const tableName8 = 'user'; // Replace with your table name
+
+// // Replace these with your CSV file path and delimiter
+// const csvFilePath8 = './csv_initial_data/user.csv';
+// const csvDelimiter8 = ',';
+
+// const processCsv8 = async () => {
+//   try {
+//     const stream = fs.createReadStream(csvFilePath8);
+//     const db = await database.openOrCreateDB();
+//     const client = await db.connect();
+
+//     stream.pipe(csv({ delimiter: csvDelimiter8 }))
+//       .on('data', async (row) => {
+//         try {
+//           // Assuming the CSV column names match the database column names
+//           const columns = Object.keys(row).join(', ');
+//           const values = Object.values(row);
+//           const placeholders = values.map((_, index) => `$${index + 1}`).join(', ');
+
+//           const query = `
+//             INSERT INTO ${tableName8} (${columns})
+//             VALUES (${placeholders})
+//             ON CONFLICT (id)
+//             DO UPDATE SET
+//             ${Object.keys(row).map((col, index) => `${col} = EXCLUDED.${col}`).join(', ')}
+//           `;
+
+//           await client.query(query, values);
+//         } catch (insertError) {
+//           console.error('Error inserting row:', insertError.message);
+//         }
+//       })
+//       .on('end', () => {
+//         console.log('CSV file successfully processed.');
+//         client.release();
+//       });
+//   } catch (error) {
+//     console.error('Error processing CSV:', error);
+//   }
+// };
+
+///////////////////////////////////////////////////////////////////////////////
+
+module.exports = { main }

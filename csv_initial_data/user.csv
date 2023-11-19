@@ -1,0 +1,17 @@
+id,role,up_mail,first_name,last_name,middle_name,degree_program,sais_id,student_number,adviser_up_mail,department
+d93fa60b-c633-4234-9301-e82cd3bc850f,admin,jpmlicup@gmail.com,John Paolo,Licup,Dimagiba,,,,,dpsm
+c31365c1-9a26-4fe3-bce3-09555ce3465b,ocs,socomsci.upm@gmail.com,Russel Lenard,Mercado,O,BS Computer Science,10238,2021-46188,romercado1@up.edu.ph,dpsm
+309764b2-34ed-4431-9a57-49c328584011,admin,gdsc.upmanila@gmail.com,Admin,test,test,,,,,
+f663a9c7-97b0-432f-845b-f69f420fc497,adviser,acdorado2@up.edu.ph,adviiser,test,test,,,,,
+7b28afcb-49e2-41bf-9910-0af7e3ba9616,student,abramdorado18@gmail.com,abram,dorado,c,bs computer science,43506725,201776263,acdorado2@up.edu.ph,dpsm
+7835dffb-30e7-4663-8011-d55f3626e7e4,ocs,doradobam@gmail.com,ocs,test,test,,,,,
+3162b570-5b9b-463a-b609-c991e56ae5d1,student,dmcalibuyot@up.edu.ph,dhone matthews,calibuyot,test,bs computer science,10231322,202010353,acdorado2@up.edu.ph,dpsm
+dca18685-5419-4618-b8f2-a048716fa544,student,mecarigaba@up.edu.ph,ma. anna,carigaba,test,bs computer science,21323123,201932323,acdorado2@up.edu.ph,dpsm
+5994f2d9-82dc-41cf-b7d1-6b09fb95dddb,student,lcmelon@up.edu.ph,loisse clare,melon,test,bs computer science,32414924,201854293,acdorado2@up.edu.ph,dpsm
+5db56007-5cd6-4096-a648-3507fde41949,student,mppalisoc1@up.edu.ph,may ann grace,palisoc,test,bs computer science,43506725,201776263,acdorado2@up.edu.ph,dpsm
+f4dcc2e4-ce1e-4d76-aa6d-ec7325d2b27e,student,jdsalongsongan@up.edu.ph,john eron david,salongsongan,test,bs computer science,54598526,201698233,acdorado2@up.edu.ph,dpsm
+d42dac01-6de4-4d46-ac12-5f59ad7685ea,student,upmanila.socomsci@gmail.com,test,cas,one,bs computer science,54598526,201698233,acdorado2@up.edu.ph,dpsm
+b68be525-092b-4ae1-9517-76ff63dcbb03,student,jmlicup@up.edu.ph,John Paolo,Licup,Dimagiba,BS Computer Science,10008,2019-46188,jpmlicup@gmail.com,dpsm
+88c35495-b0b4-4941-a270-58364da54f44,adviser,romercado1@up.edu.ph,Russel Lenard,Mercado,Middle,,,,,
+e552642b-9337-4f4b-8f0c-c8c96688928b,adviser,vcmagboo@up.edu.ph,Vincent Peter,Magboo,C,,,,,dpsm
+c80dece3-454b-4bfa-bfe6-e0da329c1c3c,admin,rlomercado22@gmail.com,Russel Lenard,Mercado,O,,,,,

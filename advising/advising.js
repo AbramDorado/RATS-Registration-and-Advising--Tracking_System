@@ -9,17 +9,35 @@ router.post('/api/advising/getStatus', loggedIn, async (req, res) => {
     if (!req.body.student_up_mail) {
       throw 'Invalid request body'
     } else {
-      const source = './database/db.sqlite'
-      const db = await database.openOrCreateDB(source)
-      const result = await database.get(db, `
-        SELECT step1_status, step2_status, step3_status, remarks FROM advising_status WHERE student_up_mail = ?
-      `, [req.body.student_up_mail], false)
-      res.json({step1_status: result.step1_status, step2_status: result.step2_status, step3_status: result.step3_status, remarks: result.remarks}).send()
+      // const source = './database/db.sqlite'
+      const db = await database.openOrCreateDB();
+      const client = await db.connect();
+      console.log('req.body.student_up_mail', req.body.student_up_mail);
+      // const result = await database.get(db, `
+      //   SELECT step1_status, step2_status, step3_status, remarks FROM advising_status WHERE student_up_mail = ?
+      // `, [req.body.student_up_mail], false)
+      const result_query = {
+        text: `
+          SELECT step1_status, step2_status, step3_status, remarks FROM advising_status WHERE student_up_mail = $1
+        `,
+        values: [req.body.student_up_mail],
+      };
+      // console.log('result_query', result_query);
+
+      const result = await client.query(result_query);
+      // console.log('result.rows[0]', result);
+      if (result) {
+        res.json({ step1_status: result.rows[0].step1_status, step2_status: result.rows[0].step2_status, step3_status: result.rows[0].step3_status, remarks: result.rows[0].remarks }).send()
+      }
+      else {
+        res.json({ step1_status: 'not found', step2_status: 'not found', step3_status: 'not found', remarks: 'not found' }).send()
+      }
+      await client.release();
     }
   } catch (error) {
     console.log('Error in api advising getStatus')
     console.log(error)
-    res.json({messsage: error}).send()
+    res.json({ messsage: error }).send()
   }
 })
 // end Get Status
@@ -48,7 +66,7 @@ router.post('/api/advising/read/all/all', ocsOnly, async (req, res) => {
     if (req.body.searchString) {
       searchString = req.body.searchString
     }
-  
+
     var filterByDepartmentText = ''
     if (req.body.filterByDepartmentText) {
       filterByDepartmentText = ` AND (department = '${req.body.filterByDepartmentText}')`
@@ -58,7 +76,7 @@ router.post('/api/advising/read/all/all', ocsOnly, async (req, res) => {
     if (req.body.filterByDegreeProgramText) {
       filterByDegreeProgramText = ` AND (degree_program) = '${req.body.filterByDegreeProgramText}')`
     }
-    
+
     var filterByStep1StatusText = ''
     if (req.body.filterByStep1StatusText) {
       filterByStep1StatusText = ` AND (step1_status = '${req.body.filterByStep1StatusText}')`
@@ -68,15 +86,16 @@ router.post('/api/advising/read/all/all', ocsOnly, async (req, res) => {
     if (req.body.filterByStep2StatusText) {
       filterByStep2StatusText = ` AND (step2_status = '${req.body.filterByStep2StatusText}')`
     }
-    
+
     var filterByStep3StatusText = ''
     if (req.body.filterByStep3StatusText) {
       filterByStep3StatusText = ` AND (step3_status = '${req.body.filterByStep3StatusText}')`
     }
 
-    const source = './database/db.sqlite'
-    const db = await database.openOrCreateDB(source)
-    const rows = await database.all(db, `
+    // const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
+    const rows = await client.query(`
       SELECT *
       FROM advising_status 
       WHERE
@@ -96,8 +115,9 @@ router.post('/api/advising/read/all/all', ocsOnly, async (req, res) => {
         ${filterByStep3StatusText}
       ORDER BY ${sortColumn} ${sortOrder}
       LIMIT ${myLimit}
-      OFFSET ${myOffset}`, [], false)
-    res.send(rows)
+      OFFSET ${myOffset}`);
+    res.send(rows.rows);
+    await client.release();
   } catch (error) {
     console.log('error on /api/advising/read/all/all') // temp
     console.log(error)
@@ -134,7 +154,7 @@ router.post('/api/advising/read/all/adviser', adviserOnly, async (req, res) => {
     if (req.body.filterByDegreeProgramText) {
       filterByDegreeProgramText = ` AND (degree_program) = '${req.body.filterByDegreeProgramText}')`
     }
-    
+
     var filterByStep1StatusText = ''
     if (req.body.filterByStep1StatusText) {
       filterByStep1StatusText = ` AND (step1_status = '${req.body.filterByStep1StatusText}')`
@@ -144,15 +164,16 @@ router.post('/api/advising/read/all/adviser', adviserOnly, async (req, res) => {
     if (req.body.filterByStep2StatusText) {
       filterByStep2StatusText = ` AND (step2_status = '${req.body.filterByStep2StatusText}')`
     }
-    
+
     var filterByStep3StatusText = ''
     if (req.body.filterByStep3StatusText) {
       filterByStep3StatusText = ` AND (step3_status = '${req.body.filterByStep3StatusText}')`
     }
-    
-    const source = './database/db.sqlite'
-    const db = await database.openOrCreateDB(source)
-    const rows = await database.all(db, `
+
+    // const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
+    const rows = await client.query(`
       SELECT student_up_mail, degree_program, step1_status, step2_status, step3_status 
       FROM advising_status 
       WHERE
@@ -167,8 +188,9 @@ router.post('/api/advising/read/all/adviser', adviserOnly, async (req, res) => {
         ${filterByStep3StatusText}
       ORDER BY ${sortColumn} ${sortOrder}
       LIMIT ${myLimit}
-      OFFSET ${myOffset}`, [], false)
-    res.send(rows)
+      OFFSET ${myOffset}`)
+    res.send(rows.rows);
+    await client.release();
   } catch (error) {
     console.log('error on /api/advising/read/all/adviser') // temp
     console.log(error)
@@ -181,21 +203,35 @@ router.post('/api/advising/read/all/adviser', adviserOnly, async (req, res) => {
 router.post('/api/advising_status/update', adviserOnly, async (req, res) => {
   // req.body = {student_up_mail, status}
   try {
-    const source = './database/db.sqlite'
-    const db = await database.openOrCreateDB(source)
+    // const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
     var remarksText = ''
     if (req.body.status == "Waiting for Revision") {
       remarksText = `, remarks = '${req.body.remarks}'`
     }
-    await database.run(db, `
-      UPDATE advising_status SET step2_status = ?
-      ${remarksText} 
-      WHERE student_up_mail = ?
-    `, [req.body.status, req.body.student_up_mail], false)
-    res.json({message: `Updated status for ${req.body.student_up_mail} to ${req.body.status} successfully`}).send()
+    // await database.run(db, `
+    //   UPDATE advising_status SET step2_status = ?
+    //   ${remarksText} 
+    //   WHERE student_up_mail = ?
+    // `, [req.body.status, req.body.student_up_mail], false)
+    const updateQuery = {
+      text: `
+        UPDATE advising_status 
+        SET step2_status = $1
+        ${remarksText ? `, remarks = $2` : ''} 
+        WHERE student_up_mail = $${remarksText ? 3 : 2}
+      `,
+      values: [req.body.status, ...(remarksText ? [req.body.remarks, req.body.student_up_mail] : [req.body.student_up_mail])],
+    };
+
+    await client.query(updateQuery);
+
+    res.json({ message: `Updated status for ${req.body.student_up_mail} to ${req.body.status} successfully` }).send()
+    await client.release();
   } catch (error) {
     console.log('Error on api > advising_status > update', error)
-    res.json({message: error}).send()
+    res.json({ message: error }).send()
   }
 })
 // end Update Status
@@ -203,105 +239,248 @@ router.post('/api/advising_status/update', adviserOnly, async (req, res) => {
 // Delete All Status
 router.post('/api/advising_status/delete/all', ocsOnly, async (req, res) => {
   try {
-    const source = './database/db.sqlite'
-    const db = await database.openOrCreateDB(source)
-    await database.run(db, `DELETE FROM advising_status`, [], false)
-    res.json({message: 'Deleted all rows from advising_status successfully'}).send()
+    // const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
+    await client.query(`DELETE FROM advising_status`);
+    res.json({ message: 'Deleted all rows from advising_status successfully' }).send();
+    await client.release();
   } catch (error) {
     console.log('Error on api > advising_status > delete > all', error)
-    res.status(401).json({message: error}).send()
+    res.status(401).json({ message: error }).send()
   }
 })
 // end Delete All Status
 
 // Create/Update Curri Progress
 // Required Body: curri_progress
+// router.post('/api/advising/curri/update', studentOnly, async (req, res) => {
+//   try {
+//     const db = await database.openOrCreateDB();
+//     const client = await db.connect();
+//     const curriProgressQuery = {
+//       text: 'SELECT * FROM curri_progress WHERE student_up_mail = $1',
+//       values: [req.user.up_mail],
+//     };
+
+//     const curriProgressResult = await client.query(curriProgressQuery);
+
+//     if (curriProgressResult.rows.length > 0) {
+//       const updateCurriProgressQuery = {
+//         text: `
+//           UPDATE curri_progress
+//           SET curri_progress = $1, modified = $2
+//           WHERE student_up_mail = $3
+//         `,
+//         values: [JSON.stringify(req.body.curri_progress), Date.now(), req.user.up_mail],
+//       };
+
+//       await client.query(updateCurriProgressQuery);
+
+//       const updateAdvisingStatusQuery = {
+//         text: `
+//           UPDATE advising_status
+//           SET step1_status = $1
+//           WHERE student_up_mail = $2
+//         `,
+//         values: ['done', req.user.up_mail],
+//       };
+
+//       await client.query(updateAdvisingStatusQuery);
+
+//       res.json({ message: 'Updated' });
+//     } else {
+//       const insertCurriProgressQuery = {
+//         text: `
+//           INSERT INTO curri_progress (student_up_mail, curri_progress, created, modified)
+//           VALUES ($1, $2, $3, $4)
+//         `,
+//         values: [req.user.up_mail, JSON.stringify(req.body.curri_progress), Date.now(), Date.now()],
+//       };
+
+//       await client.query(insertCurriProgressQuery);
+
+//       const updateAdvisingStatusQuery = {
+//         text: `
+//           UPDATE advising_status
+//           SET step1_status = $1
+//           WHERE student_up_mail = $2
+//         `,
+//         values: ['done', req.user.up_mail],
+//       };
+
+//       await client.query(updateAdvisingStatusQuery);
+
+//       res.json({ message: 'Created' });
+//     }
+//   } catch (error) {
+//     console.error('Error on advising.js > api > advising > curri > update', error);
+//     res.status(500).json({ message: 'Internal Server Error' });
+//   }
+// })
+
+
 router.post('/api/advising/curri/update', studentOnly, async (req, res) => {
   try {
-    // check if there is existing record
-    const source = './database/db.sqlite'
-    const db = await database.openOrCreateDB(source)
-    const row = await database.get(db, `SELECT * FROM curri_progress WHERE student_up_mail = ?`, [req.user.up_mail], false)
-    if (row) {
-      // update record
-      await database.run(db, `UPDATE curri_progress SET curri_progress = ?, modified = ? WHERE student_up_mail = ?`, [JSON.stringify(req.body.curri_progress), Date.now(), req.user.up_mail], false)
-      // update advising_status
-      await database.run(db, `UPDATE advising_status SET step1_status = ? WHERE student_up_mail = ?`, ['done', req.user.up_mail], false)
-      res.json({message: 'Updated'}).send()
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
+
+    // Query to retrieve curriculum progress for the student
+    const curriProgressQuery = {
+      text: 'SELECT * FROM "curri_progress" WHERE "student_up_mail" = $1',
+      values: [req.user.up_mail],
+    };
+
+    const curriProgressResult = await client.query(curriProgressQuery);
+
+    if (curriProgressResult.rows.length > 0) {
+      // Update curriculum progress
+      const updateCurriProgressQuery = {
+        text: `
+          UPDATE "curri_progress"
+          SET "curri_progress" = $1, "modified" = $2
+          WHERE "student_up_mail" = $3
+        `,
+        values: [JSON.stringify(req.body.curri_progress), Date.now(), req.user.up_mail],
+      };
+
+      await client.query(updateCurriProgressQuery);
+
+      // Update advising status
+      const updateAdvisingStatusQuery = {
+        text: `
+          UPDATE "advising_status"
+          SET "step1_status" = $1
+          WHERE "student_up_mail" = $2
+        `,
+        values: ['done', req.user.up_mail],
+      };
+
+      await client.query(updateAdvisingStatusQuery);
+
+      res.json({ message: 'Updated' });
+      await client.release();
+
     } else {
-      // no existing record, create one
-      await database.run(db, `INSERT INTO curri_progress (
-        student_up_mail,
-        curri_progress,
-        created,
-        modified
-      ) VALUES (?, ?, ?, ?)`, [req.user.up_mail, JSON.stringify(req.body.curri_progress), Date.now(), Date.now()], false)
-      // update advising_status
-      await database.run(db, `UPDATE advising_status SET step1_status = ? WHERE student_up_mail = ?`, ['done', req.user.up_mail], false)
-      res.json({message: 'Created'}).send()
+      // Insert curriculum progress
+      const insertCurriProgressQuery = {
+        text: `
+          INSERT INTO "curri_progress" ("student_up_mail", "curri_progress", "created", "modified")
+          VALUES ($1, $2, $3, $4)
+        `,
+        values: [req.user.up_mail, JSON.stringify(req.body.curri_progress), Date.now(), Date.now()],
+      };
+
+      await client.query(insertCurriProgressQuery);
+
+      // Update advising status
+      const updateAdvisingStatusQuery = {
+        text: `
+          UPDATE "advising_status"
+          SET "step1_status" = $1
+          WHERE "student_up_mail" = $2
+        `,
+        values: ['done', req.user.up_mail],
+      };
+
+      await client.query(updateAdvisingStatusQuery);
+
+      res.json({ message: 'Created' });
+      await client.release();
     }
   } catch (error) {
-    console.log('Error on advising.js > api > advising > curri > update')
-    console.log(error)
-    res.status(401).json({message: error}).send()
+    console.error('Error on advising.js > api > advising > curri > update', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
-}) 
+});
 // end Create/Update Curri Progress
 
 // Read Curri Progress
 router.post('/api/advising/curri/read', studentOnly, async (req, res) => {
   try {
-    const source = './database/db.sqlite'
-    const db = await database.openOrCreateDB(source)
-    const row = await database.get(db, `SELECT * FROM curri_progress WHERE student_up_mail = ?`, [req.user.up_mail], false)
-    if (row) {
-      res.status(200).json({row: row}).send()
+    // const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
+    // const row = await database.get(db, `SELECT * FROM curri_progress WHERE student_up_mail = ?`, [req.user.up_mail], false)
+    const result = await client.query('SELECT * FROM curri_progress WHERE student_up_mail = $1', [req.user.up_mail]);
+
+    if (result.rows.length > 0) {
+      res.status(200).json({ row: result.rows[0] }).send();
     } else {
-      res.status(200).json({message: 'No record found'}).send()
+      res.status(200).json({ message: 'No record found' }).send();
     }
+    await client.release();
   } catch (error) {
     console.log('Error on advising.js > api > advising > curri > read')
     console.log(error)
-    res.status(401).json({message: error}).send()
+    res.status(401).json({ message: error }).send()
   }
 })
 // end Read Curri Progress
 
 // Read Curri Progress Using Adviser Account
+// router.post('/api/advising/curri/read/adviser', adviserOnly, async (req, res) => {
+//   try {
+//     // const source = './database/db.sqlite'
+//     const db = await database.openOrCreateDB();
+//     const client = await db.connect();
+//     // const row = await database.get(db, `SELECT * FROM curri_progress WHERE student_up_mail = ?`, [req.body.student_up_mail], false)
+//     const row = await client.query('SELECT * FROM curri_progress WHERE student_up_mail = $1', [req.body.student_up_mail]);
+
+//     if (row) {
+//       // const row_parsed = {
+//       //   student_up_mail: row.student_up_mail,
+//       //   curri_progress: JSON.parse(curri_progress)
+//       // }
+//       res.status(200).json({ row: row }).send()
+//     } else {
+//       res.status(200).json({ message: 'No record found' }).send()
+//     }
+//   } catch (error) {
+//     console.log('Error on advising.js > api > advising > curri > read > adviser')
+//     console.log(error)
+//     res.status(401).json({ message: error }).send()
+//   }
+// })
 router.post('/api/advising/curri/read/adviser', adviserOnly, async (req, res) => {
   try {
-    const source = './database/db.sqlite'
-    const db = await database.openOrCreateDB(source)
-    const row = await database.get(db, `SELECT * FROM curri_progress WHERE student_up_mail = ?`, [req.body.student_up_mail], false)
-    if (row) {
-      // const row_parsed = {
-      //   student_up_mail: row.student_up_mail,
-      //   curri_progress: JSON.parse(curri_progress)
-      // }
-      res.status(200).json({row: row}).send()
-    } else {
-      res.status(200).json({message: 'No record found'}).send()
+    // Check if 'student_up_mail' property exists in the request body
+    if (!req.body.student_up_mail) {
+      throw 'Invalid request body';
     }
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
+    const result = await client.query('SELECT * FROM curri_progress WHERE student_up_mail = $1', [req.body.student_up_mail]);
+
+    if (result.rows.length > 0) {
+      const row = result.rows[0];
+      res.status(200).json({ row }).send();
+    } else {
+      res.status(200).json({ message: 'No record found' }).send();
+    }
+    await client.release();
   } catch (error) {
-    console.log('Error on advising.js > api > advising > curri > read > adviser')
-    console.log(error)
-    res.status(401).json({message: error}).send()
+    console.error('Error on advising.js > api > advising > curri > read > adviser');
+    console.error(error);
+    res.status(401).json({ message: error }).send();
   }
-})
+});
 // end Read Curri Progress Using Adviser Account
 
 // Read All Curri Progress
 router.post('/api/advising/curri/read/all', adviserOnly, async (req, res) => {
   try {
-    const source = './database/db.sqlite'
-    const db = await database.openOrCreateDB(source)
-    const rows = await database.all(db, `
+    // const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
+    const rows = await client.query(`
       SELECT * FROM curri_progress
-    `, [], false)
-    res.json({rows: rows}).send()
+    `);
+    res.json({ rows: rows }).send();
+    await client.release();
   } catch (error) {
     console.log('Error on api > advising > curri > read > all', error)
-    res.status(401).json({message: error}).send()
+    res.status(401).json({ message: error }).send()
   }
 })
 // end Read All Curri Progress
@@ -309,40 +488,42 @@ router.post('/api/advising/curri/read/all', adviserOnly, async (req, res) => {
 // Delete All Status
 router.post('/api/advising/curri/delete/all', ocsOnly, async (req, res) => {
   try {
-    const source = './database/db.sqlite'
-    const db = await database.openOrCreateDB(source)
-    await database.run(db, `DELETE FROM curri_progress`, [], false)
-    res.json({message: 'Deleted all rows from curri_progress successfully'}).send()
+    // const source = './database/db.sqlite'
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
+    await client.query(`DELETE FROM curri_progress`);
+    res.json({ message: 'Deleted all rows from curri_progress successfully' }).send();
+    await client.release();
   } catch (error) {
     console.log('Error on api > advising > curri > delete > all', error)
-    res.status(401).json({message: error}).send()
+    res.status(401).json({ message: error }).send()
   }
 })
 // end Delete All Status
 
 // Middlewares
-function adminOnly(req, res, next){
-  try{
+function adminOnly(req, res, next) {
+  try {
     if (req.user.role !== 'admin') {
       throw 'User not Admin'
     } else {
       next()
     }
-  } catch(error){
+  } catch (error) {
     console.log('Error on admin.js > adminOnly', error)
-    res.status(401).json({message: error}).send()
+    res.status(401).json({ message: error }).send()
   }
 }
-function adviserOnly(req, res, next){
-  try{
+function adviserOnly(req, res, next) {
+  try {
     if (req.user.role !== 'adviser') {
       throw 'User not Adviser'
     } else {
       next()
     }
-  } catch(error){
+  } catch (error) {
     console.log('Error on advising.js > adviserOnly', error)
-    res.status(401).json({message: error}).send()
+    res.status(401).json({ message: error }).send()
   }
 }
 function loggedIn(req, res, next) {
@@ -355,7 +536,7 @@ function loggedIn(req, res, next) {
   } catch (error) {
     console.log('Error in advising.js > loggedIn middleware')
     console.log(error)
-    res.status(401).json({message: error}).send()
+    res.status(401).json({ message: error }).send()
   }
 }
 function ocsOnly(req, res, next) {
@@ -367,7 +548,7 @@ function ocsOnly(req, res, next) {
     }
   } catch (error) {
     console.log('Error on advising.js > ocsOnly', error)
-    res.status(401).json({message: error}).send()
+    res.status(401).json({ message: error }).send()
   }
 }
 function studentOnly(req, res, next) {
@@ -380,9 +561,9 @@ function studentOnly(req, res, next) {
   } catch (error) {
     console.log('Error on advising.js > studentOnly()')
     console.log(error)
-    res.status(401).json({message: error}).send()
+    res.status(401).json({ message: error }).send()
   }
 }
 // end Middlewares
 
-module.exports = {router}
+module.exports = { router }
