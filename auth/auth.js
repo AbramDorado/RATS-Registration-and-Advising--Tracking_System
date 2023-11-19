@@ -257,9 +257,12 @@ async function configureGoogleStrategy(db) {
     try {
       // Configure GoogleStrategy
       passport.use(new GoogleStrategy({
-        clientID: '120783145933-io3dchjplgr1hktfm9fatrkn22adm8jb.apps.googleusercontent.com',
+        
+        clientID: '294201163334-845bm58d2k6ch08ng6m771vuqltjlkss.apps.googleusercontent.com',
+        // clientID: '120783145933-io3dchjplgr1hktfm9fatrkn22adm8jb.apps.googleusercontent.com',
         // clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: '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',
+        clientSecret: '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',
+        // clientSecret: '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',
         // clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: '/oauth2/redirect/google',
         scope: [ 'https://www.googleapis.com/auth/userinfo.email', 'profile' ],
