@@ -133,7 +133,7 @@ async function createInitialRows(db) {
   // end Global Variables
 
   // Users
-    // student jmlicup@up.edu.ph
+    // student jmlicup@up.edu.ph ///////////////////////////////////////////////////////////////////
     await database.run(db, `
       INSERT INTO user (
         id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
@@ -144,8 +144,21 @@ async function createInitialRows(db) {
       uuidv4(),
       'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'Dimagiba', 'BS Computer Science', '10008', '2019-46188', 'jpmlicup@gmail.com', 'dpsm'
     ], true)
+
+    await database.run(db, `
+    INSERT INTO user (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+    `, [
+      uuidv4(),
+      'student', 'abramdorado18@gmail.com', 'Abram', 'Dorado', 'Coronado', 'BS Computer Science', '10008', '2011-11111', 'acdorado2@up.edu.ph', 'dpsm'
+    ], true)
     // end student jmlicup@up.edu.ph
-    // admin jpmlicup@gmail.com
+    ///////////////////////////////////////////////////////////////////
+
+    // admin jpmlicup@gmail.com ///////////////////////////////////////////////////////////////////
     await database.run(db, `
       INSERT INTO user (
         id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
@@ -156,6 +169,88 @@ async function createInitialRows(db) {
       uuidv4(),
       'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', 'Dimagiba', '', '', '', '', ''
     ], true)
+
+    await database.run(db, `
+    INSERT OR REPLACE INTO user (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+    `, [
+      uuidv4(),
+      'admin', 'rlomercado22@gmail.com', 'Russel Lenard', 'Mercado', 'O', '', '', '', '', ''
+    ], true)
+
+    await database.run(db, `
+    INSERT OR REPLACE INTO user (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+    `, [
+      uuidv4(),
+      'admin', 'gdsc.upmanila@gmail.com', 'Admin', 'test', 'test', '', '', '', '', ''
+    ], true)
+    
+    await database.run(db, `
+    INSERT OR REPLACE INTO user (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+    `, [
+      uuidv4(),
+      'admin', 'oysuba@up.edu.ph', 'Admin', 'test', 'test', '', '', '', '', ''
+    ], true)
+
+    await database.run(db, `
+    INSERT OR REPLACE INTO user (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+    `, [
+      uuidv4(),
+      'admin', 'hdbuizon@up.edu.ph', 'Admin', 'test', 'test', '', '', '', '', ''
+    ], true)
+
+    await database.run(db, `
+    INSERT OR REPLACE INTO user (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+    `, [
+      uuidv4(),
+      'admin', 'kqpanganiban@up.edu.ph', 'Admin', 'test', 'test', '', '', '', '', ''
+    ], true)
+
+    await database.run(db, `
+    INSERT OR REPLACE INTO user (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+    `, [
+      uuidv4(),
+      'admin', 'gttrani@up.edu.ph', 'Admin', 'test', 'test', '', '', '', '', ''
+    ], true)
+
+    await database.run(db, `
+    INSERT OR REPLACE INTO user (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+    `, [
+      uuidv4(),
+      'admin', 'jdjavier@up.edu.ph', 'Admin', 'test', 'test', '', '', '', '', ''
+    ], true)
+    ///////////////////////////////////////////////////////////////////
+
+
+
+    //adviser ///////////////////////////////////////////////////////////////////
     await database.run(db, `
       INSERT OR REPLACE INTO user (
         id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
@@ -166,6 +261,7 @@ async function createInitialRows(db) {
       uuidv4(),
       'adviser', 'romercado1@up.edu.ph', 'Russel Lenard', 'Mercado', 'Middle', '', '', '', '', ''
     ], true)
+
     await database.run(db, `
       INSERT OR REPLACE INTO user (
         id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
@@ -176,6 +272,20 @@ async function createInitialRows(db) {
       uuidv4(),
       'adviser', 'vcmagboo@up.edu.ph', 'Vincent Peter', 'Magboo', 'C', '', '', '', '', 'dpsm'
     ], true)
+
+    await database.run(db, `
+    INSERT OR REPLACE INTO user (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    )
+    `, [
+      uuidv4(),
+      'adviser', 'acdorado2@up.edu.ph', 'Adviser', 'test', 'test', '', '', '', '', 'dpsm'
+    ], true)
+    ///////////////////////////////////////////////////////////////////
+
+    //ocs ///////////////////////////////////////////////////////////////////
     await database.run(db, `
       INSERT OR REPLACE INTO user (
         id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
@@ -184,8 +294,9 @@ async function createInitialRows(db) {
       )
     `, [
       uuidv4(),
-      'admin', 'rlomercado22@gmail.com', 'Russel Lenard', 'Mercado', 'O', '', '', '', '', ''
+      'ocs', 'doradobam@gmail.com', 'ocs', 'test', 'test', '', '', '', '', ''
     ], true)
+    ///////////////////////////////////////////////////////////////////
     
   // end Users
 
