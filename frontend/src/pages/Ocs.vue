@@ -2,6 +2,9 @@
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
 import ScheduleOfClasses from '../components/ScheduleOfClasses.vue'
+import axios from 'axios';
+
+
 export default {
   name: 'OCS',
   components: {
@@ -55,6 +58,7 @@ export default {
       searchString: '',
       // end pagination-related
 
+      feedbackMessage: 'Revert Advising Status Successful', // Initialize the feedback message
     }
   },
   computed: {
@@ -382,7 +386,29 @@ export default {
         console.log('Error on viewDetails', error)
         alert('Error')
       }
-    },         
+    },
+    async revertAllAdvisingStatus() {
+      const confirmed = window.confirm('Are you sure you want to revert advising status for all students?');
+
+      if (!confirmed) {
+        return; // User cancelled the operation
+      }
+
+      try {
+        const response = await axios.post('/api/advising/revertAllStatus');
+        console.log('API Response:', response.data);
+
+        if (response.data.message) {
+          this.feedbackMessage = response.data.message; // Set the feedback message
+          // Optionally, update your frontend state or show a success message
+          window.location.reload(); // Reload the page
+        }
+      } catch (error) {
+        console.error('An error occurred:', error);
+        this.feedbackMessage = 'Failed to revert advising status. Please try again.'; // Set an error message
+        // Handle error and display an error message to the user
+      }
+    },   
     // end advisingDashboard-related
     // utility functions
     hideDiv(ref) {
@@ -1002,13 +1028,30 @@ export default {
         <!-- Advising Dashboard Header -->
         <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
           <!-- Advising Dashboard Header Left Div -->
-          <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <div class="align-items-center d-flex flex-row" style="gap: 10px;">
             <!-- Advising Dashboard Header Left Div Icon -->
             <i class="align-items-center bi bi-people-fill d-flex" style="color: white; font-size: 20px;"></i>
             <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Advising Dashboard</span>
             <!-- end Advising Dashboard Header Left Div Icon -->
-          </div>
-          <!-- end Advising Dashboard Header Left Div -->
+            </div>
+            <!-- end Advising Dashboard Header Left Div -->
+            
+            <div>{{ feedbackMessage }}</div> <!-- Display the feedback message -->
+    
+            <!-- Announcement Dashboard Header Right Div -->
+            <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+            <!-- Add Revert Advising status button -->
+            <div class="hoverTransform">
+              <span @click="revertAllAdvisingStatus" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Revert Advising Status </span>
+            </div>
+            <!-- end Revert Advising status button --> 
+            <!-- Back to Menu -->
+            <div class="hoverTransform">
+              <span @click="hideDiv('advisingDashboard'); showDiv('menuDiv');" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Back to Menu</span>
+            </div>
+            <!-- end Back to Menu -->
+            </div>
+          <!-- end Advising Dashboard Header Right Div -->
         </div>
         <!-- end Advising Dashboard Header -->
         <!-- Advising Dashboard Body -->

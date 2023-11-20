@@ -2,6 +2,56 @@ const database = require('../database/database')
 const express = require('express')
 const router = express.Router()
 
+
+// Revert Advising Status to Not Started for All Students
+router.post('/api/advising/revertAllStatus', ocsOnly, async (req, res) => {
+  try {
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
+
+    // Update advising status to 'Not Started' for all students with status 'Waiting for Approval' or 'Done'
+    const updateAllStatusQuery = {
+      text: `
+        UPDATE advising_status
+        SET step1_status = 'not started', step2_status = 'not started', step3_status = 'not started'
+        WHERE step1_status IN ('waiting for approval', 'done')
+      `,
+    };
+
+    await client.query(updateAllStatusQuery);
+
+    // Delete rows from the 'ecf' table for all students with status 'Not Started'
+    const deleteECFQuery = {
+      text: `
+        DELETE FROM ecf
+        WHERE student_up_mail IN (
+          SELECT student_up_mail FROM advising_status WHERE step1_status = 'not started'
+        )
+      `,
+    };
+
+    await client.query(deleteECFQuery);
+
+    // Delete rows from the 'curri_progress' table for all students with status 'Not Started'
+    const deleteCurriProgressQuery = {
+      text: `
+        DELETE FROM curri_progress
+        WHERE student_up_mail IN (
+          SELECT student_up_mail FROM advising_status WHERE step1_status = 'not started'
+        )
+      `,
+    };
+
+    await client.query(deleteCurriProgressQuery);
+
+    res.json({ message: 'Advising status reverted, and related data deleted for all applicable students' });
+    await client.release();
+  } catch (error) {
+    console.error('Error on /api/advising/revertAllStatus:', error);
+    res.status(500).json({ error: 'Internal Server Error', details: error.message || error });
+  }
+});
+
 // Get Status
 // Required Request Body: student_up_mail
 router.post('/api/advising/getStatus', loggedIn, async (req, res) => {
@@ -13,9 +63,7 @@ router.post('/api/advising/getStatus', loggedIn, async (req, res) => {
       const db = await database.openOrCreateDB();
       const client = await db.connect();
       console.log('req.body.student_up_mail', req.body.student_up_mail);
-      // const result = await database.get(db, `
-      //   SELECT step1_status, step2_status, step3_status, remarks FROM advising_status WHERE student_up_mail = ?
-      // `, [req.body.student_up_mail], false)
+
       const result_query = {
         text: `
           SELECT step1_status, step2_status, step3_status, remarks FROM advising_status WHERE student_up_mail = $1
@@ -252,74 +300,6 @@ router.post('/api/advising_status/delete/all', ocsOnly, async (req, res) => {
 })
 // end Delete All Status
 
-// Create/Update Curri Progress
-// Required Body: curri_progress
-// router.post('/api/advising/curri/update', studentOnly, async (req, res) => {
-//   try {
-//     const db = await database.openOrCreateDB();
-//     const client = await db.connect();
-//     const curriProgressQuery = {
-//       text: 'SELECT * FROM curri_progress WHERE student_up_mail = $1',
-//       values: [req.user.up_mail],
-//     };
-
-//     const curriProgressResult = await client.query(curriProgressQuery);
-
-//     if (curriProgressResult.rows.length > 0) {
-//       const updateCurriProgressQuery = {
-//         text: `
-//           UPDATE curri_progress
-//           SET curri_progress = $1, modified = $2
-//           WHERE student_up_mail = $3
-//         `,
-//         values: [JSON.stringify(req.body.curri_progress), Date.now(), req.user.up_mail],
-//       };
-
-//       await client.query(updateCurriProgressQuery);
-
-//       const updateAdvisingStatusQuery = {
-//         text: `
-//           UPDATE advising_status
-//           SET step1_status = $1
-//           WHERE student_up_mail = $2
-//         `,
-//         values: ['done', req.user.up_mail],
-//       };
-
-//       await client.query(updateAdvisingStatusQuery);
-
-//       res.json({ message: 'Updated' });
-//     } else {
-//       const insertCurriProgressQuery = {
-//         text: `
-//           INSERT INTO curri_progress (student_up_mail, curri_progress, created, modified)
-//           VALUES ($1, $2, $3, $4)
-//         `,
-//         values: [req.user.up_mail, JSON.stringify(req.body.curri_progress), Date.now(), Date.now()],
-//       };
-
-//       await client.query(insertCurriProgressQuery);
-
-//       const updateAdvisingStatusQuery = {
-//         text: `
-//           UPDATE advising_status
-//           SET step1_status = $1
-//           WHERE student_up_mail = $2
-//         `,
-//         values: ['done', req.user.up_mail],
-//       };
-
-//       await client.query(updateAdvisingStatusQuery);
-
-//       res.json({ message: 'Created' });
-//     }
-//   } catch (error) {
-//     console.error('Error on advising.js > api > advising > curri > update', error);
-//     res.status(500).json({ message: 'Internal Server Error' });
-//   }
-// })
-
-
 router.post('/api/advising/curri/update', studentOnly, async (req, res) => {
   try {
     const db = await database.openOrCreateDB();
@@ -418,30 +398,6 @@ router.post('/api/advising/curri/read', studentOnly, async (req, res) => {
 })
 // end Read Curri Progress
 
-// Read Curri Progress Using Adviser Account
-// router.post('/api/advising/curri/read/adviser', adviserOnly, async (req, res) => {
-//   try {
-//     // const source = './database/db.sqlite'
-//     const db = await database.openOrCreateDB();
-//     const client = await db.connect();
-//     // const row = await database.get(db, `SELECT * FROM curri_progress WHERE student_up_mail = ?`, [req.body.student_up_mail], false)
-//     const row = await client.query('SELECT * FROM curri_progress WHERE student_up_mail = $1', [req.body.student_up_mail]);
-
-//     if (row) {
-//       // const row_parsed = {
-//       //   student_up_mail: row.student_up_mail,
-//       //   curri_progress: JSON.parse(curri_progress)
-//       // }
-//       res.status(200).json({ row: row }).send()
-//     } else {
-//       res.status(200).json({ message: 'No record found' }).send()
-//     }
-//   } catch (error) {
-//     console.log('Error on advising.js > api > advising > curri > read > adviser')
-//     console.log(error)
-//     res.status(401).json({ message: error }).send()
-//   }
-// })
 router.post('/api/advising/curri/read/adviser', adviserOnly, async (req, res) => {
   try {
     // Check if 'student_up_mail' property exists in the request body
