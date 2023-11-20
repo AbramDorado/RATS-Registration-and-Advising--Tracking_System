@@ -520,4 +520,4 @@ async function configureGoogleStrategy(db) {
   })
 }
 
-module.exports = { main, router }
+module.exports = { main, router, pool }

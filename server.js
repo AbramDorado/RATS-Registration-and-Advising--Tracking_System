@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
+const pool = require("./db");
 
 // Main
 async function main() {
@@ -71,11 +72,26 @@ async function main() {
   //   console.log(`Express app listening on port 8000`)
   // })
 
-  //port for railway deployment
-  const port = process.env.PORT || 3000;
-  app.listen(port, "0.0.0.0", () => {
-    console.log(`Express app listening on port ${port}`);
+  app.get("/", (req, res) => {
+    res.send("Hello, World!");
   });
+  
+  app.get("/posts", async (req, res) => {
+    const posts = await pool.query("SELECT * FROM posts;");
+    res.send({ posts });
+  });
+
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+  
+  
+  //port for railway deployment
+  // const port = process.env.PORT || 3000;
+  // app.listen(port, "0.0.0.0", () => {
+  //   console.log(`Express app listening on port ${port}`);
+  // });
   
   // end Start express server
 }
