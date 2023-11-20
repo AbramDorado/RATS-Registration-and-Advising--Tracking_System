@@ -1,23 +1,14 @@
 
 const { Pool } = require('pg');
 
-// // Create a PostgreSQL pool
-// const pool = new Pool({
-//   user: 'postgres',
-//   host: '127.0.0.1',
-//   database: 'rats6', //you can change this base on your db
-//   password: 'abrampostgres', //you can change this base on your db
-//   port: 5432, // Default PostgreSQL port
-// });
-
-// The secret connection string you copied earlier
-const connectionString =
-  "postgresql://postgres:dr75i6HaC0sDZDTjtLCt@containers-us-west-37.railway.app:6233/railway";
-
+// Create a PostgreSQL pool
 const pool = new Pool({
-  connectionString,
+  user: 'postgres',
+  host: '127.0.0.1',
+  database: 'rats6', //you can change this base on your db
+  password: 'abrampostgres', //you can change this base on your db
+  port: 5432, // Default PostgreSQL port
 });
-
 
 // Open/Create Database
 async function openOrCreateDB() {
@@ -84,4 +75,4 @@ async function all(sql, params, ignoreErrs) {
   }
 }
 
-module.exports = { openOrCreateDB, createTable, run, get, all, pool };
+module.exports = { openOrCreateDB, createTable, run, get, all };
