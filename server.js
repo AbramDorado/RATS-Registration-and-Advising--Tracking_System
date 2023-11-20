@@ -67,9 +67,16 @@ async function main() {
   //   })
   // }
 
-  app.listen(8000, () => {
-    console.log(`Express app listening on port 8000`)
-  })
+  // app.listen(8000, () => {
+  //   console.log(`Express app listening on port 8000`)
+  // })
+
+  //port for railway deployment
+  const port = process.env.PORT || 3000;
+  app.listen(port, "0.0.0.0", () => {
+    console.log(`Express app listening on port ${port}`);
+  });
+  
   // end Start express server
 }
 main() // Main Call

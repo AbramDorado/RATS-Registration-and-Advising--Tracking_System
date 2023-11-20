@@ -178,15 +178,9 @@ async function createInitialRows() {
     SET value = EXCLUDED.value;
   `, ['acad_year', '2022-2023']);
 
-    // Insert Users data
-    // Insert student data
-    // await client.query(`
-    //   INSERT INTO "user" (
-    //     id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
-    //   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-    // `, [
-    //   uuidv4(), 'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'Dimagiba', 'BS Computer Science', '10008', '2019-46188', 'jpmlicup@gmail.com', 'dpsm'
-    // ]);
+  // Insert Users data
+
+    // Insert student data /////////////////////////////////////////////////////////////////////////////////////////////////////////  
     await client.query(`
     INSERT INTO "user" (
       id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
@@ -206,14 +200,6 @@ async function createInitialRows() {
       uuidv4(), 'student', 'jmlicup@up.edu.ph', 'John Paolo', 'Licup', 'Dimagiba', 'BS Computer Science', '10008', '2019-46188', 'acdorado2@up.edu.ph', 'dpsm'
     ]);
 
-    // Insert admin data
-    // await client.query(`
-    //   INSERT INTO "user" (
-    //     id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
-    //   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-    // `, [
-    //   uuidv4(), 'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', 'Dimagiba', '', '', '', '', ''
-    // ]);
     await client.query(`
     INSERT INTO "user" (
       id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
@@ -230,60 +216,28 @@ async function createInitialRows() {
       adviser_up_mail = EXCLUDED.adviser_up_mail,
       department = EXCLUDED.department;
   `, [
-    uuidv4(), 'admin', 'gdsc.upmanila@gmail.com', 'Admin', 'Last', 'Test', '', '', '', '', ''
-  ]);
-
-    // Insert adviser data
-    // await client.query(`
-    //   INSERT INTO "user" (
-    //     id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
-    //   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-    // `, [
-    //   uuidv4(), 'adviser', 'romercado1@up.edu.ph', 'Russel Lenard', 'Mercado', 'Middle', '', '', '', '', ''
-    // ]);
-    await client.query(`
-    INSERT INTO "user" (
-      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-    ON CONFLICT (up_mail) DO UPDATE
-    SET
-      role = EXCLUDED.role,
-      first_name = EXCLUDED.first_name,
-      last_name = EXCLUDED.last_name,
-      middle_name = EXCLUDED.middle_name,
-      degree_program = EXCLUDED.degree_program,
-      sais_id = EXCLUDED.sais_id,
-      student_number = EXCLUDED.student_number,
-      adviser_up_mail = EXCLUDED.adviser_up_mail,
-      department = EXCLUDED.department;
-  `, [
-      uuidv4(), 'adviser', 'romercado1@up.edu.ph', 'Russel Lenard', 'Mercado', 'Middle', '', '', '', '', ''
+      uuidv4(), 'student', 'abramdorado18@gmail.com', 'Abram', 'Dorado', 'C', 'BS Computer Science', '10008', '2011-11111', 'acdorado2@up.edu.ph', 'dpsm'
     ]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // await client.query(`
-    //   INSERT INTO "user" (
-    //     id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
-    //   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-    // `, [
-    //   uuidv4(), 'adviser', 'vcmagboo@up.edu.ph', 'Vincent Peter', 'Magboo', 'C', '', '', '', '', 'dpsm'
-    // ]);
+    // Insert admin data /////////////////////////////////////////////////////////////////////////////////////////////////////////
     await client.query(`
-  INSERT INTO "user" (
-    id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
-  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-  ON CONFLICT (up_mail) DO UPDATE
-  SET
-    role = EXCLUDED.role,
-    first_name = EXCLUDED.first_name,
-    last_name = EXCLUDED.last_name,
-    middle_name = EXCLUDED.middle_name,
-    degree_program = EXCLUDED.degree_program,
-    sais_id = EXCLUDED.sais_id,
-    student_number = EXCLUDED.student_number,
-    adviser_up_mail = EXCLUDED.adviser_up_mail,
-    department = EXCLUDED.department;
-`, [
-      uuidv4(), 'adviser', 'vcmagboo@up.edu.ph', 'Vincent Peter', 'Magboo', 'C', '', '', '', '', 'dpsm'
+    INSERT INTO "user" (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    ON CONFLICT (up_mail) DO UPDATE
+    SET
+      role = EXCLUDED.role,
+      first_name = EXCLUDED.first_name,
+      last_name = EXCLUDED.last_name,
+      middle_name = EXCLUDED.middle_name,
+      degree_program = EXCLUDED.degree_program,
+      sais_id = EXCLUDED.sais_id,
+      student_number = EXCLUDED.student_number,
+      adviser_up_mail = EXCLUDED.adviser_up_mail,
+      department = EXCLUDED.department;
+    `, [
+      uuidv4(), 'admin', 'jpmlicup@gmail.com', 'John Paolo', 'Licup', 'Dimagiba', '', '', '', '', ''
     ]);
 
     await client.query(
@@ -304,18 +258,238 @@ async function createInitialRows() {
         adviser_up_mail = EXCLUDED.adviser_up_mail,
         department = EXCLUDED.department
       `, [
-      uuidv4(),
-      'admin',
-      'rlomercado22@gmail.com',
-      'Russel Lenard',
-      'Mercado',
-      'O',
-      '', '', '', '', ''
-    ]
-    );
+      uuidv4(), 'admin', 'rlomercado22@gmail.com', 'Russel Lenard', 'Mercado', 'O', '', '', '', '', ''
+    ]);
 
+    await client.query(
+      `INSERT INTO "user" (
+        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+      )
+      ON CONFLICT (up_mail)
+      DO UPDATE SET
+        role = EXCLUDED.role,
+        first_name = EXCLUDED.first_name,
+        last_name = EXCLUDED.last_name,
+        middle_name = EXCLUDED.middle_name,
+        degree_program = EXCLUDED.degree_program,
+        sais_id = EXCLUDED.sais_id,
+        student_number = EXCLUDED.student_number,
+        adviser_up_mail = EXCLUDED.adviser_up_mail,
+        department = EXCLUDED.department
+      `, [
+      uuidv4(), 'admin', 'gdsc.upmanila@gmail.com', 'Admin', 'tset', 'test', '', '', '', '', ''
+    ]);
 
-    // Insert more users if needed
+    await client.query(
+      `INSERT INTO "user" (
+        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+      )
+      ON CONFLICT (up_mail)
+      DO UPDATE SET
+        role = EXCLUDED.role,
+        first_name = EXCLUDED.first_name,
+        last_name = EXCLUDED.last_name,
+        middle_name = EXCLUDED.middle_name,
+        degree_program = EXCLUDED.degree_program,
+        sais_id = EXCLUDED.sais_id,
+        student_number = EXCLUDED.student_number,
+        adviser_up_mail = EXCLUDED.adviser_up_mail,
+        department = EXCLUDED.department
+      `, [
+      uuidv4(), 'admin', 'oysuba@gmail.com', 'Admin', 'test', 'test', '', '', '', '', ''
+    ]);
+
+    await client.query(
+      `INSERT INTO "user" (
+        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+      )
+      ON CONFLICT (up_mail)
+      DO UPDATE SET
+        role = EXCLUDED.role,
+        first_name = EXCLUDED.first_name,
+        last_name = EXCLUDED.last_name,
+        middle_name = EXCLUDED.middle_name,
+        degree_program = EXCLUDED.degree_program,
+        sais_id = EXCLUDED.sais_id,
+        student_number = EXCLUDED.student_number,
+        adviser_up_mail = EXCLUDED.adviser_up_mail,
+        department = EXCLUDED.department
+      `, [
+      uuidv4(), 'admin', 'hdbuizon@gmail.com', 'Admin', 'test', 'test', '', '', '', '', ''
+    ]);
+
+    await client.query(
+      `INSERT INTO "user" (
+        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+      )
+      ON CONFLICT (up_mail)
+      DO UPDATE SET
+        role = EXCLUDED.role,
+        first_name = EXCLUDED.first_name,
+        last_name = EXCLUDED.last_name,
+        middle_name = EXCLUDED.middle_name,
+        degree_program = EXCLUDED.degree_program,
+        sais_id = EXCLUDED.sais_id,
+        student_number = EXCLUDED.student_number,
+        adviser_up_mail = EXCLUDED.adviser_up_mail,
+        department = EXCLUDED.department
+      `, [
+      uuidv4(), 'admin', 'kqpanganiban@gmail.com', 'Admin', 'test', 'test', '', '', '', '', ''
+    ]);
+
+    await client.query(
+      `INSERT INTO "user" (
+        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+      )
+      ON CONFLICT (up_mail)
+      DO UPDATE SET
+        role = EXCLUDED.role,
+        first_name = EXCLUDED.first_name,
+        last_name = EXCLUDED.last_name,
+        middle_name = EXCLUDED.middle_name,
+        degree_program = EXCLUDED.degree_program,
+        sais_id = EXCLUDED.sais_id,
+        student_number = EXCLUDED.student_number,
+        adviser_up_mail = EXCLUDED.adviser_up_mail,
+        department = EXCLUDED.department
+      `, [
+      uuidv4(), 'admin', 'gttrani@gmail.com', 'Admin', 'test', 'test', '', '', '', '', ''
+    ]);
+
+    await client.query(
+      `INSERT INTO "user" (
+        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+      )
+      ON CONFLICT (up_mail)
+      DO UPDATE SET
+        role = EXCLUDED.role,
+        first_name = EXCLUDED.first_name,
+        last_name = EXCLUDED.last_name,
+        middle_name = EXCLUDED.middle_name,
+        degree_program = EXCLUDED.degree_program,
+        sais_id = EXCLUDED.sais_id,
+        student_number = EXCLUDED.student_number,
+        adviser_up_mail = EXCLUDED.adviser_up_mail,
+        department = EXCLUDED.department
+      `, [
+      uuidv4(), 'admin', 'jdjavier4@gmail.com', 'Admin', 'test', 'test', '', '', '', '', ''
+    ]);
+
+    await client.query(
+      `INSERT INTO "user" (
+        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+      )
+      ON CONFLICT (up_mail)
+      DO UPDATE SET
+        role = EXCLUDED.role,
+        first_name = EXCLUDED.first_name,
+        last_name = EXCLUDED.last_name,
+        middle_name = EXCLUDED.middle_name,
+        degree_program = EXCLUDED.degree_program,
+        sais_id = EXCLUDED.sais_id,
+        student_number = EXCLUDED.student_number,
+        adviser_up_mail = EXCLUDED.adviser_up_mail,
+        department = EXCLUDED.department
+      `, [
+      uuidv4(), 'admin', 'oysuba@gmail.com', 'Admin', 'test', 'test', '', '', '', '', ''
+    ]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Insert adviser data /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    await client.query(`
+    INSERT INTO "user" (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    ON CONFLICT (up_mail) DO UPDATE
+    SET
+      role = EXCLUDED.role,
+      first_name = EXCLUDED.first_name,
+      last_name = EXCLUDED.last_name,
+      middle_name = EXCLUDED.middle_name,
+      degree_program = EXCLUDED.degree_program,
+      sais_id = EXCLUDED.sais_id,
+      student_number = EXCLUDED.student_number,
+      adviser_up_mail = EXCLUDED.adviser_up_mail,
+      department = EXCLUDED.department;
+  `, [
+      uuidv4(), 'adviser', 'romercado1@up.edu.ph', 'Russel Lenard', 'Mercado', 'Middle', '', '', '', '', ''
+    ]);
+
+    await client.query(`
+    INSERT INTO "user" (
+      id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+    ON CONFLICT (up_mail) DO UPDATE
+    SET
+      role = EXCLUDED.role,
+      first_name = EXCLUDED.first_name,
+      last_name = EXCLUDED.last_name,
+      middle_name = EXCLUDED.middle_name,
+      degree_program = EXCLUDED.degree_program,
+      sais_id = EXCLUDED.sais_id,
+      student_number = EXCLUDED.student_number,
+      adviser_up_mail = EXCLUDED.adviser_up_mail,
+      department = EXCLUDED.department;
+      `, [
+        uuidv4(), 'adviser', 'vcmagboo@up.edu.ph', 'Vincent Peter', 'Magboo', 'C', '', '', '', '', 'dpsm'
+      ]);
+
+      await client.query(`
+      INSERT INTO "user" (
+        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      ON CONFLICT (up_mail) DO UPDATE
+      SET
+        role = EXCLUDED.role,
+        first_name = EXCLUDED.first_name,
+        last_name = EXCLUDED.last_name,
+        middle_name = EXCLUDED.middle_name,
+        degree_program = EXCLUDED.degree_program,
+        sais_id = EXCLUDED.sais_id,
+        student_number = EXCLUDED.student_number,
+        adviser_up_mail = EXCLUDED.adviser_up_mail,
+        department = EXCLUDED.department;
+        `, [
+          uuidv4(), 'adviser', 'acdorado2@up.edu.ph', 'Adviser', 'test', 'test', '', '', '', '', 'dpsm'
+        ]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    // Insert ocs data /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    await client.query(
+      `INSERT INTO "user" (
+        id, role, up_mail, first_name, last_name, middle_name, degree_program, sais_id, student_number, adviser_up_mail, department
+      ) VALUES (
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+      )
+      ON CONFLICT (up_mail)
+      DO UPDATE SET
+        role = EXCLUDED.role,
+        first_name = EXCLUDED.first_name,
+        last_name = EXCLUDED.last_name,
+        middle_name = EXCLUDED.middle_name,
+        degree_program = EXCLUDED.degree_program,
+        sais_id = EXCLUDED.sais_id,
+        student_number = EXCLUDED.student_number,
+        adviser_up_mail = EXCLUDED.adviser_up_mail,
+        department = EXCLUDED.department
+      `, [
+      uuidv4(), 'ocs', 'gdsc.doradobam@gmail.com', 'OCS', 'test', 'test', '', '', '', '', ''
+    ]);
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   } catch (error) {
     console.error('Error inserting data:', error);
