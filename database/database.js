@@ -2,12 +2,24 @@
 const { Pool } = require('pg');
 
 // Create a PostgreSQL pool
+// const pool = new Pool({
+//   user: 'postgres',
+//   host: '127.0.0.1',
+//   database: 'rats6', //you can change this base on your db
+//   password: 'abrampostgres', //you can change this base on your db
+//   port: 5432, // Default PostgreSQL port
+// });
+
+// Postgres connection in railway
 const pool = new Pool({
-  user: 'postgres',
-  host: '127.0.0.1',
-  database: 'rats6', //you can change this base on your db
-  password: 'abrampostgres', //you can change this base on your db
-  port: 5432, // Default PostgreSQL port
+  user: process.env.PGUSER,
+  host: '127.0.0.1', // Use IPv4 localhost
+  database: process.env.PGDATABASE,
+  password: process.env.PGPASSWORD,
+  port: process.env.PGPORT,
+  ssl: {
+    rejectUnauthorized: false, // Disable SSL certificate validation for Railway
+  },
 });
 
 // Open/Create Database
