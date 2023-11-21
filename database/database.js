@@ -12,11 +12,11 @@ const { Pool } = require('pg');
 
 // Postgres connection in railway
 const pool = new Pool({
-  user: process.env.PGUSER,
-  host: '127.0.0.1', // Use IPv4 localhost
-  database: process.env.PGDATABASE,
-  password: process.env.PGPASSWORD,
-  port: process.env.PGPORT,
+  user: 'postgres',
+  host: 'roundhouse.proxy.rlwy.net',
+  database: 'railway',
+  password: 'cbfd6cCA5Cd4DfB-cb2aB-b21ad1E-C6',
+  port: '26226',
   ssl: {
     rejectUnauthorized: false, // Disable SSL certificate validation for Railway
   },

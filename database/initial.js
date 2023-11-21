@@ -155,6 +155,28 @@ async function createInitialRows() {
       remarks = EXCLUDED.remarks
   `, ['jmlicup@up.edu.ph', 'acdorado2@up.edu.ph', 'dpsm', 'BS Computer Science', 'not started', 'not started', 'no access', 'incomplete grades']);
 
+    await client.query(`
+    INSERT INTO advising_status (
+      student_up_mail,
+      adviser_up_mail,
+      department,
+      degree_program,
+      step1_status,
+      step2_status,
+      step3_status,
+      remarks
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    ON CONFLICT (student_up_mail) DO UPDATE
+    SET
+      adviser_up_mail = EXCLUDED.adviser_up_mail,
+      department = EXCLUDED.department,
+      degree_program = EXCLUDED.degree_program,
+      step1_status = EXCLUDED.step1_status,
+      step2_status = EXCLUDED.step2_status,
+      step3_status = EXCLUDED.step3_status,
+      remarks = EXCLUDED.remarks
+    `, ['abramdorado18@gmail.com', 'acdorado2@up.edu.ph', 'dpsm', 'BS Computer Science', 'not started', 'not started', 'no access', '']);
+
     // Insert Global Variables data
     // await client.query(`
     //   INSERT INTO global_variables (key, value) VALUES ($1, $2)
@@ -487,7 +509,7 @@ async function createInitialRows() {
         adviser_up_mail = EXCLUDED.adviser_up_mail,
         department = EXCLUDED.department
       `, [
-      uuidv4(), 'ocs', 'gdsc.doradobam@gmail.com', 'OCS', 'test', 'test', '', '', '', '', ''
+      uuidv4(), 'ocs', 'doradobam@gmail.com', 'OCS', 'test', 'test', '', '', '', '', ''
     ]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
