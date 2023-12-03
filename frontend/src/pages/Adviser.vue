@@ -158,7 +158,7 @@ export default {
   <ScheduleOfClasses :user="this.user" />
   <Header :user="this.user" />
   <!-- Adviser Dashboard -->
-  <div class="align-items-center d-flex justify-content-center" style="background-color: lightgray; padding: 30px;">
+  <div class="align-items-center d-flex justify-content-center" style="background-color: lightgray; padding: 8% 0 30px 0;">
     <div ref="adviserDashboard" class="flex-column" style="background-color: #f3f3f3; border: 2px solid black; display: flex; min-height: 300px;">
       <!-- Adviser Dashboard Header -->
       <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">

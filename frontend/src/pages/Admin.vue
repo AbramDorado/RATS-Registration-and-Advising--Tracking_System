@@ -269,7 +269,7 @@ export default {
 <div class="d-flex flex-column justify-content-between" style="min-height: 100vh;">
   <Header :user="this.user" />
   <!-- Admin Div -->
-  <div class="align-items-center d-flex flex-column justify-content-center" style="background-color: lightgray; flex-basis: 0; flex-grow: 1; gap: 20px; padding: 30px;">
+  <div class="align-items-center d-flex flex-column justify-content-center" style="background-color: lightgray; flex-basis: 0; flex-grow: 1; gap: 20px; padding: 8% 0 0 0;">
     <!-- Menu Div -->
     <!-- <div ref="menuDiv" style="align-items: center; display: flex; flex-direction: column; gap: 20px;">
       <div class="d-flex hoverTransform">
@@ -657,9 +657,7 @@ export default {
               <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">Student Number</th>
               <th v-if="filterByRole == '' || filterByRole == 'student'" class="align-middle text-center" scope="col">Adviser UP Mail</th>
               <th class="align-middle text-center" scope="col">Department</th>
-              <th class="align-middle text-center" scope="col">View</th>
-              <th class="align-middle text-center" scope="col">Edit</th>
-              <th class="align-middle text-center" scope="col">Delete</th>
+              <th class="align-middle text-center" scope="col" colspan="3">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -681,10 +679,10 @@ export default {
                 </div>
                 <!-- end View Button -->
               </td>
-              <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; position: relative; text-overflow: ellipsis; white-space: nowrap;">
+              <td style="font-family: Open_Sans; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                 <!-- Edit Button -->
                 <div @click="editUser(users[index])" class="align-items-center d-flex flex-row hoverTransform justify-content-center m-auto">
-                  <span class="myButton1" style="background-color: #7F6000;">Edit</span>
+                  <span class="myButton1" style=" background-color: #7F6000;">Edit</span>
                 </div>
                 <!-- end Edit Button -->
               </td>

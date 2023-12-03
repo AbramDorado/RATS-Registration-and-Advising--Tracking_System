@@ -125,7 +125,7 @@ export default {
 <ScheduleOfClasses :user="this.user" />
 <div ref="home" class="flex-column" style="display: none;">
   <Header :user="this.user" />
-  <div id="homeMainDiv" class="d-flex flex-column justify-content-center" style="background-color: lightgray;">
+  <div id="homeMainDiv" class="d-flex flex-column justify-content-center" style="background-color: lightgray; padding: 8% 0 0 0;">
     <div id="homeMainRow" class="align-items-start d-flex flex-row" style="flex-basis: 0; gap: 20px; margin: 2%;">
       <div class="d-flex flex-column justify-content-center" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px;">
         <div id="announcementsHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">

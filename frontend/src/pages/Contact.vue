@@ -35,7 +35,7 @@ export default {
   <ScheduleOfClasses :user="this.user" />
   <Header :user="this.user"/>
   <!-- Contact Page -->
-  <div class="d-flex flex-column" style="flex-grow: 1;">
+  <div class="d-flex flex-column" style="flex-grow: 1; padding: 8% 0 0 0;">
     <!-- Header -->
     <!-- <div class="align-items-center d-flex justify-content-start" style="background-color: #093405; padding: 10px 15px;">
       <span style="color: white; font-family: Open_Sans_Bold; font-size: 24px; line-height: 1;">Contact Us</span>

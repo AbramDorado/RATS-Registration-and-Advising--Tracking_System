@@ -84,7 +84,7 @@ export default {
 
 <template>
 <!-- Header Main Div -->
-<div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; color: white; height: 92px; padding: 14px 23px 13px 23px; user-select: none;">
+<div class="align-items-center d-flex flex-row justify-content-between" style="position: fixed; width: 100%; background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; color: white; height: 92px; padding: 14px 23px 13px 23px; user-select: none;">
   <!-- Header Left Div -->
   <div @click="redirect('/')" class="align-items-center d-flex flex-row" style="cursor: pointer;">
     <img src="/UPM_CAS_logo.png" alt="UPM CAS Logo" style="height: 65px; margin-right: 8px; width: 65px; ">

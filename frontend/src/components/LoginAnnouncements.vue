@@ -1,0 +1,55 @@
+<script>
+    import AnnouncementCard from '../components/AnnouncementCard.vue'
+    export default {
+        name: 'LoginAnnouncements',
+        data(){
+            return{
+                announcements:[],
+                announcementsCounter: 0, // counter for total announcements loaded
+                announcementsEmpty: false, // v-if 'Show more (announcements)' button; true if all announcements from backend are already loaded here
+                getNextAnnouncementsDisabled: false, // for spam handling getNextAnnouncements()
+            }
+        },
+        components:{
+            AnnouncementCard
+        },
+        methods:{
+          formatted_date(miliseconds) {
+            var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+            var myDate = new Date(parseInt(miliseconds))
+            return myDate.toLocaleDateString("en-US", options)
+          },
+          async getNextAnnouncements(){
+              try {
+                    this.getNextAnnouncementsDisabled = true
+                    const response = await this.axios.post('/api/announcement/next', {loaded: this.announcementsCounter})
+                    this.announcementsCounter += response.data.announcements.length
+                    if (response.data.more === 'true') {
+                    this.announcementsEmpty = false
+                    } else {
+                    this.announcementsEmpty = true
+                    }
+                    this.announcements = this.announcements.concat(response.data.announcements)
+                    this.getNextAnnouncementsDisabled = false
+                } catch (error) {
+                    console.log('Error on Login.vue > getNextAnnouncements()', error)
+                    this.getNextAnnouncementsDisabled = false
+              }
+          },
+          async mounted(){
+                await this.getNextAnnouncements()
+          }
+        }
+    }
+</script>
+
+<template>
+    <div class="d-flex flex-column justify-content-center" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px;">
+        <div id="announcementsHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
+          <i class="align-items-center bi bi-megaphone-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
+          <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Announcements</span>
+        </div>
+        <AnnouncementCard v-for="(obj, index) in announcements" :key="index" :header="announcements[index].title" :date="this.formatted_date(announcements[index].modified)" :content="announcements[index].body" />
+        <a @click="getNextAnnouncements()" v-if="!this.announcementsEmpty" href="javascript:;">Show more</a>
+    </div>
+</template>

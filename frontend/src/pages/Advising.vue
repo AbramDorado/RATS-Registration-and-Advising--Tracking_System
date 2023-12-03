@@ -187,7 +187,7 @@ export default {
   <Header :user="this.user" />
 
   <!-- Student View: Advising Page Body -->
-  <div v-if="this.user.role === 'student'" class="align-items-start d-flex flex-column" style="flex-grow: 1; gap: 20px; margin: 2%;">
+  <div v-if="this.user.role === 'student'" class="align-items-start d-flex flex-column" style="flex-grow: 1; gap: 20px; padding: 8% 0 0 0;;">
     <!-- Curriculum Progress -->
     <div class="div2">
       <!-- Curriculum Progress Header -->
