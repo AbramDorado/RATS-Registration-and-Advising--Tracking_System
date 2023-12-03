@@ -354,7 +354,7 @@ export default {
         this.advisees = response.data.rows
       } catch (error) {
         console.log('Error on Ocs.vue > updateAdvisees()', error)
-        alert('Error on updateAdvisees()')
+        this.$router.push('/');
       }
     },
     totalUnits() {

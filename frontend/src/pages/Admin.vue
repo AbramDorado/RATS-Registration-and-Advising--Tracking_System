@@ -185,6 +185,7 @@ export default {
         this.users = response.data
       } catch (error) {
         console.log('Error on Admin.vue > getAllUsers', error) // temp
+        this.$router.push('/');
       }
     },
     async getUsersCount() {

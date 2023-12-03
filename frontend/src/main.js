@@ -18,7 +18,11 @@ import Ocs from './pages/OCS.vue'
 // set routes
 const routes = [
   {path: '/', component: Home},
-  {path: '/admin', component: Admin},
+  {
+    path: '/admin/:randomString',
+    name: 'admin-with-random',
+    component: Admin,
+  },  
   {path: '/adviser', component: Adviser},
   {path: '/advising', component: Advising},
   {path: '/contact', component: Contact},

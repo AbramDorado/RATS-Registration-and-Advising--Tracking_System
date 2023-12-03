@@ -119,6 +119,7 @@ export default {
         this.advisees = response.data.rows
       } catch (error) {
         console.log('Error on Adviser.vue > updateAdvisees()', error)
+        this.$router.push('/');
       }
     },
     async updateStatus(newStatus) {

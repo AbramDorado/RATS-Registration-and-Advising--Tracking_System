@@ -55,6 +55,14 @@ export default {
       // refs: accPopover
       this.$refs[ref].style.display = 'flex'
     },
+    generateRandomString() {
+      const randomChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < 10; i++) {
+        result += randomChars.charAt(Math.floor(Math.random() * randomChars.length));
+      }
+      return result;
+    },
     toAdvising() {
       if (this.user.role === 'student') {
         location.href = '/advising'
@@ -63,7 +71,9 @@ export default {
       } else if (this.user.role === 'ocs') {
         location.href = '/ocs'
       } else if (this.user.role === 'admin') {
-        location.href = '/admin'
+        const randomString = this.generateRandomString();
+      // Navigate to /admin with the generated random string
+      this.$router.push({ name: 'admin-with-random', params: { randomString } });
       } else {
         location.href = '/login'
       }
