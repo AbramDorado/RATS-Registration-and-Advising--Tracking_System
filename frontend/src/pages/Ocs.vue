@@ -41,7 +41,8 @@ export default {
 
       // advisingDashboard-related
       advisees: [],
-      view_advisee: {},    
+      view_advisee: {},
+      batchUploadGradesProgress: '',
       // end advisingDashboard-related
 
       // pagination-related
@@ -416,6 +417,68 @@ export default {
       this.$refs[ref].style.display = 'flex'
     },
     // end utility functions
+
+  // grades related
+  async addGrade() {
+    try {
+      const response = await this.axios.post('/api/grade/create', this.add_grade);
+      alert(response.data.message);
+      // Handle any additional logic or UI updates as needed
+    } catch (error) {
+      console.error('Error on addGrade:', error);
+      alert('Error during grade addition');
+    }
+  },
+
+  batchUploadGrades() {
+    console.log('Batch Upload Grades button clicked');
+    try {
+      var myReader = new FileReader();
+      if (this.$refs.batchUploadCSV_grades) {
+        myReader.readAsText(this.$refs.batchUploadCSV_grades.files[0]);
+      }
+      var thiss = this;
+      myReader.onload = async function (e) {
+        var content = myReader.result;
+        var lines = content.split("\r");
+        thiss.batchUploadGradesProgress += `\nRegistering ${lines.length - 1} grades...`;
+
+        for (let count = 1; count < lines.length; count++) {
+          try {
+          // split each row content
+          var rowContent = lines[count].split(",");
+          var gradeObj = {};
+
+          // Extract grade information from CSV row
+          gradeObj.year_level = rowContent[0].trim();
+          gradeObj.semester = rowContent[1].trim();
+          gradeObj.units = rowContent[2].trim();
+          gradeObj.subject = rowContent[3].trim();
+          gradeObj.grade = rowContent[4].trim();
+
+          // Use Axios to send a POST request for batch grade creation
+          
+            const response = await thiss.axios.post('/api/grade/create', gradeObj);
+            thiss.batchUploadGradesProgress += `\nSuccessfully registered ${gradeObj.subject} grade...`;
+          } catch (error) {
+            console.error('Error on batchUploadGrades inner try-catch:', error);
+
+          // Log the entire error object for debugging
+          console.log(error);
+
+          // Display a more informative error message
+          const errorMessage = error.response?.data?.message || error.message || 'Unknown error';
+          thiss.batchUploadGradesProgress += `\nError on registering ${gradeObj.subject} grade: ${errorMessage}`;
+          }
+        }
+      };
+    } catch (error) {
+      console.log('Error on batchUploadGrades:', error);
+      alert('Error on batchUploadGrades');
+      thiss.batchUploadGradesProgress += `\nError on batchUploadGrades: ${error}`;
+    }
+  }
+
   },
   async mounted() {
     await this.authorize()
@@ -1191,11 +1254,22 @@ export default {
           <!-- end View Advisee Details Header Left Div -->
           <!-- View Advisee Details Header Right Div -->
           <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+
+          <!-- Batch Upload Button -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('viewAdviseeDetailsDiv'); showDiv('batchUploadGradesDiv')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Batch Upload</span>
+          </div>
+            <!--end Batch Upload Grades -->
+            <!-- Add Grades -->
+            <div class="hoverTransform">
+              <span @click="hideDiv('viewAdviseeDetailsDiv'); showDiv('addGradesDiv')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Add Grades</span>
+            </div>
+            <!-- end Add Grades -->
             <!-- Close -->
             <div class="hoverTransform">
-              <span @click="hideDiv('viewAdviseeDetailsDiv'); showDiv('advisingDashboard')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Close</span>
+              <span @click="hideDiv('viewAdviseeDetailsDiv'); showDiv('advisingDashboard')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Close</span>
             </div>
-            <!-- end Close -->          
+            <!-- end Close -->
           </div>
           <!-- end View Advisee Details Header Right Div -->
         </div>
@@ -1210,6 +1284,40 @@ export default {
           <span style="font-weight: normal;">SAIS ID: <span style="font-weight: bold;">{{this.view_advisee.sais_id}}</span></span>
           <span style="font-weight: normal;">Student Number: <span style="font-weight: bold;">{{this.view_advisee.student_number}}</span></span>
           <span style="font-weight: normal;">Adviser's UP Mail: <span style="font-weight: bold;">{{this.view_advisee.adviser_up_mail}}</span></span>
+
+          <!-- Student Grades Section -->
+          <div style="margin-bottom: 10px;">
+            <div class="text-center" style="margin-bottom: 10px;">
+              <span style="font-family: Open_Sans_Bold; font-size: 20px;">Student Grades</span>
+            </div>
+
+            <!-- Progress Bar Section (Replace with your logic) -->
+            <div class="progress" style="height: 25px; margin-bottom: 20px;">
+              <div class="progress-bar" role="progressbar" :style="{ width: progressBarWidth }" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                {{ progressBarText }}
+              </div>
+            </div>
+
+            <!-- Table View for Subjects, Units, and Grades -->
+            <table class="table table-bordered" style="background-color: white;">
+              <thead>
+                <tr>
+                  <th class="align-middle text-center" scope="col">Subjects</th>
+                  <th class="align-middle text-center" scope="col">Units</th>
+                  <th class="align-middle text-center" scope="col">Grades</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Replace with your Vue.js logic to loop through subjects, units, and grades -->
+                <tr v-for="(subject, index) in studentGrades" :key="index">
+                  <td class="text-center">{{ subject.name }}</td>
+                  <td class="text-center">{{ subject.units }}</td>
+                  <td class="text-center">{{ subject.grade }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
           <!-- ECF -->
           <!-- ECF: {{ this.view_advisee.ecf }} -->
           <div style="margin-bottom: 10px;">
@@ -1252,6 +1360,116 @@ export default {
       <!-- end View Advisee Details Div -->    
     </div>
     <!-- end Adviser Dashboard -->
+
+    <!-- Batch Upload Grades Div -->
+    <div ref="batchUploadGradesDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
+      <!-- Batch Upload Grades Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- Batch Upload Grades Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <!-- Batch Upload Grades Header Left Div Icon -->
+          <i class="align-items-center bi bi-file-earmark-plus-fill d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Batch Upload Grades</span>
+          <!-- end Batch Upload Grades Header Left Div Icon -->
+        </div>
+        <!-- end Batch Upload Grades Header Left Div -->
+        <!-- Batch Upload Grades Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Close -->
+          <div class="hoverTransform">
+            <span @click="hideDiv('batchUploadGradesDiv'); updateCourses(); showDiv('viewAdviseeDetailsDiv')" style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Close</span>
+          </div>
+          <!-- end Close -->          
+        </div>
+        <!-- end Batch Upload Courses Header Right Div -->
+      </div>
+      <!-- end Batch Upload Courses Header -->
+      <!-- Batch Upload Courses Body -->
+      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
+        <span style="font-family: Open_Sans_Bold;">Upload CSV containing grades</span>
+        <input ref="batchUploadCSV_grades" type="file">
+        <div @click="batchUploadGrades()" class="hoverTransform" style="align-self: center;">
+          <span style="background-color: #093405; border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Batch Upload Grades</span>
+        </div>
+        <span>Current Progress: <span style="white-space: pre-line">{{batchUploadGradesProgress}}</span></span>
+      </div>
+      <!-- end Batch Upload Courses Body -->
+    </div>
+    <!-- end Batch Upload Courses Div -->    
+
+    
+    <!-- Add Course Div -->
+    <div ref="addGradesDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
+      <!-- Add Course Header -->
+      <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+        <!-- Add Course Header Left Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+          <!-- Add Course Header Left Div Icon -->
+          <i class="align-items-center bi bi-file-earmark-plus-fill d-flex" style="color: white; font-size: 20px;"></i>
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Add Course</span>
+          <!-- end Add Course Header Left Div Icon -->
+        </div>
+        <!-- end Add Course Header Left Div -->
+        <!-- Add Course Header Right Div -->
+        <div class="align-items-center d-flex flex-row" style="gap: 10px;">
+          <!-- Cancel -->
+          <div class="hoverTransform">
+            <span @click="clearAddCourseInputs(); hideDiv('addCourseDiv'); showDiv('coursesDashboard')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
+          </div>
+          <!-- end Cancel -->          
+        </div>
+        <!-- end Add Course Header Right Div -->
+      </div>
+      <!-- end Add Course Header -->      
+      <!-- Add Course Body -->
+      <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
+        <span style="font-family: Open_Sans_Bold;">Class Number</span>
+        <input v-model="add_course.class_number" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Department</span>
+        <!-- <input v-model="add_course.department" type="text" style="margin-bottom: 10px;"> -->
+        <select v-model="add_course.department" style="margin-bottom: 10px;">
+          <option value="DAC">DAC</option>
+          <option value="DPSM">DPSM</option>
+          <option value="DB">DB</option>
+          <option value="DBS">DBS</option>
+          <option value="DPE">DPE</option>
+          <option value="DSS">DSS</option>
+          <option value="MM">MM</option>
+        </select>
+        <span style="font-family: Open_Sans_Bold;">Course Title</span>
+        <input v-model="add_course.course_title" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Subject</span>
+        <input v-model="add_course.subject" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Catalog Number</span>
+        <input v-model="add_course.catalog_no" type="text" style="margin-bottom: 10px;"> 
+        <span style="font-family: Open_Sans_Bold;">Section</span>
+        <input v-model="add_course.section" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Component</span>
+        <input v-model="add_course.component" type="text" style="margin-bottom: 10px;">        
+        <span style="font-family: Open_Sans_Bold;">Schedule</span>
+        <input v-model="add_course.schedule" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Learning Delivery Mode</span>
+        <input v-model="add_course.learning_delivery_mode" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Room Assigned</span>
+        <input v-model="add_course.room_assigned" type="text" style="margin-bottom: 10px;">        
+        <span style="font-family: Open_Sans_Bold;">Instructor</span>
+        <input v-model="add_course.instructor" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Class Capacity</span>
+        <input v-model="add_course.class_capacity" type="text" style="margin-bottom: 10px;"> 
+        <span style="font-family: Open_Sans_Bold;">Restrictions</span>
+        <input v-model="add_course.restrictions" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Units</span>
+        <input v-model="add_course.units" type="text" style="margin-bottom: 10px;">                             
+        <!-- Add Button -->
+          <div @click="addCourse()" class="align-items-center d-flex justify-content-center hoverTransform">
+            <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Add Course</span>
+          </div>
+        <!-- end Add Button -->        
+      </div>
+      <!-- end Add Course Body -->
+    </div>    
+    <!-- end Add Course Div -->
+
 
   </div>
   <!-- end Admin Div -->

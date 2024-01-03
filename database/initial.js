@@ -113,6 +113,19 @@ async function createInitialTables(db) {
     value TEXT
   `)
   // end global_variables table
+
+  // grades table
+  await database.createTable(db, 'grades', `
+    id TEXT UNIQUE PRIMARY KEY,
+    student_id TEXT REFERENCES "user"(id),
+    year_level TEXT,
+    semester TEXT,
+    units INT,
+    subject TEXT,
+    grade FLOAT
+  `)
+  // end grades table
+
 }
 
 
@@ -120,19 +133,6 @@ async function createInitialRows() {
   const db = await database.openOrCreateDB();
   const client = await db.connect();
   try {
-    // Insert Advising Status data
-    // await client.query(`
-    //   INSERT INTO advising_status (
-    //     student_up_mail,
-    //     adviser_up_mail,
-    //     department,
-    //     degree_program,
-    //     step1_status,
-    //     step2_status,
-    //     step3_status,
-    //     remarks
-    //   ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-    // `, ['jmlicup@up.edu.ph', 'johnpaolomlicup@gmail.com', 'dpsm', 'BS Computer Science', 'not started', 'not started', 'no access', 'incomplete grades']);
     await client.query(`
     INSERT INTO advising_status (
       student_up_mail,
@@ -177,11 +177,6 @@ async function createInitialRows() {
     remarks = EXCLUDED.remarks
   `, ['abramdorado18@gmail.com', 'acdorado2@up.edu.ph', 'dpsm', 'BS Computer Science', 'not started', 'not started', 'no access', '']);
 
-    // Insert Global Variables data
-    // await client.query(`
-    //   INSERT INTO global_variables (key, value) VALUES ($1, $2)
-    // `, ['semester', 'Second']);
-
     await client.query(`
   INSERT INTO global_variables (key, value)
   VALUES ($1, $2)
@@ -189,10 +184,6 @@ async function createInitialRows() {
   SET value = EXCLUDED.value;
 `, ['semester', 'Second']);
 
-
-    // await client.query(`
-    //   INSERT INTO global_variables (key, value) VALUES ($1, $2)
-    // `, ['acad_year', '2022-2023']);
     await client.query(`
     INSERT INTO global_variables (key, value)
     VALUES ($1, $2)

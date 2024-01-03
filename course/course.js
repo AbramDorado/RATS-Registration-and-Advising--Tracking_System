@@ -6,62 +6,6 @@ const router = express.Router()
 
 // course APIs
 // create
-// router.post('/api/course/create', ocsOnly, async (req, res) => {
-//   // req.body: {register_type, class_number, department, course_title, subject, catalog_no, section, schedule, learning_delivery_mode, instructor, class_capacity, restrictions, units}
-//   try {
-//     // const source = './database/db.sqlite'
-//     const db = await database.openOrCreateDB();
-//     const client = await db.connect();
-
-//     const ress = await client.query(`
-//           INSERT INTO course (
-//             class_number,
-//             department,
-//             course_title,
-//             subject,
-//             catalog_no,
-//             section,
-//             component,
-//             schedule,
-//             learning_delivery_mode,
-//             room_assigned,
-//             instructor,
-//             class_capacity,
-//             restrictions,
-//             units
-//           ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-//         `, [req.body.class_number,
-//     req.body.department,
-//     req.body.course_title,
-//     req.body.subject,
-//     req.body.catalog_no,
-//     req.body.section,
-//     req.body.component,
-//     req.body.schedule,
-//     req.body.learning_delivery_mode,
-//     req.body.room_assigned,
-//     req.body.instructor,
-//     req.body.class_capacity,
-//     req.body.restrictions,
-//     req.body.units])
-//     // if single register
-//     if (req.body.registration_type !== 'batch') {
-//       // insert addition in course_edit
-//       await database.run(db, `
-//               INSERT INTO course_edit (
-//                 class_number, subject, catalog_no, section, modification, last_modified
-//               ) VALUES (?, ?, ?, ?, ?, ?)
-//           `, [req.body.class_number, req.body.subject, req.body.catalog_no, req.body.section, 'Addition', Date.now()], false)
-//       // end insert addition in course_edit
-//     }
-//     // end if single register
-//     res.json({ message: `Insert success for course ${req.body.class_number}` }).send()
-//   } catch (error) {
-//     console.log('Error on api > course > create', error)
-//     res.status(401).json({ message: error }).send()
-//   }
-// })
-
 
 router.post('/api/course/create', ocsOnly, async (req, res) => {
   try {
@@ -139,21 +83,6 @@ router.post('/api/course/create', ocsOnly, async (req, res) => {
 // end create
 
 // // read all by dept
-// router.post('/api/course/read/all', async (req, res) => {
-//   // req.body = {dept}
-//   try {
-//     const db = await database.openOrCreateDB();
-//     const client = await db.connect();
-//     const rows = await client.query(`
-//           SELECT * FROM course WHERE department = ? ORDER BY subject, catalog_no 
-//         `, [req.body.dept])
-//     res.json({ rows: rows }).send()
-//   } catch (error) {
-//     console.log('Error on api > course > read > all', error)
-//     res.status(401).json({ message: error }).send()
-//   }
-// })
-// end read all by dept
 router.post('/api/course/read/all', async (req, res) => {
   // req.body = {dept}
   let client;
@@ -180,23 +109,10 @@ router.post('/api/course/read/all', async (req, res) => {
     res.status(401).json({ message: error }).send();
   }
 });
+// end read all by dept
 
 
 // read one
-// router.post('/api/course/read/one', async (req, res) => {
-//   // req.body = {class_number}
-//   try {
-//     const db = database.openOrCreateDB();
-//     const client = await db.connect();
-//     const row = await client.query(`SELECT * FROM course WHERE class_number = ?`, [req.body.class_number])
-//     res.json({ row: row }).send()
-//   } catch (error) {
-//     console.log('Error on api > course > read > one', error)
-//     res.status(401).json({ message: error }).send()
-//   }
-// })
-
-
 router.post('/api/course/read/one', async (req, res) => {
   try {
     const db = await database.openOrCreateDB();
@@ -225,30 +141,6 @@ router.post('/api/course/read/one', async (req, res) => {
 // end read one
 
 // update
-// router.post('/api/course/update', ocsOnly, async (req, res) => {
-//   // req.body: {old_class_number, new_class_number, department, course_title, subject, catalog_no, section, schedule, learning_delivery_mode, instructor, class_capacity, restrictions, units}    
-//   try {
-//     const db = await database.openOrCreateDB();
-//     const client = await db.connect();
-//     await client.query(`
-//           UPDATE course SET class_number = ?, department = ?, course_title = ?, subject = ?, catalog_no = ?, section = ?, component = ?, schedule = ?, learning_delivery_mode = ?, room_assigned = ?, instructor = ?, class_capacity = ?, restrictions = ?, units = ? WHERE class_number = ?
-//         `, [
-//       req.body.class_number, req.body.department, req.body.course_title, req.body.subject, req.body.catalog_no, req.body.section, req.body.component, req.body.schedule, req.body.learning_delivery_mode, req.body.room_assigned, req.body.instructor, req.body.class_capacity, req.body.restrictions, req.body.units, req.body.class_number
-//     ])
-//     // update course_edit table
-//     // insert row with 'updated' modification type
-//     await client.query(`INSERT OR REPLACE INTO course_edit (class_number, subject, catalog_no, section, modification, last_modified) VALUES (?, ?, ?, ?, ?, ?)`, [req.body.class_number, req.body.subject, req.body.catalog_no, req.body.section, 'Updated', Date.now()])
-//     // end insert row with 'updated' modification type
-//     // end update course_edit table
-//     res.json({ message: `Update success for ${req.body.subject} ${req.body.catalog_no} ${req.body.section}` })
-//   } catch (error) {
-//     console.log('Error on api > course > update', error)
-//     res.status(401).json({ message: error }).send()
-//   }
-// })
-
-
-
 router.post('/api/course/update', ocsOnly, async (req, res) => {
   try {
     const db = await database.openOrCreateDB();
@@ -313,39 +205,6 @@ router.post('/api/course/update', ocsOnly, async (req, res) => {
 // end update
 
 // delete
-// router.post('/api/course/delete', ocsOnly, async (req, res) => {
-//   // req.body = {class_number}
-//   try {
-//     const db = await database.openOrCreateDB();
-//     // get original course row
-//     const row = await database.get(db, `
-//           SELECT subject, catalog_no, section FROM course WHERE class_number = ?
-//         `, [req.body.class_number], false)
-//     console.log('get original row success') // temp
-//     console.log('row is', row) // temp
-//     // end get original course row        
-//     await database.run(db, `DELETE FROM course WHERE class_number = ?`, [req.body.class_number], false)
-//     console.log('delete success') // temp
-//     await database.run(db, `
-//           UPDATE advising_status SET step2_status = ? WHERE student_up_mail 
-//           IN (SELECT student_up_mail FROM ecf WHERE class_number = ?)
-//           `, ['waiting for approval', req.body.class_number], false)
-//     await database.run(db, `DELETE FROM ecf WHERE class_number = ?`, [req.body.class_number], false)
-//     // insert into course_edit
-//     await database.run(db, `
-//           INSERT OR REPLACE INTO course_edit (
-//             class_number, subject, catalog_no, section, modification, last_modified
-//           ) VALUES (?, ?, ?, ?, ?, ?)
-//         `, [req.body.class_number, row.subject, row.catalog_no, row.section, 'Dissolved', Date.now()], false)
-//     console.log('insert into course_edit success') // temp
-//     // end insert into course_edit
-//     res.json({ message: `Delete success for class_number ${req.body.class_number}` }).send()
-//   } catch (error) {
-//     console.log('Error on api > course > delete', error)
-//     res.status(401).json({ message: error }).send()
-//   }
-// })
-
 router.post('/api/course/delete', ocsOnly, async (req, res) => {
   try {
     const db = await database.openOrCreateDB();

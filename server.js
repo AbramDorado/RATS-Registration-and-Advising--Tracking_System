@@ -43,6 +43,8 @@ async function main() {
   app.use('/', ecf.router)
   const global_variables = require('./global_variables/global_variables')
   app.use('/', global_variables.router)
+  const grade = require('./grade/grade')
+  app.use('/', grade.router)
   // end Initialize routers
 
   // Initialize fallback
@@ -72,7 +74,7 @@ async function main() {
   // })
 
   //port for railway deployment
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 8000;
   app.listen(port, "0.0.0.0", () => {
     console.log(`Express app listening on port ${port}`);
   });
