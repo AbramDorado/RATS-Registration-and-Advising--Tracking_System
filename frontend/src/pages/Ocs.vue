@@ -43,6 +43,7 @@ export default {
       advisees: [],
       view_advisee: {},
       batchUploadGradesProgress: '',
+      add_grade: {},
       // end advisingDashboard-related
 
       // pagination-related
@@ -173,7 +174,7 @@ export default {
         alert(response.data.message)
         this.updateCourses()
         this.hideDiv('addCourseDiv')
-        this.showDiv('coursesDashboard')
+        this.showDiv('viewAdviseeDetailsDiv')
       } catch (error) {
         console.log('Error on Ocs.vue > addCourse()', error)
         alert('Error')
@@ -424,6 +425,9 @@ export default {
       const response = await this.axios.post('/api/grade/create', this.add_grade);
       alert(response.data.message);
       // Handle any additional logic or UI updates as needed
+      this.updateCourses()
+      this.hideDiv('addGradesDiv')
+      this.showDiv('coursesDashboard')
     } catch (error) {
       console.error('Error on addGrade:', error);
       alert('Error during grade addition');
@@ -477,7 +481,15 @@ export default {
       alert('Error on batchUploadGrades');
       thiss.batchUploadGradesProgress += `\nError on batchUploadGrades: ${error}`;
     }
-  }
+  },
+  async updateGrades() {
+      try {
+        const response = await this.axios.post('/api/grade/read/all', {dept: this.dept})
+        this.courses = response.data.rows
+      } catch (error) {
+        console.log('Error on Ocs.vue > updateGrades()', error)
+      }
+    },
 
   },
   async mounted() {
@@ -1398,77 +1410,50 @@ export default {
     <!-- end Batch Upload Courses Div -->    
 
     
-    <!-- Add Course Div -->
+    <!-- Add Grades Div -->
     <div ref="addGradesDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; width: 700px;">
-      <!-- Add Course Header -->
+      <!-- Add Grades Header -->
       <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
-        <!-- Add Course Header Left Div -->
+        <!-- Add Grades Header Left Div -->
         <div class="align-items-center d-flex flex-row" style="gap: 5px;">
-          <!-- Add Course Header Left Div Icon -->
+          <!-- Add Grades Header Left Div Icon -->
           <i class="align-items-center bi bi-file-earmark-plus-fill d-flex" style="color: white; font-size: 20px;"></i>
-          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Add Course</span>
-          <!-- end Add Course Header Left Div Icon -->
+          <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Add Grades</span>
+          <!-- end Add Grades Header Left Div Icon -->
         </div>
-        <!-- end Add Course Header Left Div -->
-        <!-- Add Course Header Right Div -->
+        <!-- end Add Grades Header Left Div -->
+        <!-- Add Grades Header Right Div -->
         <div class="align-items-center d-flex flex-row" style="gap: 10px;">
           <!-- Cancel -->
           <div class="hoverTransform">
-            <span @click="clearAddCourseInputs(); hideDiv('addCourseDiv'); showDiv('coursesDashboard')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
+            <span @click="clearAddCourseInputs(); hideDiv('addGradesDiv'); showDiv('viewAdviseeDetailsDiv')" style="background-color: rgb(127, 96, 0); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 14px; padding: 5px 10px;">Cancel</span>
           </div>
           <!-- end Cancel -->          
         </div>
-        <!-- end Add Course Header Right Div -->
+        <!-- end Add Grades Header Right Div -->
       </div>
-      <!-- end Add Course Header -->      
-      <!-- Add Course Body -->
+      <!-- end Add Grades Header -->      
+      <!-- Add Grades Body -->
       <div class="d-flex flex-column" style="gap: 10px; padding: 20px 40px;">
-        <span style="font-family: Open_Sans_Bold;">Class Number</span>
-        <input v-model="add_course.class_number" type="text" style="margin-bottom: 10px;">
-        <span style="font-family: Open_Sans_Bold;">Department</span>
-        <!-- <input v-model="add_course.department" type="text" style="margin-bottom: 10px;"> -->
-        <select v-model="add_course.department" style="margin-bottom: 10px;">
-          <option value="DAC">DAC</option>
-          <option value="DPSM">DPSM</option>
-          <option value="DB">DB</option>
-          <option value="DBS">DBS</option>
-          <option value="DPE">DPE</option>
-          <option value="DSS">DSS</option>
-          <option value="MM">MM</option>
-        </select>
-        <span style="font-family: Open_Sans_Bold;">Course Title</span>
-        <input v-model="add_course.course_title" type="text" style="margin-bottom: 10px;">
-        <span style="font-family: Open_Sans_Bold;">Subject</span>
-        <input v-model="add_course.subject" type="text" style="margin-bottom: 10px;">
-        <span style="font-family: Open_Sans_Bold;">Catalog Number</span>
-        <input v-model="add_course.catalog_no" type="text" style="margin-bottom: 10px;"> 
-        <span style="font-family: Open_Sans_Bold;">Section</span>
-        <input v-model="add_course.section" type="text" style="margin-bottom: 10px;">
-        <span style="font-family: Open_Sans_Bold;">Component</span>
-        <input v-model="add_course.component" type="text" style="margin-bottom: 10px;">        
-        <span style="font-family: Open_Sans_Bold;">Schedule</span>
-        <input v-model="add_course.schedule" type="text" style="margin-bottom: 10px;">
-        <span style="font-family: Open_Sans_Bold;">Learning Delivery Mode</span>
-        <input v-model="add_course.learning_delivery_mode" type="text" style="margin-bottom: 10px;">
-        <span style="font-family: Open_Sans_Bold;">Room Assigned</span>
-        <input v-model="add_course.room_assigned" type="text" style="margin-bottom: 10px;">        
-        <span style="font-family: Open_Sans_Bold;">Instructor</span>
-        <input v-model="add_course.instructor" type="text" style="margin-bottom: 10px;">
-        <span style="font-family: Open_Sans_Bold;">Class Capacity</span>
-        <input v-model="add_course.class_capacity" type="text" style="margin-bottom: 10px;"> 
-        <span style="font-family: Open_Sans_Bold;">Restrictions</span>
-        <input v-model="add_course.restrictions" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Year Level</span>
+        <input v-model="add_grade.year_level" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Semester</span>
+        <input v-model="add_grade.semester" type="text" style="margin-bottom: 10px;">
         <span style="font-family: Open_Sans_Bold;">Units</span>
-        <input v-model="add_course.units" type="text" style="margin-bottom: 10px;">                             
+        <input v-model="add_grade.units" type="text" style="margin-bottom: 10px;">
+        <span style="font-family: Open_Sans_Bold;">Subject</span>
+        <input v-model="add_grade.subject" type="text" style="margin-bottom: 10px;"> 
+        <span style="font-family: Open_Sans_Bold;">Grade</span>
+        <input v-model="add_grade.grade" type="text" style="margin-bottom: 10px;">                          
         <!-- Add Button -->
-          <div @click="addCourse()" class="align-items-center d-flex justify-content-center hoverTransform">
-            <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Add Course</span>
+          <div @click="addGrade()" class="align-items-center d-flex justify-content-center hoverTransform">
+            <span style="background-color: #093405; border: 2px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 18px; padding: 5px 10px;">Add Grade</span>
           </div>
         <!-- end Add Button -->        
       </div>
-      <!-- end Add Course Body -->
+      <!-- end Add Grades Body -->
     </div>    
-    <!-- end Add Course Div -->
+    <!-- end Add Grades Div -->
 
 
   </div>

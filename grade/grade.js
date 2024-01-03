@@ -32,19 +32,10 @@ router.post('/api/grade/create', ocsOnly, async (req, res) => {
     await client.query(gradeInsertQuery);
 
     res.status(200).json({ message: `Insert success for student ${req.body.student_id} in ${req.body.subject}` });
+    await client.release();
   } catch (error) {
-    console.error('Error on api > grade > create:', error);
-
-    // Check if it's a PostgreSQL constraint violation (e.g., unique key violation)
-    if (error.code === '23505') {
-      return res.status(400).json({ message: 'Duplicate entry. This record already exists.' });
-    }
-
+    console.error('Error on api > grade > create', error);
     res.status(500).json({ message: 'Internal Server Error' });
-  } finally {
-    if (client) {
-      await client.release();
-    }
   }
 });
 
