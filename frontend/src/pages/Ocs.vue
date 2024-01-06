@@ -44,6 +44,7 @@ export default {
       view_advisee: {},
       batchUploadGradesProgress: '',
       add_grade: {},
+      studentGrades: [],
       // end advisingDashboard-related
 
       // pagination-related
@@ -427,7 +428,7 @@ export default {
       // Handle any additional logic or UI updates as needed
       this.updateCourses()
       this.hideDiv('addGradesDiv')
-      this.showDiv('coursesDashboard')
+      this.showDiv('viewAdviseeDetailsDiv')
     } catch (error) {
       console.error('Error on addGrade:', error);
       alert('Error during grade addition');
@@ -459,6 +460,7 @@ export default {
           gradeObj.units = rowContent[2].trim();
           gradeObj.subject = rowContent[3].trim();
           gradeObj.grade = rowContent[4].trim();
+          gradeObj.student_up_mail = rowContent[5].trim();
 
           // Use Axios to send a POST request for batch grade creation
           
@@ -484,10 +486,26 @@ export default {
   },
   async updateGrades() {
       try {
-        const response = await this.axios.post('/api/grade/read/all', {dept: this.dept})
+        const response = await this.axios.post('/api/grade/read/all', {student_up_mail: this.user.up_mail})
         this.courses = response.data.rows
       } catch (error) {
         console.log('Error on Ocs.vue > updateGrades()', error)
+      }
+    },
+
+    // Fetch data method
+    async getGrades() {
+      try {
+        // Fetch grades data
+        const gradesResponse = await this.axios.post('/api/grade/read/all', null, {params: { student_up_mail: this.user.up_mail }});
+        this.studentGrades = gradesResponse.data.rows;
+
+        // Additional logic for data processing or UI updates can be added here
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Handle error appropriately, e.g., show an error message to the user
+        alert('Error fetching grades data. Please try again.');
       }
     },
 
@@ -498,6 +516,8 @@ export default {
     await this.updateCourses()
     await this.updateAdvisees()
     await this.getStudentsCount()
+    // Fetch additional data using the fetchData method
+    await this.getGrades();
   }
 }
 </script>
@@ -1309,6 +1329,7 @@ export default {
                 {{ progressBarText }}
               </div>
             </div>
+            <!-- end Progress Bar Section -->
 
             <!-- Table View for Subjects, Units, and Grades -->
             <table class="table table-bordered" style="background-color: white;">
@@ -1321,14 +1342,17 @@ export default {
               </thead>
               <tbody>
                 <!-- Replace with your Vue.js logic to loop through subjects, units, and grades -->
-                <tr v-for="(subject, index) in studentGrades" :key="index">
-                  <td class="text-center">{{ subject.name }}</td>
-                  <td class="text-center">{{ subject.units }}</td>
-                  <td class="text-center">{{ subject.grade }}</td>
+                <tr v-for="(grade, index) in studentGrades" :key="index">
+                  <td class="text-center">{{ grade.subject }}</td>
+                  <td class="text-center">{{ grade.units }}</td>
+                  <td class="text-center">{{ grade.grade }}</td>
                 </tr>
               </tbody>
             </table>
+            <!--end Table View for Subjects, Units, and Grades -->
           </div>
+          <!-- end Student Grades Section -->
+
 
           <!-- ECF -->
           <!-- ECF: {{ this.view_advisee.ecf }} -->
@@ -1355,6 +1379,7 @@ export default {
             <div class="text-center" style="font-size: 18px; font-family: Open_Sans_Bold;">Total Units: {{totalUnits()}}</div>
           </div>
           <!-- end ECF -->
+
           <div class="align-items-center d-flex flex-column justify-content-center">
             <div class="alert alert-primary text-center" style="font-family: Open_Sans_Bold; font-size: 20px; text-transform: capitalize;">
               Advising Status: {{this.view_advisee.step2_status}}

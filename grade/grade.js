@@ -13,31 +13,35 @@ router.post('/api/grade/create', ocsOnly, async (req, res) => {
     const gradeInsertQuery = {
       text: `
         INSERT INTO "grade" (
-          "student_id",
-          "subject",
-          "semester",
           "year_level",
-          "grade"
-        ) VALUES ($1, $2, $3, $4, $5)
+          "semester",
+          "units",
+          "subject",
+          "grade",
+          "student_up_mail"
+        ) VALUES ($1, $2, $3, $4, $5, $6)
       `,
       values: [
-        req.body.student_id,
-        req.body.subject,
-        req.body.semester,
         req.body.year_level,
+        req.body.semester,
+        req.body.units,
+        req.body.subject,
         req.body.grade,
+        req.body.student_up_mail,
       ],
     };
 
     await client.query(gradeInsertQuery);
 
-    res.status(200).json({ message: `Insert success for student ${req.body.student_id} in ${req.body.subject}` });
+    res.status(200).json({ message: `Insert success for student ${req.body.student_up_mail} in ${req.body.subject}` });
     await client.release();
   } catch (error) {
     console.error('Error on api > grade > create', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+// end create grade
+
 
 // read all grades
 router.post('/api/grade/read/all', async (req, res) => {
@@ -47,9 +51,9 @@ router.post('/api/grade/read/all', async (req, res) => {
 
     const readAllGradesQuery = {
       text: `
-        SELECT * FROM "grade" WHERE "student_id" = $1
+        SELECT * FROM "grade" WHERE "student_up_mail" = $1
       `,
-      values: [req.body.student_id],
+      values: [req.body.student_up_mail],
     };
 
     const result = await client.query(readAllGradesQuery);
@@ -61,6 +65,7 @@ router.post('/api/grade/read/all', async (req, res) => {
     res.status(401).json({ message: error }).send();
   }
 });
+// end read all grades
 
 // delete grade
 router.post('/api/grade/delete', ocsOnly, async (req, res) => {
@@ -70,20 +75,22 @@ router.post('/api/grade/delete', ocsOnly, async (req, res) => {
 
     const deleteGradeQuery = {
       text: `
-        DELETE FROM "grade" WHERE "student_id" = $1 AND "subject" = $2
+        DELETE FROM "grade" WHERE "student_up_mail" = $6 AND "subject" = $4
       `,
-      values: [req.body.student_id, req.body.subject],
+      values: [req.body.student_up_mail, req.body.subject],
     };
 
     await client.query(deleteGradeQuery);
 
-    res.status(200).json({ message: `Delete success for student ${req.body.student_id} in ${req.body.subject}` });
+    res.status(200).json({ message: `Delete success for student ${req.body.student_up_mail} in ${req.body.subject}` });
     await client.release();
   } catch (error) {
     console.error('Error on api > grade > delete', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+// end delete grade
+
 
 // Middleware
 function ocsOnly(req, res, next) {

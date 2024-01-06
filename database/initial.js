@@ -21,7 +21,7 @@ async function createInitialTables(db) {
 
   // user table
   await database.createTable(db, 'user', `
-    id TEXT UNIQUE PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     role TEXT,
     up_mail TEXT UNIQUE,
     first_name TEXT,
@@ -37,7 +37,7 @@ async function createInitialTables(db) {
 
   // announcement table
   await database.createTable(db, 'announcement', `
-    id TEXT UNIQUE PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     title TEXT,
     body TEXT UNIQUE,
     created TIMESTAMP,
@@ -100,7 +100,7 @@ async function createInitialTables(db) {
 
   // ecf table
   await database.createTable(db, 'ecf', `
-    id TEXT UNIQUE PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     student_up_mail TEXT,
     class_number TEXT,
     adviser_up_mail TEXT
@@ -114,18 +114,17 @@ async function createInitialTables(db) {
   `)
   // end global_variables table
 
-  // grades table
-  await database.createTable(db, 'grades', `
-    id TEXT UNIQUE PRIMARY KEY,
-    student_id TEXT REFERENCES "user"(id),
+  // grade table
+  await database.createTable(db, 'grade', `
+    id SERIAL PRIMARY KEY,
     year_level TEXT,
     semester TEXT,
     units INT,
     subject TEXT,
-    grade FLOAT
+    grade FLOAT,
+    student_up_mail TEXT
   `)
-  // end grades table
-
+  // end grade table
 }
 
 
