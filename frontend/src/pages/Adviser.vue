@@ -2,6 +2,8 @@
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import ScheduleOfClasses from '../components/ScheduleOfClasses.vue'
+import axios from 'axios';
+
 export default {
   name: 'Adviser',
   components: {
@@ -143,6 +145,12 @@ export default {
         const response2 = await this.axios.post('/api/ecf/read/all/student/adviserAcc', {student_up_mail: advisee.up_mail})
         this.view_advisee.ecf = response2.data.rows
         // end Get ECF
+
+        // Get grade
+        const response3 = await this.axios.post('/api/grade/read/all/student/adviserAcc', { student_up_mail: advisee.up_mail });
+        this.view_advisee.grade = response3.data.rows
+        // end Get grade
+
         this.hideDiv('adviserDashboard')
         this.showDiv('viewAdviseeDetailsDiv')
       } catch (error) {
@@ -274,6 +282,7 @@ export default {
       </div>
       <!-- end Adviser Dashboard Body -->      
     </div>
+
     <!-- View Advisee Details Div -->
     <div ref="viewAdviseeDetailsDiv" class="flex-column" style="background-color: #F8F6F0; border: 2px solid black; display: none; min-width: 700px;">
       <!-- View Advisee Details Header -->
@@ -309,6 +318,44 @@ export default {
         <span style="font-weight: bold;">Curriculum Progress: <span style="font-weight: normal; text-transform: capitalize;">{{this.view_advisee.step1_status}}</span></span>
         <!-- <span style="font-weight: bold;">Advising Status: <span style="font-weight: normal; text-transform: capitalize;">{{this.view_advisee.step2_status}}</span></span> -->
         <!-- Curri Progress: {{view_advisee.curri_progress}} -->
+
+        
+          <!-- Student Grades Section -->
+          <div style="margin-bottom: 10px;">
+            <div class="text-center" style="margin-bottom: 10px;">
+              <span style="font-family: Open_Sans_Bold; font-size: 20px;">Student Grades</span>
+            </div>
+
+            <!-- Progress Bar Section (Replace with your logic) -->
+            <div class="progress" style="height: 25px; margin-bottom: 20px;">
+              <div class="progress-bar" role="progressbar" :style="{ width: progressBarWidth }" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                {{ progressBarText }}
+              </div>
+            </div>
+            <!-- end Progress Bar Section -->
+
+            <!-- Table View for Subjects, Units, and Grades -->
+            <table class="table table-bordered" style="background-color: white;">
+              <thead>
+                <tr>
+                  <th class="align-middle text-center" scope="col">Subjects</th>
+                  <th class="align-middle text-center" scope="col">Units</th>
+                  <th class="align-middle text-center" scope="col">Grades</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(obj, index) in view_advisee.grade" :key="index">
+                  <td class="text-center">{{ view_advisee.grade[index].subject }}</td>
+                  <td class="text-center">{{ view_advisee.grade[index].units }}</td>
+                  <td class="text-center">{{ view_advisee.grade[index].grade }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <!--end Table View for Subjects, Units, and Grades -->
+          </div>
+          <!-- end Student Grades Section -->
+
+
         <!-- Curriculum Progress -->
         <div>
           <div class="text-center" style="margin-bottom: 10px;"><span style="font-family: Open_Sans_Bold; font-size: 20px;">Curriculum Progress</span></div>

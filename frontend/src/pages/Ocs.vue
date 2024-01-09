@@ -40,11 +40,16 @@ export default {
       // end headerComponent-related
 
       // advisingDashboard-related
-      advisees: [],
-      view_advisee: {},
+      advisees: [], // click and it will show where the grades are
+      view_advisee: { grade: [] }, // Your data structure
       batchUploadGradesProgress: '',
       add_grade: {},
-      studentGrades: [],
+      selectedSemester: null, // To store the selected semester from the dropdown
+      semester: '1st Year 1st Semester',
+      // semesters: ["1st Year 1st Semester", "1st Year 2nd Semester", "1st Year Mid Year",
+      // "2nd Year 1st Semester", "2nd Year 2nd Semester", "2nd Year Mid Year",
+      // "3rd Year 1st Semester", "3rd Year 2nd Semester", "3rd Year Mid Year",
+      // "4th Year 1st Semester", "4th Year 2nd Semester"], // To store unique semester values from your data
       // end advisingDashboard-related
 
       // pagination-related
@@ -67,8 +72,20 @@ export default {
     pages() {
       return Math.ceil(this.studentsCount / this.resultsLimit_static)
     }
+    // Use a computed property to filter the data based on the selected semester
   },
+
   methods: {
+
+    filteredGrades() {
+      console.log("Selected Semester:", this.selectedSemester);
+      if (this.selectedSemester) {
+        return this.view_advisee.grade.filter(grade => grade.semester === this.selectedSemester);
+      } else {
+        return this.view_advisee.grade;
+      }
+    },
+
     // announcementDashboard-related
     async addAnnouncement() {
       try {
@@ -382,6 +399,12 @@ export default {
         const response2 = await this.axios.post('/api/ecf/read/all/student/ocsAcc', {student_up_mail: advisee.up_mail})
         this.view_advisee.ecf = response2.data.rows
         // end Get ECF
+
+        // Get grade
+        const response3 = await this.axios.post('/api/grade/read/all/student/ocsAcc', { student_up_mail: advisee.up_mail });
+        this.view_advisee.grade = response3.data.rows
+        // end Get grade
+
         this.hideDiv('advisingDashboard')
         this.showDiv('viewAdviseeDetailsDiv')
       } catch (error) {
@@ -421,12 +444,21 @@ export default {
     // end utility functions
 
   // grades related
+  async updateGrades() {
+    try {
+      const response = await this.axios.post('/api/grade/read/all', {semester: this.semester})
+      this.grade = response.data.rows
+    } catch (error) {
+      console.log('Error on Ocs.vue > updateGrades()', error)
+    }
+  },
+
   async addGrade() {
     try {
       const response = await this.axios.post('/api/grade/create', this.add_grade);
       alert(response.data.message);
       // Handle any additional logic or UI updates as needed
-      this.updateCourses()
+      this.updateGrades()
       this.hideDiv('addGradesDiv')
       this.showDiv('viewAdviseeDetailsDiv')
     } catch (error) {
@@ -484,30 +516,6 @@ export default {
       thiss.batchUploadGradesProgress += `\nError on batchUploadGrades: ${error}`;
     }
   },
-  async updateGrades() {
-      try {
-        const response = await this.axios.post('/api/grade/read/all', {student_up_mail: this.user.up_mail})
-        this.courses = response.data.rows
-      } catch (error) {
-        console.log('Error on Ocs.vue > updateGrades()', error)
-      }
-    },
-
-    // Fetch data method
-    async getGrades() {
-      try {
-        // Fetch grades data
-        const gradesResponse = await this.axios.post('/api/grade/read/all', null, {params: { student_up_mail: this.user.up_mail }});
-        this.studentGrades = gradesResponse.data.rows;
-
-        // Additional logic for data processing or UI updates can be added here
-
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        // Handle error appropriately, e.g., show an error message to the user
-        alert('Error fetching grades data. Please try again.');
-      }
-    },
 
   },
   async mounted() {
@@ -516,8 +524,12 @@ export default {
     await this.updateCourses()
     await this.updateAdvisees()
     await this.getStudentsCount()
-    // Fetch additional data using the fetchData method
-    await this.getGrades();
+    await this.updateGrades() 
+
+    // Populate semesters array with unique values
+    this.semesters = Array.from(new Set(this.view_advisee.grade.map(grade => grade.year_level + ' ' + grade.semester)));
+    // Set the default selected semester
+    this.selectedSemester = this.semesters[0];
   }
 }
 </script>
@@ -1331,6 +1343,38 @@ export default {
             </div>
             <!-- end Progress Bar Section -->
 
+            <!-- Add the dropdown filter -->
+            <!-- <div>
+              <label for="semesterFilter">Select Semester:</label>
+              <select id="semesterFilter" v-model="selectedSemester">
+                <option v-for="semester in semesters" :key="semester" :value="semester">{{ semester }}</option>
+              </select>
+            </div> -->
+
+            <!-- Dept Dropdown -->
+            <div>
+              <span style="font-family: Open_Sans_Bold; margin-right: 5px;">Select Semester: </span>
+              <select @change="updateGrades()" v-model="semester" style="margin-bottom: 10px;">
+                <option value="1st Year 1st Semester">1st Year 1st Semester</option>
+                <option value="1st Year 2nd Semester">1st Year 2nd Semester</option>
+                <option value="1st Year Mid Year">1st Year Mid Year</option>
+                
+                <option value="2nd Year 1st Semester">2nd Year 1st Semester</option>
+                <option value="2nd Year 2nd Semester">2nd Year 2nd Semester</option>
+                <option value="2nd Year Mid Year">2nd Year Mid Year</option>
+
+                <option value="3rd Year 1st Semester">3rd Year 1st Semester</option>
+                <option value="3rd Year 2nd Semester">3rd Year 2nd Semester</option>
+                <option value="3rd Year Mid Year">3rd Year Mid Year</option>
+
+                <option value="4th Year 1st Semester">4th Year 1st Semester</option>
+                <option value="4th Year 2nd Semester">4th Year 2nd Semester</option>
+            
+              </select>     
+            </div>      
+            <!-- end Dept Dropdown -->    
+
+
             <!-- Table View for Subjects, Units, and Grades -->
             <table class="table table-bordered" style="background-color: white;">
               <thead>
@@ -1341,11 +1385,10 @@ export default {
                 </tr>
               </thead>
               <tbody>
-                <!-- Replace with your Vue.js logic to loop through subjects, units, and grades -->
-                <tr v-for="(grade, index) in studentGrades" :key="index">
-                  <td class="text-center">{{ grade.subject }}</td>
-                  <td class="text-center">{{ grade.units }}</td>
-                  <td class="text-center">{{ grade.grade }}</td>
+                <tr v-for="(obj, index) in view_advisee.grade" :key="index">
+                  <td class="text-center">{{ view_advisee.grade[index].subject }}</td>
+                  <td class="text-center">{{ view_advisee.grade[index].units }}</td>
+                  <td class="text-center">{{ view_advisee.grade[index].grade }}</td>
                 </tr>
               </tbody>
             </table>

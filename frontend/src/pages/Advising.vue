@@ -3,6 +3,8 @@ import Ecf from '../components/Ecf.vue'
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
 import ScheduleOfClasses from '../components/ScheduleOfClasses.vue'
+import axios from 'axios';
+
 export default {
   name: 'Advising',
   components: {
@@ -43,12 +45,17 @@ export default {
       users: [], // Main list of rows shown in users table
       usersCount: 0, // Stores response of countUsers API
 
+      //show grade
+      studentGrades: [],
+
     }
   },
   async mounted() {
     await this.authorize()
     await this.update_curri_progress()
     await this.getECFStatus()
+    // Fetch additional data using the fetchData method
+    await this.getGrades();
   },
   methods: {
     addCurriProgressRow() {
@@ -173,8 +180,33 @@ export default {
         this.currentPage--
         this.getAllUsers()
       }
-    }
+    },
     //end OCS view: Pagination Related
+
+    // Fetch data for grade method
+    async getGrades() { 
+      try {
+        // Fetch grades data
+        const gradesResponse = await this.axios.post('/api/grade/read/all/student', { student_up_mail: this.user.up_mail });
+        
+        // Log the entire response for debugging
+        console.log('API Response:', gradesResponse);
+
+        // Check if 'data' property exists
+        if ('data' in gradesResponse && 'rows' in gradesResponse.data) {
+        this.studentGrades = gradesResponse.data.rows;
+        // Log the received data to the console
+        console.log('Student Grades:', [...this.studentGrades]);
+        } else {
+          console.error('Unexpected API response structure:', gradesResponse);
+        }
+
+      } catch (error) {
+        console.error('Error fetching grades data:', error);
+        // Handle error appropriately, e.g., show an error message to the user
+        alert('Error fetching grades data. Please try again.');
+      }
+    }
 
   }
 }
@@ -287,6 +319,56 @@ export default {
       <!-- end ECF Body -->
     </div>
     <!-- end ECF -->
+
+    <!-- Grade -->
+    <div class="div2" id="ecfDiv">
+      <!-- ECF Header -->
+      <div ref="gradeHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
+        <i class="align-items-center bi bi-list-check d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
+        <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Student Grades</span>
+      </div>
+      <!-- end ECF Header -->
+      <!-- Grade Body -->
+
+          <!-- Student Grades Section -->
+          <div style="margin-bottom: 10px;">
+            <div class="text-center" style="margin-bottom: 10px;">
+              <span style="font-family: Open_Sans_Bold; font-size: 20px;">Student Grades</span>
+            </div>
+
+            <!-- Progress Bar Section (Replace with your logic) -->
+            <div class="progress" style="height: 25px; margin-bottom: 20px;">
+              <div class="progress-bar" role="progressbar" :style="{ width: progressBarWidth }" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                {{ progressBarText }}
+              </div>
+            </div>
+            <!-- end Progress Bar Section -->
+
+            <!-- Table View for Subjects, Units, and Grades -->
+            <table class="table table-bordered" style="background-color: white;">
+              <thead>
+                <tr>
+                  <th class="align-middle text-center" scope="col">Subjects</th>
+                  <th class="align-middle text-center" scope="col">Units</th>
+                  <th class="align-middle text-center" scope="col">Grades</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(grade, index) in studentGrades" :key="index">
+                  <td class="text-center">{{ grade.subject }}</td>
+                  <td class="text-center">{{ grade.units }}</td>
+                  <td class="text-center">{{ grade.grade }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <!--end Table View for Subjects, Units, and Grades -->
+          </div>
+          <!-- end Student Grades Section -->
+
+      <!-- end Grade Body -->
+    </div>
+    <!-- end Grade -->
+
   </div>
   <!-- end Student View: Advising Page Body -->
   <!-- start OCS View: Advising Page Body-->

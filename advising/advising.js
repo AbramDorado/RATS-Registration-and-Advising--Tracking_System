@@ -457,6 +457,46 @@ router.post('/api/advising/curri/delete/all', ocsOnly, async (req, res) => {
 })
 // end Delete All Status
 
+
+// read all grades
+router.post('/api/grade/read/all/student', async (req, res) => {
+  try {
+    const db = await database.openOrCreateDB();
+    const client = await db.connect();
+
+    try {
+    const gradeRowsQuery = {
+      text: `
+        SELECT * FROM "grade" WHERE "student_up_mail" = $1
+      `,
+      values: [req.body.student_up_mail],
+    };
+
+    const gradeRows = await client.query(gradeRowsQuery);
+
+    const gradeCompleteRows = [];
+      for (let i = 0; i < gradeRows.rows.length; i++) {
+        const gradeRowQuery = {
+          text: `
+            SELECT * FROM grade WHERE subject = $1
+          `,
+          values: [gradeRows.rows[i].subject],
+        };
+        const gradeRow = await client.query(gradeRowQuery);
+        gradeCompleteRows.push(gradeRow.rows[0]);
+      }
+
+    res.json({ rows: gradeCompleteRows }).send();
+    } finally {
+      client.release();
+    }
+  } catch (error) {
+    console.log('Error on api > grade > read > all', error);
+    res.status(401).json({ message: error }).send();
+  }
+});
+// end read all grades
+
 // Middlewares
 function adminOnly(req, res, next) {
   try {
