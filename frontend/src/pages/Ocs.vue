@@ -420,6 +420,33 @@ export default {
       <div class="d-flex hoverTransform">
         <span @click="updateAdvisees(); hideDiv('menuDiv'); showDiv('advisingDashboard');" class="myButton2" style="background-color: rgb(117, 21, 24);">Advising Dashboard</span>
       </div>
+
+      <!-- Set Period Section -->
+      <div ref="setPeriod" class="flex-column" style="background-color: #f3f3f3; border: 2px solid black; min-height: 300px; padding: 15px 20px; margin-top: 20px;">
+        <!-- Header for Set Period Section -->
+        <div class="align-items-center d-flex flex-row justify-content-between" style="background-image: url(/header_bg.png); background-position: center; background-repeat: no-repeat; background-size: cover; height: 50px; padding: 10px 10px 10px 15px;">
+          <div class="align-items-center d-flex flex-row" style="gap: 5px;">
+            <i class="align-items-center bi bi-calendar-check-fill d-flex" style="color: white; font-size: 20px;"></i>
+            <span style="color: white; font-family: Open_Sans_Bold; font-size: 20px;">Set Advising Period</span>
+          </div>
+        </div>
+
+        <!-- Start Date Input -->
+        <div class="mb-3">
+          <label for="startDate" class="form-label">Start Date:</label>
+          <input type="date" class="form-control" id="startDate">
+        </div>
+        <!-- End Date Input -->
+        <div class="mb-3">
+          <label for="endDate" class="form-label">End Date:</label>
+          <input type="date" class="form-control" id="endDate">
+        </div>
+        <!-- Set and Revert Buttons -->
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-primary" onclick="setPeriod()">Set</button>
+          <button class="btn btn-secondary" onclick="revertPeriod()">Revert</button>
+        </div>
+      </div>
     </div>
     <!-- end Menu Div -->
     <!-- Add Announcement Div -->
