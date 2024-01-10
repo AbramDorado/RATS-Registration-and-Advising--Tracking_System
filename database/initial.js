@@ -121,10 +121,19 @@ async function createInitialTables(db) {
     semester TEXT,
     units INT,
     subject TEXT,
-    grade FLOAT,
+    grade TEXT,
     student_up_mail TEXT
   `)
   // end grade table
+
+  // degree_programs table
+  await database.createTable(db, 'degree_programs',`
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    department TEXT,
+    total_units INT
+  `);
+  // end degree_programs table
 }
 
 
@@ -481,6 +490,23 @@ async function createInitialRows() {
       uuidv4(), 'ocs', 'doradobam@gmail.com', 'OCS', 'test', 'test', '', '', '', '', ''
     ]);
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // degree_programs initial data
+    await client.query(`
+      INSERT INTO "degree_programs" (
+        id,
+        name,
+        department,
+        total_units
+      ) VALUES (
+        1,
+        'bs computer science',
+        'dpsm',
+        100
+      )
+      ON CONFLICT (id) DO NOTHING;
+    `);
+    // end degree_programs initial data
 
   } catch (error) {
     console.error('Error inserting data:', error);

@@ -45,6 +45,8 @@ async function main() {
   app.use('/', global_variables.router)
   const grade = require('./grade/grade')
   app.use('/', grade.router)
+  const curriculum = require("./curriculum/curriculum");
+  app.use("/", curriculum.router);
   // end Initialize routers
 
   // Initialize fallback
