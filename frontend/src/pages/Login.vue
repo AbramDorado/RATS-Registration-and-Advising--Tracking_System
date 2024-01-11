@@ -50,15 +50,15 @@ export default {
 
 <template>
 <div ref="login" class="align-items-center justify-content-center" style="background-image: url('login_bg.png'); background-position: center; background-repeat: no-repeat; background-size: cover; display: none; flex-grow: 1; width: 100%; height: 100%;">
-  <div class="announcementDiv" style="margin:5% 0% 5% 5%">
-    <div class="announcementMainDiv" style="position: fixed; top:10%; left: 10%; height = 65%; width: 40%; min-height: 65%; min-width: 40%;">
+  <div class="announcementDiv" style="margin:5% 0% 5% 5%; height: 70%;">
+    <div class="announcementMainDiv" style="position: fixed; top:5%; left: 4%; height: 3255px; width: 55%; min-height: 65%; min-width: 40%;">
       <LoginAnnouncements/>
     </div>
   </div>
   
   <div class="mainLoginDiv" style="margin:5%">
-    <div class="loginMainDiv align-items-center d-flex justify-content-end" style="position: fixed; top: 10%; left: 50%; background-image: url('PGH_bg.jpeg'); background-position: center; background-size: cover; background-repeat: no-repeat; height: 75%; width: 25%; min-height: 650px; min-width: 500px;">
-      <div class="whitebg" style="position: fixed; top: 10%; left: 50%;  background-color: rgba(255, 255, 255, 1); height: 25%; width: 25%; min-height: 200px; min-width: 500px;">
+    <!--<div class="loginMainDiv align-items-center d-flex justify-content-end" style="position: fixed; top: 5%; left: 62%; background-image: url('PGH_bg.jpeg'); background-position: center; background-size: cover; background-repeat: no-repeat; height: 75%; width: 40%; min-height: 650px; min-width: 500px;">-->
+      <div class="whitebg" style="position: fixed; top: 5%; left: 60%;  background-color: rgba(255, 255, 255, 1); height: 92%; width: 35%; min-height: 200px; min-width: 500px; padding-top: 8%;">
       <div class="loginDiv d-flex flex-row" style="height: 100%; min-height: 300px;">
         <div class="leftDiv align-items-center d-flex flex-column justify-content-center" style="gap: 81px; height: 400px; width: 500px;">
           <div class="align-items-center header d-flex flex-row justify-content-between px-3" style="flex: 1; gap: 15px; max-height: 100px;">
@@ -115,7 +115,7 @@ export default {
       </div>    
       <!--img src="/PGH_bg.jpeg" alt="" style="position: absolute; max-height: 500px; max-width: 500px; object-position: 100% 100%; opacity: 50%;"-->
       </div>
-    </div>
+    <!--</div>-->
   </div>      
   <LoginScheduleOfClasses/>
 </div>

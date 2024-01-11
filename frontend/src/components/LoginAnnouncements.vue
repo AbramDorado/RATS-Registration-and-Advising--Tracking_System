@@ -1,5 +1,6 @@
 <script>
     import AnnouncementCard from '../components/AnnouncementCard.vue'
+    import ScheduleTab from "../components/ScheduleTab.vue"; // Adjust the path accordingly
     export default {
         name: 'LoginAnnouncements',
         data(){
@@ -11,7 +12,7 @@
             }
         },
         components:{
-            AnnouncementCard
+            AnnouncementCard, ScheduleTab
         },
         methods:{
           formatted_date(miliseconds) {
@@ -44,12 +45,32 @@
 </script>
 
 <template>
-    <div class="d-flex flex-column justify-content-center" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; flex: 1 1 0; padding: 15px 20px;">
-        <div id="announcementsHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
-          <i class="align-items-center bi bi-megaphone-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
-          <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Announcements</span>
-        </div>
-        <AnnouncementCard v-for="(obj, index) in announcements" :key="index" :header="announcements[index].title" :date="this.formatted_date(announcements[index].modified)" :content="announcements[index].body" />
-        <a @click="getNextAnnouncements()" v-if="!this.announcementsEmpty" href="javascript:;">Show more</a>
+    <div class="justify-content-center" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; height: 20%; overflow: scroll; padding: 15px 20px; margin-right: 15px;">
+        <ScheduleTab>
+            <template v-slot:tab-content="{ tabIndex }">
+                <!-- Content for the Announcements tab -->
+                <div v-if="tabIndex === 0">
+                    <div id="announcementsHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
+                        <i class="align-items-center bi bi-megaphone-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
+                        <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Announcements</span>
+                    </div>
+                    <AnnouncementCard v-for="(obj, index) in announcements" :key="index" :header="announcements[index].title" :date="this.formatted_date(announcements[index].modified)" :content="announcements[index].body" />
+                    <a @click="getNextAnnouncements()" v-if="!this.announcementsEmpty" href="javascript:;">Show more</a>
+                </div>
+                <!-- Content for the Calendar tab -->
+                <div v-else-if="tabIndex === 1">
+                    <div class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
+                        <i class="align-items-center bi bi-calendar-week-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
+                        <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Schedule of Activities</span>
+                    </div>
+                    <div>
+                        <img src="/Schedule_of_Activities.jpg" alt="Schedule of Activities">
+                        <!-- <img src="/UPM_CAS_logo.png" alt="UPM CAS Logo" style="height: 65px; margin-right: 8px; width: 65px; "> -->
+                    </div>
+                </div>
+            </template>
+        </ScheduleTab>
+        
+        
     </div>
 </template>
