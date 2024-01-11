@@ -45,11 +45,11 @@
 </script>
 
 <template>
-    <div class="justify-content-center" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; height: 20%; overflow: scroll; padding: 15px 20px; margin-right: 15px;">
+    <div class="justify-content-center" style="background-color: #F8F6F0; border: 2px solid #093405; border-radius: 10px; height: 20%; overflow: auto; padding: 15px 20px; margin-right: 15px;">
         <ScheduleTab>
             <template v-slot:tab-content="{ tabIndex }">
                 <!-- Content for the Announcements tab -->
-                <div v-if="tabIndex === 0">
+                <div v-if="tabIndex === 0" style="height:100%; ">
                     <div id="announcementsHeader" class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
                         <i class="align-items-center bi bi-megaphone-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
                         <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Announcements</span>
@@ -58,19 +58,17 @@
                     <a @click="getNextAnnouncements()" v-if="!this.announcementsEmpty" href="javascript:;">Show more</a>
                 </div>
                 <!-- Content for the Calendar tab -->
-                <div v-else-if="tabIndex === 1">
+                <div v-else-if="tabIndex === 1" style="width:100%; ">
                     <div class="align-items-center d-flex flex-row" style="margin-bottom: 15px;">
                         <i class="align-items-center bi bi-calendar-week-fill d-flex" style="color: #460C0F; font-size: 24px; margin-right: 5px;"></i>
                         <span style="color: #460C0F; font-family: Open_Sans_Bold; font-size: 24px;">Schedule of Activities</span>
                     </div>
-                    <div>
-                        <img src="/Schedule_of_Activities.jpg" alt="Schedule of Activities">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <img src="/Schedule_of_Activities.jpg" alt="Schedule of Activities" class="img-fluid" style ="display: block; margin: auto; width: 80%;">
                         <!-- <img src="/UPM_CAS_logo.png" alt="UPM CAS Logo" style="height: 65px; margin-right: 8px; width: 65px; "> -->
                     </div>
                 </div>
             </template>
         </ScheduleTab>
-        
-        
     </div>
 </template>

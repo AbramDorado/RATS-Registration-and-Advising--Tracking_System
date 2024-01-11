@@ -50,8 +50,8 @@ export default {
 
 <template>
 <div ref="login" class="align-items-center justify-content-center" style="background-image: url('login_bg.png'); background-position: center; background-repeat: no-repeat; background-size: cover; display: none; flex-grow: 1; width: 100%; height: 100%;">
-  <div class="announcementDiv" style="margin:5% 0% 5% 5%; height: 70%;">
-    <div class="announcementMainDiv" style="position: fixed; top:5%; left: 4%; height: 3255px; width: 55%; min-height: 65%; min-width: 40%;">
+  <div class="announcementDiv" style="margin:5% 0% 5% 5%; height: 100%;">
+    <div class="announcementMainDiv" style="position: fixed; top:5%; left: 4%; height: 3255px; width: 55%; min-height: 90%; min-width: 40%;">
       <LoginAnnouncements/>
     </div>
   </div>

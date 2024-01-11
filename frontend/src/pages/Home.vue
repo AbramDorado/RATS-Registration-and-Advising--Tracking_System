@@ -182,20 +182,20 @@ export default {
             <!-- end Advising -->
 
             <!-- SAIS  -->
-            <div class="d-flex flex-column" style="background-color: white; border: 2px solid black; border-radius: 10px; padding: 10px 15px;">
-              <span style="font-family: Open_Sans_Bold; font-size: 16px; margin-bottom: 10px;">Step 3: Enlist through SAIS</span>
+            <!--<div class="d-flex flex-column" style="background-color: white; border: 2px solid black; border-radius: 10px; padding: 10px 15px;">
+              <span style="font-family: Open_Sans_Bold; font-size: 16px; margin-bottom: 10px;">Step 3: Enlist through SAIS</span>-->
               <!-- <span style="align-self: center; font-family: Open_Sans_Bold; font-size: 20px; margin-bottom: 5px;">
                 Status:
                 <span style="font-family: Open_Sans; font-size: 20px; text-transform: capitalize;">{{this.step3_status}}</span>
               </span> -->
               <!-- Go to SAIS Button -->
-              <div class="d-flex hoverTransform justify-content-center" style="align-self: center; width: 100px;">
+              <!--<div class="d-flex hoverTransform justify-content-center" style="align-self: center; width: 100px;">
                 <span @click="goToSAIS()" style="background-color: rgb(70, 12, 15); border: 1px solid white; border-radius: 5px; color: white; cursor: pointer; font-family: Open_Sans; font-size: 16px; padding: 5px 10px;">
                   Go to SAIS
                 </span>
-              </div>
+              </div>-->
               <!-- end Go to SAIS Button -->               
-            </div>
+            <!--</div>-->
             <!-- end SAIS -->          
 
           </div>
