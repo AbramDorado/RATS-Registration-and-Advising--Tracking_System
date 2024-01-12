@@ -126,14 +126,40 @@ export default {
     },
     async updateStatus(newStatus) {
       try {
-        const response = await this.axios.post('/api/advising_status/update', {student_up_mail: this.view_advisee.up_mail, status: newStatus, remarks: this.remarksString})
-        alert(response.data.message)
-        location.href = '/adviser'
+        // Update advising status
+        const response = await this.axios.post('/api/advising_status/update', {
+          student_up_mail: this.view_advisee.up_mail,
+          status: newStatus,
+          remarks: this.remarksString
+        });
+
+        // Send notification
+        //const notificationResponse = await this.sendNotification();
+
+        // Show success message
+        alert(response.data.message);
+
+        // Redirect to adviser page
+        location.href = '/adviser';
       } catch (error) {
-        console.log('Error on Adviser.vue > updateStatus()', error)
-        alert('Error on updateStatus()')
+        console.error('Error on Adviser.vue > updateStatus()', error);
+        alert('Error updating status');
       }
     },
+/*
+    async sendNotification() {
+       try {
+         const notificationResponse = await this.axios.post('https://localhost:3000/send-notification', {
+           to: 'oysuba@up.edu.ph',
+           subject: 'Notification Subject [ECF Update]',
+           message: 'Changes have been made. Please check.',
+         });
+         return notificationResponse;
+       } catch (error) {
+         console.error('Error sending notification', error);
+         throw error; // Rethrow the error to handle it in the calling function
+       }
+     },*/
     async viewDetails(advisee) {
       try {
         this.view_advisee = advisee
