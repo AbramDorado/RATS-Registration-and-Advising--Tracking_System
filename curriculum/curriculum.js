@@ -2,6 +2,7 @@ const database = require("../database/database");
 const express = require("express");
 const router = express.Router();
 
+// Middleware
 const loggedIn = async (req, res, next) => {
     try {
         if (!req.user) {
@@ -12,6 +13,20 @@ const loggedIn = async (req, res, next) => {
         res.status(401).send();
     }
 };
+
+function ocsOnly(req, res, next) {
+    try {
+      if (req.user.role === 'ocs') {
+        next();
+      } else {
+        throw 'User not OCS';
+      }
+    } catch (error) {
+      console.log('Error on grades.js > ocsOnly');
+      console.log(error);
+      res.status(401).json({ message: error }).send();
+    }
+  }
 
 router.post("/api/curriculum/progress", loggedIn, async (req, res) => {
     try {

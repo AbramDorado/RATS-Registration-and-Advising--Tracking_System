@@ -502,7 +502,7 @@ async function createInitialRows() {
         1,
         'bs computer science',
         'dpsm',
-        100
+        172
       )
       ON CONFLICT (id) DO NOTHING;
     `);

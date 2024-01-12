@@ -51,6 +51,11 @@ export default {
       // "3rd Year 1st Semester", "3rd Year 2nd Semester", "3rd Year Mid Year",
       // "4th Year 1st Semester", "4th Year 2nd Semester"], // To store unique semester values from your data
       // end advisingDashboard-related
+      totalUnits: 0,
+      progress: 0,
+      progressBarWidth: "50%", // Replace with your logic to calculate the progress width
+      totalUnitsToGraduate: 172, // Set the total units required to graduate
+      //studentProgress: 86, // Replace with your logic to get the student's progress
 
       // pagination-related
       currentPage: 1,
@@ -71,20 +76,43 @@ export default {
   computed: {
     pages() {
       return Math.ceil(this.studentsCount / this.resultsLimit_static)
-    }
+    },
     // Use a computed property to filter the data based on the selected semester
-  },
 
-  methods: {
+    //Progress bar for the status student year level
+    progressBarWidth() {
+      return (this.progress / this.totalUnits) * 100 + "%";
+    },
+    progressBarText() {
+      return `${this.progress} / ${this.totalUnits} units completed`;
+      // return `${this.progress}%`;
+    },
+    progressBarPercentage() {
+      const progressPercentage = (this.progress / this.totalUnitsToGraduate) * 100;
 
-    filteredGrades() {
-      console.log("Selected Semester:", this.selectedSemester);
-      if (this.selectedSemester) {
-        return this.view_advisee.grade.filter(grade => grade.semester === this.selectedSemester);
+      return Math.min(100, Math.max(0, progressPercentage)).toFixed(2); // Limit the value between 0 and 100 and round to two decimal places
+    },
+
+    //computation to tell if the student's year levevl
+    yearLabel() {
+      const progressPercentage = (this.progress / this.totalUnitsToGraduate) * 100;
+
+      if (progressPercentage >= 0 && progressPercentage <= 25) {
+        return "First Year";
+      } else if (progressPercentage > 25 && progressPercentage <= 50) {
+        return "Second Year";
+      } else if (progressPercentage > 50 && progressPercentage <= 75) {
+        return "Third Year";
+      } else if (progressPercentage > 75 && progressPercentage <= 100) {
+        return "Fourth Year";
       } else {
-        return this.view_advisee.grade;
+        return "";
       }
     },
+    
+  },  
+
+  methods: {
 
     // announcementDashboard-related
     async addAnnouncement() {
@@ -517,7 +545,32 @@ export default {
     }
   },
 
+  filteredGrades() {
+      console.log("Selected Semester:", this.selectedSemester);
+      if (this.selectedSemester) {
+        return this.view_advisee.grade.filter(grade => grade.semester === this.selectedSemester);
+      } else {
+        return this.view_advisee.grade;
+      }
+    },
+
+  fetchCurriculumProgress() {
+      // Make a request to your backend API to get curriculum progress data
+      // You can use axios or any other HTTP library for this
+      // Update this part based on your actual API endpoint
+      axios.post('/api/curriculum/progress', { studentEmail: 'abramdorado18@gmail.com', degreeProgram: 'bs computer science' })
+        .then(response => {
+          this.totalUnits = response.data.totalUnits;
+          this.progress = response.data.progress;
+        })
+        .catch(error => {
+          console.error('Error fetching curriculum progress:', error);
+        });
+    },
+  
   },
+  // end of Methods
+
   async mounted() {
     await this.authorize()
     await this.getAllAnnouncements()
@@ -530,6 +583,9 @@ export default {
     this.semesters = Array.from(new Set(this.view_advisee.grade.map(grade => grade.year_level + ' ' + grade.semester)));
     // Set the default selected semester
     this.selectedSemester = this.semesters[0];
+
+    // Fetch curriculum progress data when the component is mounted
+    this.fetchCurriculumProgress();
   }
 }
 </script>
@@ -1335,21 +1391,20 @@ export default {
               <span style="font-family: Open_Sans_Bold; font-size: 20px;">Student Grades</span>
             </div>
 
-            <!-- Progress Bar Section (Replace with your logic) -->
-            <div class="progress" style="height: 25px; margin-bottom: 20px;">
-              <div class="progress-bar" role="progressbar" :style="{ width: progressBarWidth }" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
-                {{ progressBarText }}
+            <!-- Progress Bar Section -->
+            <div>
+              <div class="progress-label">
+                <span style="font-family: Open_Sans_Bold;"> Year Level: </span>
+                {{ yearLabel }}
+              </div>
+              <div class="progress" style="height: 25px; margin-bottom: 20px;">
+                <div class="progress-bar" role="progressbar" :style="{ width: progressBarWidth }" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100">
+                  {{ progressBarText }}  |  {{ progressBarPercentage }}%
+                </div>
               </div>
             </div>
             <!-- end Progress Bar Section -->
 
-            <!-- Add the dropdown filter -->
-            <!-- <div>
-              <label for="semesterFilter">Select Semester:</label>
-              <select id="semesterFilter" v-model="selectedSemester">
-                <option v-for="semester in semesters" :key="semester" :value="semester">{{ semester }}</option>
-              </select>
-            </div> -->
 
             <!-- Dept Dropdown -->
             <div>
@@ -1529,6 +1584,27 @@ export default {
   <Footer />
 </div>
 </template>
+
+<style>
+.progress {
+  /* width: 50%; */
+  margin: 20px 0; /* Add margin for spacing */
+}
+
+.progress-bar {
+  height: 100%;
+  color: #fff;
+  text-align: center;
+  line-height: 25px; /* Match the height of the progress bar */
+  background-color: #139217; /* Background color of the progress bar */
+}
+
+.progress-label {
+  /* text-align: center; */
+  font-weight: bold;
+  margin-top: 10px;
+}
+</style>
 
 <style scoped>
 span, td {
