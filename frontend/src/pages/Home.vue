@@ -241,6 +241,9 @@ export default {
             <img src="/Schedule_of_Activities.jpg" alt="Schedule of Activities">
             <!-- <img src="/UPM_CAS_logo.png" alt="UPM CAS Logo" style="height: 65px; margin-right: 8px; width: 65px; "> -->
           </div>
+          <button id="loginButton" @click="" class="hoverTransform align-items-center btn d-flex justify-content-center shadow-lg text-light" v-if="this.user.role === 'ocs'" style="background-color: #950B10; border-radius: 30px; height: 59px; width: 242px; margin-top: 10%;">
+            <span v-if="!loading">Update Schedule of Activities</span>
+          </button>
         </div>
         <!-- end Schedule of Activities -->
       </div>
