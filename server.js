@@ -76,7 +76,7 @@ async function main() {
   // })
 
   //port for railway deployment
-  const port = process.env.PORT || 8000;
+  const port = process.env.PORT || 3000;
   app.listen(port, "0.0.0.0", () => {
     console.log(`Express app listening on port ${port}`);
   });
