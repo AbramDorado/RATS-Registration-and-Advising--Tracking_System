@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
+import LoginAnnouncements from './frontend/src/components/LoginAnnouncements.vue';
 
 const app = createApp(App)
 
@@ -27,7 +28,9 @@ const routes = [
   {path: '/advising', component: Advising},
   {path: '/contact', component: Contact},
   {path: '/login', component: Login},
-  {path: '/ocs', component: Ocs}
+  {path: '/ocs', component: Ocs},
+
+  { path: '/login-announcements', component: LoginAnnouncements },
 ]
 
 const router = createRouter({
