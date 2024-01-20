@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
-const history = require('connect-history-api-fallback')
 
 // Main
 async function main() {
@@ -11,11 +10,6 @@ async function main() {
   // Initialize dotenv
   require('dotenv').config()
   // end Initialize dotenv
-
-  // Serving frontend
-  const path = require('path')
-  app.use(express.static(path.join(__dirname, 'dist')))
-  // end Serve frontend
 
   // Initialize body Parser
   const bodyParser = require('body-parser')
@@ -56,8 +50,14 @@ async function main() {
   // end Initialize routers
 
   // Initialize fallback
+  const history = require('connect-history-api-fallback')
   app.use(history())
   // end Initialize fallback
+
+  // Serving frontend
+  const path = require('path')
+  app.use(express.static(path.join(__dirname, 'dist')))
+  // end Serve frontend
 
 
   // Start express server
@@ -75,12 +75,6 @@ async function main() {
   // app.listen(8000, () => {
   //   console.log(`Express app listening on port 8000`)
   // })
-
-  // Error handling middleware
-  app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something went wrong!');
-  });
 
   //port for railway deployment
   const port = process.env.PORT || 3000;
