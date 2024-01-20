@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import LoginAnnouncements from './frontend/src/components/LoginAnnouncements.vue';
+import LoginAnnouncements from './frontend/src/components/LoginAnnouncements.vue'
+import LoginScheduleOfClasses from './frontend/src/components/LoginScheduleOfClasses.vue'
 
 const app = createApp(App)
 
@@ -31,6 +32,7 @@ const routes = [
   {path: '/ocs', component: Ocs},
 
   { path: '/login-announcements', component: LoginAnnouncements },
+  { path: '/login-schedule-of-classes', component: LoginScheduleOfClasses }
 ]
 
 const router = createRouter({
