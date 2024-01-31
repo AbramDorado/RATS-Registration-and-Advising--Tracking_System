@@ -35,3 +35,6 @@ cd ..
 ```
 npm start
 ```
+
+### Updates
+The "latest branch is the new one"
